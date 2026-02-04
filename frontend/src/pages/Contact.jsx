@@ -20,6 +20,7 @@ import { contactInfo, formTopics } from "../data/mock";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const WEB3FORMS_KEY = "99d6039b-83fa-461a-9eac-331206d2f378";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -54,7 +55,8 @@ export const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/contact`, {
+      // Save to database first
+      await axios.post(`${BACKEND_URL}/api/contact`, {
         name: formData.name,
         company: formData.company || null,
         email: formData.email,
@@ -64,7 +66,40 @@ export const Contact = () => {
         message: formData.message
       });
 
-      toast.success(response.data.message || "Consultation request sent successfully!");
+      // Send email via Web3Forms (client-side)
+      const emailMessage = `
+New Consultation Request Received
+
+Contact Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Name: ${formData.name}
+${formData.company ? `Company: ${formData.company}` : ''}
+Email: ${formData.email}
+${formData.phone ? `Phone: ${formData.phone}` : ''}
+Topic: ${formData.topic}
+${formData.preferred_date ? `Preferred Date/Time: ${formData.preferred_date}` : ''}
+
+Message:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${formData.message}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This email was sent from the Fidelis Logic website contact form.
+Reply to: ${formData.email}
+      `.trim();
+
+      await axios.post("https://api.web3forms.com/submit", {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Consultation Request from ${formData.name}`,
+        from_name: formData.name,
+        email: "info@fidelislogic.com",
+        message: emailMessage,
+        replyto: formData.email
+      });
+
+      toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
       
       // Reset form
       setFormData({
@@ -78,7 +113,7 @@ export const Contact = () => {
       });
     } catch (error) {
       console.error("Form submission error:", error);
-      toast.error(error.response?.data?.detail || "Failed to send request. Please try again.");
+      toast.error("Failed to send request. Please try again or email us directly at info@fidelislogic.com");
     } finally {
       setIsSubmitting(false);
     }
@@ -89,8 +124,17 @@ export const Contact = () => {
     setIsSubscribing(true);
 
     try {
+      // Save to database
       const response = await axios.post(`${BACKEND_URL}/api/newsletter`, {
         email: newsletterEmail
+      });
+
+      // Send email notification via Web3Forms
+      await axios.post("https://api.web3forms.com/submit", {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Newsletter Subscription: ${newsletterEmail}`,
+        email: "info@fidelislogic.com",
+        message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
       });
 
       if (response.data.status === "info") {
