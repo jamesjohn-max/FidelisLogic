@@ -27,7 +27,7 @@ export const Footer = () => {
       } else {
         toast.success(response.data.message || "Successfully subscribed!");
       }
-      
+
       setNewsletterEmail("");
     } catch (error) {
       console.error("Newsletter subscription error:", error);
@@ -43,14 +43,14 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div>
             <div className="flex items-center">
-              <img 
-                src="/logo-white.png" 
-                alt="Fidelis Logic" 
-                className="h-12 w-auto"
-              />
+              <img
+                src="/logo-white.png"
+                alt="Fidelis Logic"
+                className="h-12 w-auto" />
+
             </div>
-            <p className="text-sm text-gray-400 mb-6">
-              Simplifying modern workplace technology decisions for UAE organizations.
+            <p className="!text-sm mb-6 text-gray-400">Simplifying Modern Workplace Technology decisions for organizations.
+
             </p>
             <div className="flex space-x-4">
               <a href={contactInfo.linkedin} className="text-gray-400 hover:text-blue-400 transition-colors">
@@ -130,13 +130,13 @@ export const Footer = () => {
                 onChange={(e) => setNewsletterEmail(e.target.value)}
                 required
                 disabled={isSubscribing}
-                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
-              />
-              <Button 
-                type="submit" 
+                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500" />
+
+              <Button
+                type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                disabled={isSubscribing}
-              >
+                disabled={isSubscribing}>
+
                 {isSubscribing ? "Subscribing..." : "Subscribe"}
               </Button>
             </form>
@@ -165,6 +165,6 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 };
