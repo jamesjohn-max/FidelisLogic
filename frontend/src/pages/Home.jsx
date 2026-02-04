@@ -1,0 +1,243 @@
+import { Link } from "react-router-dom";
+import { ArrowRight, Star } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import {
+  heroData,
+  segments,
+  howWeHelp,
+  whyChooseUs,
+  testimonials,
+  blogPosts
+} from "../data/mock";
+
+export const Home = () => {
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                {heroData.title}
+              </h1>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                {heroData.subtitle}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/contact">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                    {heroData.ctaPrimary}
+                    <ArrowRight className="ml-2" size={20} />
+                  </Button>
+                </Link>
+                <Link to="/solutions">
+                  <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
+                    {heroData.ctaSecondary}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="relative">
+              <img
+                src={heroData.image}
+                alt="Modern workplace technology"
+                className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What We Do Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">What We Do</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              The modern workplace technology market is complex and overwhelming. We simplify your decisions with structured consulting and vendor-neutral guidance.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {segments.map((segment) => {
+              const IconComponent = LucideIcons[segment.icon];
+              return (
+                <Link key={segment.id} to={segment.link}>
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0">
+                    <CardContent className="p-6">
+                      <div className="mb-4">
+                        <img
+                          src={segment.image}
+                          alt={segment.title}
+                          className="w-full h-48 object-cover rounded-lg mb-4"
+                        />
+                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <IconComponent className="text-blue-600" size={24} />
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                        {segment.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {segment.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* How We Help Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">How We Help</h2>
+            <p className="text-xl text-gray-600">
+              A structured approach from assessment to ongoing support
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {howWeHelp.map((step, index) => (
+              <div key={index} className="relative">
+                <div className="text-6xl font-bold text-blue-100 mb-4">{step.step}</div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
+            <p className="text-xl text-gray-600">
+              We deliver outcomes, not just implementations
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {whyChooseUs.map((item, index) => {
+              const IconComponent = LucideIcons[item.icon];
+              return (
+                <Card key={index} className="border-0 shadow-lg">
+                  <CardContent className="p-8">
+                    <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center mb-6">
+                      <IconComponent className="text-white" size={28} />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Client Success Stories</h2>
+            <p className="text-xl text-gray-600">
+              Real results from organizations we've helped
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="border-0 shadow-lg">
+                <CardContent className="p-8">
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="text-yellow-400 fill-yellow-400" size={20} />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 leading-relaxed italic">
+                    "{testimonial.content}"
+                  </p>
+                  <div>
+                    <p className="font-semibold text-gray-900">{testimonial.name}</p>
+                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                    <p className="text-sm text-gray-500">{testimonial.company}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Blog Posts Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-2">Latest Insights</h2>
+              <p className="text-xl text-gray-600">
+                Industry knowledge and practical guidance
+              </p>
+            </div>
+            <Link to="/blog">
+              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
+                View All Posts
+                <ArrowRight className="ml-2" size={18} />
+              </Button>
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {blogPosts.slice(0, 3).map((post) => (
+              <Link key={post.id} to={`/blog/${post.slug}`}>
+                <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0">
+                  <CardContent className="p-0">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-48 object-cover rounded-t-lg"
+                    />
+                    <div className="p-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                          {post.category}
+                        </span>
+                        <span className="text-xs text-gray-500">{post.date}</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 leading-snug">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm">{post.excerpt}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">
+            Ready to Simplify Your Technology Decisions?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Book a free consultation to discuss your modern workplace technology needs.
+          </p>
+          <Link to="/contact">
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+              Schedule Discovery Call
+              <ArrowRight className="ml-2" size={20} />
+            </Button>
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+};
