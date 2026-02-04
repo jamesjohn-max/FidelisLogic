@@ -21,11 +21,12 @@ export const Header = () => {
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-50 border-b border-gray-100">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">MW</span>
-            </div>
-            <span className="text-xl font-semibold text-gray-900">Modern Workplace</span>
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/logo-color.png" 
+              alt="Fidelis Logic" 
+              className="h-12 w-auto"
+            />
           </Link>
 
           <div className="hidden lg:flex items-center space-x-1">
