@@ -52,10 +52,10 @@ module.exports = {
                                 '3': 'hsl(var(--chart-3))',
                                 '4': 'hsl(var(--chart-4))',
                                 '5': 'hsl(var(--chart-5))'
-                        }
+                        },
                         'fidelis-cyan': '#22D3EE',
                         'fidelis-blue': '#2563EB',
-                        'fidelis-dark-blue': '#1E40AF',
+                        'fidelis-dark-blue': '#1E40AF'
                 },
                 keyframes: {
                         'accordion-down': {
