@@ -3,6 +3,9 @@ import { ArrowRight, Star } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
+import { SEO } from "../components/SEO";
+import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
+import { seoConfig } from "../data/seoConfig";
 import {
   heroData,
   segments,
@@ -13,8 +16,20 @@ import {
 } from "../data/mock";
 
 export const Home = () => {
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? window.location.origin : "" }
+  ];
+
   return (
     <div className="min-h-screen">
+      <SEO
+        title={seoConfig.home.title}
+        description={seoConfig.home.description}
+        keywords={seoConfig.home.keywords}
+        ogImage="https://images.unsplash.com/photo-1762176263996-a0713a49ee4d"
+      />
+      <StructuredData data={organizationSchema} />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">

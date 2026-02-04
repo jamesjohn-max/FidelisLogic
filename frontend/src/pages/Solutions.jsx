@@ -2,12 +2,26 @@ import { Link } from "react-router-dom";
 import * as LucideIcons from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { SEO } from "../components/SEO";
+import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
+import { seoConfig } from "../data/seoConfig";
 import { segments } from "../data/mock";
 import { ArrowRight } from "lucide-react";
 
 export const Solutions = () => {
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Solutions", url: typeof window !== "undefined" ? window.location.href : "" }
+  ];
+
   return (
     <div className="min-h-screen">
+      <SEO
+        title={seoConfig.solutions.title}
+        description={seoConfig.solutions.description}
+        keywords={seoConfig.solutions.keywords}
+      />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto text-center">
