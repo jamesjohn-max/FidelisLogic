@@ -1,5 +1,20 @@
 // Mock data for IT consulting website
 
+export const stats = [
+  {
+    number: "150+",
+    label: "Projects Delivered"
+  },
+  {
+    number: "98%",
+    label: "Client Satisfaction"
+  },
+  {
+    number: "10+",
+    label: "Years Experience"
+  }
+];
+
 export const heroData = {
   title: "Simplifying Modern Workplace Technology Decisions",
   subtitle: "We bridge the gap between business needs and technology solutions—helping UAE organizations choose, design, and implement the right workplace technology with confidence.",
@@ -170,15 +185,88 @@ export const blogPosts = [
   }
 ];
 
-export const partners = [
-  "Microsoft",
-  "Zoom",
-  "Poly",
-  "Logitech",
-  "Jabra",
-  "Crestron",
-  "Flowscape",
-  "ROOMZ"
+export const partners = {
+  videoCollaboration: [
+    { name: "Poly", logo: "https://via.placeholder.com/120x60?text=Poly" },
+    { name: "Yealink", logo: "https://via.placeholder.com/120x60?text=Yealink" },
+    { name: "Neat", logo: "https://via.placeholder.com/120x60?text=Neat" },
+    { name: "Logitech", logo: "https://via.placeholder.com/120x60?text=Logitech" }
+  ],
+  audioSolutions: [
+    { name: "Jabra", logo: "https://via.placeholder.com/120x60?text=Jabra" },
+    { name: "Sennheiser", logo: "https://via.placeholder.com/120x60?text=Sennheiser" },
+    { name: "EPOS", logo: "https://via.placeholder.com/120x60?text=EPOS" },
+    { name: "Shure", logo: "https://via.placeholder.com/120x60?text=Shure" },
+    { name: "QSYS", logo: "https://via.placeholder.com/120x60?text=QSYS" }
+  ],
+  displaySharing: [
+    { name: "Barco", logo: "https://via.placeholder.com/120x60?text=Barco" },
+    { name: "Crestron", logo: "https://via.placeholder.com/120x60?text=Crestron" },
+    { name: "Extron", logo: "https://via.placeholder.com/120x60?text=Extron" },
+    { name: "Samsung", logo: "https://via.placeholder.com/120x60?text=Samsung" }
+  ],
+  platforms: [
+    { name: "Microsoft Teams", logo: "https://via.placeholder.com/120x60?text=MS+Teams" },
+    { name: "Zoom", logo: "https://via.placeholder.com/120x60?text=Zoom" },
+    { name: "Webex", logo: "https://via.placeholder.com/120x60?text=Webex" },
+    { name: "Google Meet", logo: "https://via.placeholder.com/120x60?text=Meet" }
+  ]
+};
+
+export const roomTypes = [
+  {
+    title: "Executive Board Rooms",
+    description: "Premium AV for high-stakes meetings",
+    icon: "Crown"
+  },
+  {
+    title: "Huddle Rooms",
+    description: "Compact solutions for quick collaboration",
+    icon: "Users"
+  },
+  {
+    title: "Training Rooms",
+    description: "Interactive learning environments",
+    icon: "GraduationCap"
+  },
+  {
+    title: "Auditoriums",
+    description: "Large-scale presentation systems",
+    icon: "Theater"
+  },
+  {
+    title: "Townhall Spaces",
+    description: "All-hands meeting solutions",
+    icon: "Building"
+  },
+  {
+    title: "Focus Rooms",
+    description: "Private video calling booths",
+    icon: "Video"
+  }
+];
+
+export const whyChooseUsAdvantages = [
+  {
+    title: "Turnkey Meeting Room Deployment",
+    description: "From design to installation, we handle complete Meeting Room Deployment for MTR, Zoom Rooms, and hybrid spaces.",
+    icon: "CheckCircle2"
+  },
+  {
+    title: "BYOD & BYOM Ready",
+    description: "Enable Hybrid Working with seamless BYOD and BYOM solutions, supporting any device or platform.",
+    icon: "Smartphone"
+  },
+  {
+    title: "Rapid Response Support",
+    description: "Annual Maintenance Contracts and Support Contracts ensure minimal downtime with priority response times.",
+    icon: "Headphones"
+  },
+  {
+    title: "Vendor-Agnostic Expertise",
+    description: "Certified partners for Poly, Jabra, Yealink, Neat, Barco, Sennheiser, QSYS, and Shure solutions.",
+    icon: "Award"
+  }
 ];
 
 export const contactInfo = {

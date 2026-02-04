@@ -76,6 +76,20 @@ export const Home = () => {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white border-y border-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-3 gap-8 text-center">
+            {stats.map((stat, index) => (
+              <div key={index} className="space-y-2">
+                <div className="text-4xl md:text-5xl font-bold text-fidelis-blue">{stat.number}</div>
+                <div className="text-sm md:text-base text-gray-600">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* What We Do Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
