@@ -15,6 +15,22 @@ import { BlogPost } from "./pages/BlogPost";
 import { Contact } from "./pages/Contact";
 import { Toaster } from "./components/ui/sonner";
 
+// Suppress ResizeObserver errors (common React/Radix UI issue, doesn't affect functionality)
+const suppressResizeObserverError = () => {
+  const errorHandler = (event) => {
+    if (
+      event.message === 'ResizeObserver loop completed with undelivered notifications.' ||
+      event.message === 'ResizeObserver loop limit exceeded'
+    ) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
+  };
+  window.addEventListener('error', errorHandler);
+};
+
+suppressResizeObserverError();
+
 function App() {
   return (
     <HelmetProvider>
