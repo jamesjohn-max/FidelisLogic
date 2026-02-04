@@ -12,7 +12,7 @@ export const SEO = ({
   modifiedDate,
   canonicalUrl
 }) => {
-  const siteName = "Modern Workplace Solutions";
+  const siteName = "Fidelis Logic";
   const fullTitle = title ? `${title} | ${siteName}` : siteName;
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "";
   const currentUrl = typeof window !== "undefined" ? window.location.href : "";

@@ -12,10 +12,11 @@ export const StructuredData = ({ data }) => {
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Modern Workplace Solutions",
+  "name": "Fidelis Logic LLC",
+  "legalName": "Fidelis Logic LLC",
   "description": "UAE-based IT consulting firm specializing in modern workplace technology solutions including Microsoft Teams Rooms, Zoom Rooms, enterprise headsets, workspace experience platforms, and business applications.",
   "url": typeof window !== "undefined" ? window.location.origin : "",
-  "logo": typeof window !== "undefined" ? `${window.location.origin}/logo.png` : "",
+  "logo": typeof window !== "undefined" ? `${window.location.origin}/logo-color.png` : "",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Dubai",
@@ -28,9 +29,9 @@ export const organizationSchema = {
     "availableLanguage": ["en", "ar"]
   },
   "sameAs": [
-    "https://linkedin.com/company/modern-workplace",
-    "https://youtube.com/@modernworkplace",
-    "https://instagram.com/modernworkplace"
+    "https://linkedin.com/company/fidelis-logic",
+    "https://youtube.com/@fidelislogic",
+    "https://instagram.com/fidelislogic"
   ]
 };
 
@@ -42,7 +43,7 @@ export const serviceSchema = (serviceName, description) => ({
   "description": description,
   "provider": {
     "@type": "Organization",
-    "name": "Modern Workplace Solutions"
+    "name": "Fidelis Logic LLC"
   },
   "areaServed": {
     "@type": "Country",
@@ -61,14 +62,14 @@ export const blogPostSchema = (post) => ({
   "dateModified": post.date,
   "author": {
     "@type": "Organization",
-    "name": "Modern Workplace Solutions"
+    "name": "Fidelis Logic LLC"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Modern Workplace Solutions",
+    "name": "Fidelis Logic LLC",
     "logo": {
       "@type": "ImageObject",
-      "url": typeof window !== "undefined" ? `${window.location.origin}/logo.png` : ""
+      "url": typeof window !== "undefined" ? `${window.location.origin}/logo-color.png` : ""
     }
   }
 });
