@@ -14,21 +14,26 @@ import {
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, organizationSchema } from "../components/StructuredData";
 import { seoConfig } from "../data/seoConfig";
-import { useToast } from "../hooks/use-toast";
+import { toast } from "sonner";
 import { Mail, Phone, MapPin, Linkedin, Youtube, Instagram } from "lucide-react";
 import { contactInfo, formTopics } from "../data/mock";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     company: "",
     email: "",
     phone: "",
     topic: "",
-    preferredDate: "",
+    preferred_date: "",
     message: ""
   });
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   const breadcrumbs = [
     { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
@@ -44,22 +49,63 @@ export const Contact = () => {
     setFormData((prev) => ({ ...prev, topic: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    toast({
-      title: "Consultation Request Received!",
-      description: "We'll contact you within 24 hours to schedule your free consultation.",
-    });
-    setFormData({
-      name: "",
-      company: "",
-      email: "",
-      phone: "",
-      topic: "",
-      preferredDate: "",
-      message: ""
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/contact`, {
+        name: formData.name,
+        company: formData.company || null,
+        email: formData.email,
+        phone: formData.phone || null,
+        topic: formData.topic,
+        preferred_date: formData.preferred_date || null,
+        message: formData.message
+      });
+
+      toast.success(response.data.message || "Consultation request sent successfully!");
+      
+      // Reset form
+      setFormData({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        topic: "",
+        preferred_date: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error(error.response?.data?.detail || "Failed to send request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubscribing(true);
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/newsletter`, {
+        email: newsletterEmail
+      });
+
+      if (response.data.status === "info") {
+        toast.info(response.data.message);
+      } else {
+        toast.success(response.data.message || "Successfully subscribed!");
+      }
+      
+      setNewsletterEmail("");
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      toast.error("Failed to subscribe. Please try again.");
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   return (
@@ -164,11 +210,11 @@ export const Contact = () => {
                     </div>
 
                     <div>
-                      <Label htmlFor="preferredDate">Preferred Date/Time</Label>
+                      <Label htmlFor="preferred_date">Preferred Date/Time</Label>
                       <Input
-                        id="preferredDate"
-                        name="preferredDate"
-                        value={formData.preferredDate}
+                        id="preferred_date"
+                        name="preferred_date"
+                        value={formData.preferred_date}
                         onChange={handleInputChange}
                         className="mt-2"
                         placeholder="e.g., Next week, afternoon"
@@ -192,8 +238,9 @@ export const Contact = () => {
                       type="submit"
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                       size="lg"
+                      disabled={isSubmitting}
                     >
-                      Submit Consultation Request
+                      {isSubmitting ? "Sending..." : "Submit Consultation Request"}
                     </Button>
                   </form>
                 </CardContent>

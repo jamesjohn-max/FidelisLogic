@@ -99,10 +99,18 @@ export const Footer = () => {
               <Input
                 type="email"
                 placeholder="Your email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                required
+                disabled={isSubscribing}
                 className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
               />
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                Subscribe
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                disabled={isSubscribing}
+              >
+                {isSubscribing ? "Subscribing..." : "Subscribe"}
               </Button>
             </form>
           </div>
