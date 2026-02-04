@@ -10,8 +10,12 @@ import { seoConfig } from "../data/seoConfig";
 import {
   heroData,
   segments,
+  stats,
   howWeHelp,
   whyChooseUs,
+  whyChooseUsAdvantages,
+  roomTypes,
+  partners,
   testimonials,
   blogPosts
 } from "../data/mock";
