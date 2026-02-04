@@ -182,8 +182,8 @@ export const partners = [
 ];
 
 export const contactInfo = {
-  email: "hello@yourdomain.com",
-  phone: "+971 X XXXX XXXX",
+  email: "info@fidelislogic.com",
+  phone: "+971 52 360 7270",
   location: "Dubai, United Arab Emirates",
   linkedin: "#",
   youtube: "#",

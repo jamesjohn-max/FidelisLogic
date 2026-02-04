@@ -24,7 +24,8 @@ export const organizationSchema = {
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+971-X-XXXX-XXXX",
+    "telephone": "+971-52-360-7270",
+    "email": "info@fidelislogic.com",
     "contactType": "customer service",
     "availableLanguage": ["en", "ar"]
   },
