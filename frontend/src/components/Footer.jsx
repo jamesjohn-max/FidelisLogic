@@ -49,7 +49,7 @@ export const Footer = () => {
                 className="h-12 w-auto" />
 
             </div>
-            <p className="!text-sm mb-6 text-gray-400">Simplifying Modern Workplace Technology decisions for organizations.
+            <p className="!font-extralight !text-xs !text-left !mt-[10px] !mb-[24px] text-gray-400">Simplifying Modern Workplace Technology decisions for organizations.
 
             </p>
             <div className="flex space-x-4">
