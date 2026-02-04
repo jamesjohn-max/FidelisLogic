@@ -31,8 +31,17 @@ export const Home = () => {
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-fidelis-cyan/10 via-fidelis-blue/5 to-transparent">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-fidelis-cyan/20 via-transparent to-transparent animate-pulse"></div>
+        </div>
+        
+        {/* Animated orbs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-fidelis-cyan/20 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-fidelis-blue/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">

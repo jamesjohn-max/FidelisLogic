@@ -3,11 +3,38 @@ import { Linkedin, Youtube, Instagram, Mail, Phone, MapPin } from "lucide-react"
 import { contactInfo } from "../data/mock";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import axios from "axios";
+import { toast } from "sonner";
+import { useState } from "react";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const Footer = () => {
-  const handleNewsletterSubmit = (e) => {
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    alert("Newsletter subscription coming soon!");
+    setIsSubscribing(true);
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/newsletter`, {
+        email: newsletterEmail
+      });
+
+      if (response.data.status === "info") {
+        toast.info(response.data.message);
+      } else {
+        toast.success(response.data.message || "Successfully subscribed!");
+      }
+      
+      setNewsletterEmail("");
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      toast.error("Failed to subscribe. Please try again.");
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   return (
