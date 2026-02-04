@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
+import { FAQSchema, consultingFAQs } from "../components/FAQSchema";
 import { seoConfig } from "../data/seoConfig";
 import {
   heroData,
@@ -30,16 +31,16 @@ export const Home = () => {
       />
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <FAQSchema faqs={consultingFAQs} />
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-fidelis-cyan/10 via-fidelis-blue/5 to-transparent">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-fidelis-cyan/20 via-transparent to-transparent animate-pulse"></div>
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-fidelis-cyan/15 via-blue-50 to-fidelis-blue/10"></div>
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-radial from-fidelis-cyan/30 to-transparent rounded-full blur-3xl animate-blob"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-radial from-fidelis-blue/25 to-transparent rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-gradient-radial from-fidelis-cyan/20 to-transparent rounded-full blur-3xl animate-blob animation-delay-4000"></div>
         </div>
-        
-        {/* Animated orbs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-fidelis-cyan/20 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-fidelis-blue/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
