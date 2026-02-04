@@ -1,5 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
+import { SEO } from "../components/SEO";
+import { StructuredData, breadcrumbSchema, blogPostSchema } from "../components/StructuredData";
 import { blogPosts } from "../data/mock";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
 
@@ -22,12 +24,29 @@ export const BlogPost = () => {
     );
   }
 
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Blog", url: typeof window !== "undefined" ? `${window.location.origin}/blog` : "" },
+    { name: post.title, url: typeof window !== "undefined" ? window.location.href : "" }
+  ];
+
   const relatedPosts = blogPosts
     .filter((p) => p.category === post.category && p.id !== post.id)
     .slice(0, 3);
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={post.title}
+        description={post.excerpt}
+        keywords={`${post.category}, workplace technology, IT consulting`}
+        ogType="article"
+        ogImage={post.image}
+        article={true}
+        publishedDate={post.date}
+      />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <StructuredData data={blogPostSchema(post)} />
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">

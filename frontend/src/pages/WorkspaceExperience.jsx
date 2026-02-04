@@ -2,14 +2,36 @@ import { Link } from "react-router-dom";
 import * as LucideIcons from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { SEO } from "../components/SEO";
+import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/StructuredData";
+import { seoConfig } from "../data/seoConfig";
 import { workspaceExperienceDetails } from "../data/mock";
 import { ArrowRight } from "lucide-react";
 
 export const WorkspaceExperience = () => {
   const { hero, capabilities, platforms } = workspaceExperienceDetails;
 
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Solutions", url: typeof window !== "undefined" ? `${window.location.origin}/solutions` : "" },
+    { name: "Workspace Experience", url: typeof window !== "undefined" ? window.location.href : "" }
+  ];
+
+  const service = serviceSchema(
+    "Room Booking & Workspace Experience Platforms",
+    "Optimize office utilization with hot desking, room booking panels, visitor management, and workplace analytics platforms."
+  );
+
   return (
     <div className="min-h-screen">
+      <SEO
+        title={seoConfig.workspaceExperience.title}
+        description={seoConfig.workspaceExperience.description}
+        keywords={seoConfig.workspaceExperience.keywords}
+        ogImage={hero.image}
+      />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <StructuredData data={service} />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">

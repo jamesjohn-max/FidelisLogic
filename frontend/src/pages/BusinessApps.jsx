@@ -2,14 +2,36 @@ import { Link } from "react-router-dom";
 import * as LucideIcons from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { SEO } from "../components/SEO";
+import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/StructuredData";
+import { seoConfig } from "../data/seoConfig";
 import { businessAppsDetails } from "../data/mock";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const BusinessApps = () => {
   const { hero, painPoints, offer } = businessAppsDetails;
 
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Solutions", url: typeof window !== "undefined" ? `${window.location.origin}/solutions` : "" },
+    { name: "Business Applications", url: typeof window !== "undefined" ? window.location.href : "" }
+  ];
+
+  const service = serviceSchema(
+    "Business Applications for SMBs",
+    "ERP, HRMS, and CRM implementation with discovery, integration, training, and managed support for small and medium businesses."
+  );
+
   return (
     <div className="min-h-screen">
+      <SEO
+        title={seoConfig.businessApps.title}
+        description={seoConfig.businessApps.description}
+        keywords={seoConfig.businessApps.keywords}
+        ogImage={hero.image}
+      />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <StructuredData data={service} />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">

@@ -11,6 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
+import { SEO } from "../components/SEO";
+import { StructuredData, breadcrumbSchema, organizationSchema } from "../components/StructuredData";
+import { seoConfig } from "../data/seoConfig";
 import { useToast } from "../hooks/use-toast";
 import { Mail, Phone, MapPin, Linkedin, Youtube, Instagram } from "lucide-react";
 import { contactInfo, formTopics } from "../data/mock";
@@ -26,6 +29,11 @@ export const Contact = () => {
     preferredDate: "",
     message: ""
   });
+
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Contact", url: typeof window !== "undefined" ? window.location.href : "" }
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +64,13 @@ export const Contact = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={seoConfig.contact.title}
+        description={seoConfig.contact.description}
+        keywords={seoConfig.contact.keywords}
+      />
+      <StructuredData data={organizationSchema} />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">

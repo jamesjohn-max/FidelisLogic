@@ -2,11 +2,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { SEO } from "../components/SEO";
+import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
+import { seoConfig } from "../data/seoConfig";
 import { blogPosts } from "../data/mock";
 import { ArrowRight } from "lucide-react";
 
 export const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const breadcrumbs = [
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Blog", url: typeof window !== "undefined" ? window.location.href : "" }
+  ];
 
   const categories = ["All", "Modern Work", "Meeting Rooms", "Headsets", "Workspace Experience", "SMB Apps"];
 
@@ -17,6 +25,12 @@ export const Blog = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={seoConfig.blog.title}
+        description={seoConfig.blog.description}
+        keywords={seoConfig.blog.keywords}
+      />
+      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
