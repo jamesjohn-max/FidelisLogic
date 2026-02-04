@@ -1,118 +1,112 @@
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+import requests
 import os
-from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)
 
 class EmailService:
     def __init__(self):
-        self.api_key = os.environ.get('SENDGRID_API_KEY')
-        self.from_email = "noreply@fidelislogic.com"
+        self.access_key = os.environ.get('WEB3FORMS_ACCESS_KEY')
+        self.api_url = "https://api.web3forms.com/submit"
         self.to_email = "info@fidelislogic.com"
         
-    def send_email(self, subject: str, html_content: str, to_email: Optional[str] = None) -> bool:
-        """Send email via SendGrid"""
-        if not self.api_key:
-            logger.warning("SENDGRID_API_KEY not set. Email not sent (development mode).")
-            logger.info(f"Would send email: {subject} to {to_email or self.to_email}")
+    def send_email(self, subject: str, message: str, from_name: str = None, from_email: str = None) -> bool:
+        """Send email via Web3Forms"""
+        if not self.access_key:
+            logger.warning("WEB3FORMS_ACCESS_KEY not set. Email not sent (development mode).")
+            logger.info(f"Would send email: {subject}")
+            logger.info(f"Message: {message}")
             return True  # Return True in dev mode for testing
             
         try:
-            message = Mail(
-                from_email=self.from_email,
-                to_emails=to_email or self.to_email,
-                subject=subject,
-                html_content=html_content
-            )
+            data = {
+                "access_key": self.access_key,
+                "subject": subject,
+                "email": self.to_email,
+                "message": message,
+            }
             
-            sg = SendGridAPIClient(self.api_key)
-            response = sg.send(message)
+            # Add optional from fields if provided
+            if from_name:
+                data["name"] = from_name
+            if from_email:
+                data["from_email"] = from_email
             
-            if response.status_code in [200, 202]:
-                logger.info(f"Email sent successfully: {subject}")
-                return True
+            response = requests.post(self.api_url, json=data)
+            
+            if response.status_code == 200:
+                result = response.json()
+                if result.get("success"):
+                    logger.info(f"Email sent successfully via Web3Forms: {subject}")
+                    return True
+                else:
+                    logger.error(f"Web3Forms error: {result.get('message')}")
+                    return False
             else:
-                logger.error(f"Email send failed with status: {response.status_code}")
+                logger.error(f"Web3Forms request failed with status: {response.status_code}")
                 return False
                 
         except Exception as e:
-            logger.error(f"Failed to send email: {str(e)}")
+            logger.error(f"Failed to send email via Web3Forms: {str(e)}")
             return False
     
-    def send_consultation_request(self, name: str, company: Optional[str], email: str, 
-                                  phone: Optional[str], topic: str, preferred_date: Optional[str], 
+    def send_consultation_request(self, name: str, company: str, email: str, 
+                                  phone: str, topic: str, preferred_date: str, 
                                   message: str) -> bool:
         """Send consultation request notification"""
         subject = f"New Consultation Request from {name}"
         
-        html_content = f"""
-        <html>
-            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                    <div style="background: linear-gradient(135deg, #22D3EE 0%, #2563EB 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
-                        <h1 style="color: white; margin: 0;">New Consultation Request</h1>
-                    </div>
-                    
-                    <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
-                        <h2 style="color: #2563EB; margin-top: 0;">Contact Details</h2>
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><strong>Name:</strong></td>
-                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">{name}</td>
-                            </tr>
-                            {f'<tr><td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><strong>Company:</strong></td><td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">{company}</td></tr>' if company else ''}
-                            <tr>
-                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><strong>Email:</strong></td>
-                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><a href="mailto:{email}" style="color: #2563EB;">{email}</a></td>
-                            </tr>
-                            {f'<tr><td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><strong>Phone:</strong></td><td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">{phone}</td></tr>' if phone else ''}
-                            <tr>
-                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><strong>Topic:</strong></td>
-                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">{topic}</td>
-                            </tr>
-                            {f'<tr><td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><strong>Preferred Date/Time:</strong></td><td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">{preferred_date}</td></tr>' if preferred_date else ''}
-                        </table>
-                        
-                        <h3 style="color: #2563EB; margin-top: 30px;">Message</h3>
-                        <p style="background: white; padding: 15px; border-radius: 4px; border-left: 4px solid #22D3EE;">
-                            {message}
-                        </p>
-                        
-                        <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">
-                            This email was sent from the Fidelis Logic website contact form.
-                        </p>
-                    </div>
-                </div>
-            </body>
-        </html>
+        # Build message content
+        email_content = f"""
+New Consultation Request Received
+
+Contact Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Name: {name}
+{f'Company: {company}' if company else ''}
+Email: {email}
+{f'Phone: {phone}' if phone else ''}
+Topic: {topic}
+{f'Preferred Date/Time: {preferred_date}' if preferred_date else ''}
+
+Message:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{message}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This email was sent from the Fidelis Logic website contact form.
+Reply to: {email}
         """
         
-        return self.send_email(subject, html_content)
+        return self.send_email(
+            subject=subject,
+            message=email_content.strip(),
+            from_name=name,
+            from_email=email
+        )
     
     def send_newsletter_subscription(self, email: str) -> bool:
         """Send newsletter subscription notification"""
         subject = f"New Newsletter Subscription: {email}"
         
-        html_content = f"""
-        <html>
-            <body style="font-family: Arial, sans-serif;">
-                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                    <div style="background: linear-gradient(135deg, #22D3EE 0%, #2563EB 100%); padding: 20px; text-align: center;">
-                        <h2 style="color: white; margin: 0;">New Newsletter Subscription</h2>
-                    </div>
-                    <div style="background: #f9fafb; padding: 20px;">
-                        <p><strong>Email:</strong> {email}</p>
-                        <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
-                            Add this email to your newsletter distribution list.
-                        </p>
-                    </div>
-                </div>
-            </body>
-        </html>
+        message_content = f"""
+New Newsletter Subscription
+
+Email: {email}
+
+Add this email to your newsletter distribution list.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This subscription was submitted through the Fidelis Logic website.
         """
         
-        return self.send_email(subject, html_content)
+        return self.send_email(
+            subject=subject,
+            message=message_content.strip(),
+            from_email=email
+        )
 
 email_service = EmailService()

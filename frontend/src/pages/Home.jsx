@@ -167,37 +167,7 @@ export const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Client Success Stories</h2>
-            <p className="text-xl text-gray-600">
-              Real results from organizations we've helped
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="text-yellow-400 fill-yellow-400" size={20} />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-6 leading-relaxed italic">
-                    "{testimonial.content}"
-                  </p>
-                  <div>
-                    <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
-                    <p className="text-sm text-gray-500">{testimonial.company}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Removed as per client request */}
 
       {/* Featured Blog Posts Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
