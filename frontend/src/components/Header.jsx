@@ -23,9 +23,9 @@ export const Header = () => {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center">
             <img 
-              src="/logo-color.png" 
+              src="/Logo_Color_Large V2.png" 
               alt="Fidelis Logic" 
-              className="h-12 w-auto"
+              className="h-7 w-auto"
             />
           </Link>
 

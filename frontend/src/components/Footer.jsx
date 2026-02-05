@@ -44,9 +44,9 @@ export const Footer = () => {
           <div>
             <div className="flex items-center">
               <img
-                src="/logo-white.png"
+                src="/Logo_White_Large V2.png"
                 alt="Fidelis Logic"
-                className="h-12 w-auto" />
+                className="h-6 w-55" />
 
             </div>
             <p className="!font-extralight !text-xs !text-left !mt-[10px] !mb-[24px] text-gray-400">Simplifying Modern Workplace Technology decisions for organizations.
