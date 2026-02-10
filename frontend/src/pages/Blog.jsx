@@ -43,12 +43,12 @@ export const Blog = () => {
     { name: "Blog", url: typeof window !== "undefined" ? window.location.href : "" }
   ];
 
-  const categories = ["All", "Modern Work", "Meeting Rooms", "Headsets", "Workspace Experience", "SMB Apps"];
+  const categories = ["All", "Meeting Rooms", "Workspace Technology", "Business Applications", "Industry Insights", "Case Studies", "Product Reviews"];
 
   const filteredPosts =
     selectedCategory === "All"
-      ? blogPosts
-      : blogPosts.filter((post) => post.category === selectedCategory);
+      ? posts
+      : posts.filter((post) => post.category === selectedCategory);
 
   return (
     <div className="min-h-screen">
