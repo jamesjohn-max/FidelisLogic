@@ -62,6 +62,7 @@ export const AdminLogin = () => {
                 required
                 className="mt-2"
                 placeholder="Enter your username"
+                data-testid="admin-login-username"
               />
             </div>
 
@@ -75,6 +76,7 @@ export const AdminLogin = () => {
                 required
                 className="mt-2"
                 placeholder="Enter your password"
+                data-testid="admin-login-password"
               />
             </div>
 
@@ -82,6 +84,7 @@ export const AdminLogin = () => {
               type="submit"
               className="w-full bg-fidelis-blue hover:bg-fidelis-dark-blue text-white"
               disabled={isLoading}
+              data-testid="admin-login-submit"
             >
               {isLoading ? "Logging in..." : "Login"}
             </Button>
