@@ -1,15 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
 import { seoConfig } from "../data/seoConfig";
-import { blogPosts } from "../data/mock";
-import { ArrowRight } from "lucide-react";
+import { blogPosts as staticBlogPosts } from "../data/mock";
+import { ArrowRight, Loader2 } from "lucide-react";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
+        // Combine API posts with static posts, API posts first
+        const apiPosts = response.data.map(post => ({
+          ...post,
+          image: post.featured_image || "https://images.unsplash.com/photo-1497366216548-37526070297c"
+        }));
+        // Only use static posts if no API posts exist
+        setPosts(apiPosts.length > 0 ? apiPosts : staticBlogPosts);
+      } catch (error) {
+        console.error("Error fetching blog posts:", error);
+        // Fallback to static posts on error
+        setPosts(staticBlogPosts);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   const breadcrumbs = [
     { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
