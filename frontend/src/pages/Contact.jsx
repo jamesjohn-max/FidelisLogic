@@ -146,12 +146,19 @@ Reply to: ${formData.email}
         email: newsletterEmail
       });
 
-      // Send email notification via Web3Forms
-      await axios.post("https://api.web3forms.com/submit", {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Newsletter Subscription: ${newsletterEmail}`,
-        email: "info@fidelislogic.com",
-        message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
+      // Send email notification via Web3Forms using fetch
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `New Newsletter Subscription: ${newsletterEmail}`,
+          email: newsletterEmail,
+          message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
+        })
       });
 
       if (response.data.status === "info") {
