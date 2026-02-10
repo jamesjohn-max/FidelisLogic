@@ -1,11 +1,16 @@
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables FIRST before any other imports that need them
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
+
 from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks, Depends, UploadFile, File, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
-from pathlib import Path
 from typing import List, Optional
 from datetime import datetime
 import shutil
@@ -14,9 +19,6 @@ from models import ContactForm, ContactFormCreate, NewsletterSubscription, Newsl
 from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, LoginRequest
 from auth import verify_password, get_password_hash, create_access_token, decode_access_token
 from email_service import email_service
-
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
