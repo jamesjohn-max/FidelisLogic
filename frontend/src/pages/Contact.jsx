@@ -172,6 +172,9 @@ export const Contact = () => {
                     Book a Free Consultation
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Hidden input for topic to be captured by FormData */}
+                    <input type="hidden" name="topic" value={formData.topic} />
+                    
                     <div>
                       <Label htmlFor="name">Full Name *</Label>
                       <Input
