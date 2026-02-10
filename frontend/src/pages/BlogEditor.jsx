@@ -306,15 +306,98 @@ export const BlogEditor = () => {
             <Card>
               <CardContent className="p-6">
                 <Label>Content *</Label>
-                <div className="mt-2 bg-white rounded-lg border">
-                  <ReactQuill
-                    theme="snow"
+                <p className="text-xs text-gray-500 mb-2">
+                  You can use HTML tags for formatting: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a href=""&gt;
+                </p>
+                <div className="mt-2">
+                  {/* Simple formatting toolbar */}
+                  <div className="flex items-center gap-1 p-2 border border-b-0 rounded-t-lg bg-gray-50">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const textarea = document.getElementById('content');
+                        const start = textarea.selectionStart;
+                        const end = textarea.selectionEnd;
+                        const text = formData.content;
+                        const selected = text.substring(start, end);
+                        const newText = text.substring(0, start) + `<strong>${selected}</strong>` + text.substring(end);
+                        setFormData({ ...formData, content: newText });
+                      }}
+                      title="Bold"
+                    >
+                      <Bold size={16} />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const textarea = document.getElementById('content');
+                        const start = textarea.selectionStart;
+                        const end = textarea.selectionEnd;
+                        const text = formData.content;
+                        const selected = text.substring(start, end);
+                        const newText = text.substring(0, start) + `<em>${selected}</em>` + text.substring(end);
+                        setFormData({ ...formData, content: newText });
+                      }}
+                      title="Italic"
+                    >
+                      <Italic size={16} />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const text = formData.content;
+                        setFormData({ ...formData, content: text + '\n<h2></h2>' });
+                      }}
+                      title="Heading"
+                    >
+                      <Heading size={16} />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const text = formData.content;
+                        setFormData({ ...formData, content: text + '\n<ul>\n  <li></li>\n</ul>' });
+                      }}
+                      title="List"
+                    >
+                      <List size={16} />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const url = prompt('Enter URL:');
+                        if (url) {
+                          const textarea = document.getElementById('content');
+                          const start = textarea.selectionStart;
+                          const end = textarea.selectionEnd;
+                          const text = formData.content;
+                          const selected = text.substring(start, end) || 'Link text';
+                          const newText = text.substring(0, start) + `<a href="${url}">${selected}</a>` + text.substring(end);
+                          setFormData({ ...formData, content: newText });
+                        }
+                      }}
+                      title="Link"
+                    >
+                      <LinkIcon size={16} />
+                    </Button>
+                  </div>
+                  <Textarea
+                    id="content"
                     value={formData.content}
-                    onChange={(content) => setFormData({ ...formData, content })}
-                    modules={quillModules}
-                    formats={quillFormats}
-                    placeholder="Write your blog post content here..."
-                    className="h-96"
+                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    placeholder="Write your blog post content here. Use HTML tags for formatting..."
+                    className="min-h-[400px] font-mono text-sm rounded-t-none"
+                    required
                   />
                 </div>
               </CardContent>
