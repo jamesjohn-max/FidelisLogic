@@ -146,16 +146,21 @@ This email was sent from the Fidelis Logic website contact form.
         email: newsletterEmail
       });
 
-      // Send email notification via Web3Forms using FormData
-      const web3FormData = new FormData();
-      web3FormData.append('access_key', WEB3FORMS_KEY);
-      web3FormData.append('subject', `New Newsletter Subscription: ${newsletterEmail}`);
-      web3FormData.append('email', newsletterEmail);
-      web3FormData.append('message', `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`);
+      // Send email notification via Web3Forms using JSON
+      const web3Data = {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Newsletter Subscription: ${newsletterEmail}`,
+        email: newsletterEmail,
+        message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
+      };
 
       await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: web3FormData
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(web3Data)
       });
 
       if (response.data.status === "info") {
