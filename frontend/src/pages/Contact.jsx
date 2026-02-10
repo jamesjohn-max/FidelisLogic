@@ -66,7 +66,7 @@ export const Contact = () => {
         message: formData.message
       });
 
-      // Send email via Web3Forms (client-side)
+      // Send email via Web3Forms (client-side fetch)
       const emailMessage = `
 New Consultation Request Received
 
@@ -90,16 +90,33 @@ This email was sent from the Fidelis Logic website contact form.
 Reply to: ${formData.email}
       `.trim();
 
-      await axios.post("https://api.web3forms.com/submit", {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Consultation Request from ${formData.name}`,
-        from_name: formData.name,
-        email: "info@fidelislogic.com",
-        message: emailMessage,
-        replyto: formData.email
+      // Use native fetch for Web3Forms (required for free tier)
+      const web3Response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `New Consultation Request from ${formData.name}`,
+          from_name: formData.name,
+          name: formData.name,
+          email: formData.email,
+          message: emailMessage,
+          replyto: formData.email
+        })
       });
 
-      toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
+      const web3Data = await web3Response.json();
+      
+      if (!web3Response.ok || !web3Data.success) {
+        console.error("Web3Forms error:", web3Data);
+        // Still show success since data was saved to database
+        toast.success("Your request has been received. We'll contact you within 24 hours.");
+      } else {
+        toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
+      }
       
       // Reset form
       setFormData({
