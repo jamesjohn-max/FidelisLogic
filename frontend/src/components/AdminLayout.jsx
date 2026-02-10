@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { 
-  LayoutDashboard, 
-  FileText, 
-  LogOut, 
-  Menu,
-  X,
-  PlusCircle
-} from "lucide-react";
+import { FileText, LogOut, Menu, X, PlusCircle } from "lucide-react";
 
 export const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
