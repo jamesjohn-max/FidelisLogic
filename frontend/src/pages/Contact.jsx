@@ -66,7 +66,7 @@ export const Contact = () => {
         message: formData.message
       });
 
-      // Send email via Web3Forms (client-side using FormData)
+      // Send email via Web3Forms (client-side using JSON)
       const emailMessage = `
 New Consultation Request Received
 
@@ -87,32 +87,35 @@ ${formData.message}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 This email was sent from the Fidelis Logic website contact form.
-Reply to: ${formData.email}
       `.trim();
 
-      // Create FormData for Web3Forms submission
-      const web3FormData = new FormData();
-      web3FormData.append('access_key', WEB3FORMS_KEY);
-      web3FormData.append('subject', `New Consultation Request from ${formData.name}`);
-      web3FormData.append('from_name', formData.name);
-      web3FormData.append('name', formData.name);
-      web3FormData.append('email', formData.email);
-      web3FormData.append('message', emailMessage);
-      web3FormData.append('replyto', formData.email);
+      // Web3Forms API call using JSON
+      const web3Data = {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Consultation Request from ${formData.name}`,
+        from_name: formData.name,
+        name: formData.name,
+        email: formData.email,
+        message: emailMessage
+      };
 
       const web3Response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: web3FormData
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(web3Data)
       });
 
-      const web3Data = await web3Response.json();
+      const responseData = await web3Response.json();
       
-      if (!web3Response.ok || !web3Data.success) {
-        console.error("Web3Forms error:", web3Data);
+      if (responseData.success) {
+        toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
+      } else {
+        console.error("Web3Forms error:", responseData);
         // Still show success since data was saved to database
         toast.success("Your request has been received. We'll contact you within 24 hours.");
-      } else {
-        toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
       }
       
       // Reset form
