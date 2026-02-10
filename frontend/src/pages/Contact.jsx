@@ -109,17 +109,21 @@ export const Contact = () => {
         email: newsletterEmail
       });
 
-      // Send notification via Web3Forms
-      const web3FormData = new FormData();
-      web3FormData.append("access_key", "99d6039b-83fa-461a-9eac-331206d2f378");
-      web3FormData.append("subject", `New Newsletter Subscription: ${newsletterEmail}`);
-      web3FormData.append("email", newsletterEmail);
-      web3FormData.append("message", `New newsletter subscription from: ${newsletterEmail}`);
+      // Try to send notification via Web3Forms (may fail in preview environment)
+      try {
+        const web3FormData = new FormData();
+        web3FormData.append("access_key", "99d6039b-83fa-461a-9eac-331206d2f378");
+        web3FormData.append("subject", `New Newsletter Subscription: ${newsletterEmail}`);
+        web3FormData.append("email", newsletterEmail);
+        web3FormData.append("message", `New newsletter subscription from: ${newsletterEmail}`);
 
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: web3FormData
-      });
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: web3FormData
+        });
+      } catch (emailError) {
+        console.log("Email notification skipped (preview environment)");
+      }
 
       if (response.data.status === "info") {
         toast.info(response.data.message);
