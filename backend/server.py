@@ -1,13 +1,18 @@
-from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks
+from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks, Depends, UploadFile, File, Form
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from typing import List
+from typing import List, Optional
+from datetime import datetime
+import shutil
 
 from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate
+from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, LoginRequest
+from auth import verify_password, get_password_hash, create_access_token, decode_access_token
 from email_service import email_service
 
 ROOT_DIR = Path(__file__).parent
@@ -24,6 +29,9 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Security
+security = HTTPBearer()
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -32,7 +40,131 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# Add your routes to the router instead of directly to app
+# Authentication middleware
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    payload = decode_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    username = payload.get("sub")
+    if username is None:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    return username
+
+
+# Authentication endpoints
+@api_router.post("/auth/login", response_model=Token)
+async def login(login_data: LoginRequest):
+    """Admin login"""
+    user = await db.users.find_one({"username": login_data.username})
+    if not user or not verify_password(login_data.password, user["hashed_password"]):
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
+    
+    access_token = create_access_token(data={"sub": login_data.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@api_router.post("/auth/create-admin")
+async def create_admin(username: str, password: str):
+    """Create admin user (use once to set up)"""
+    # Check if any admin exists
+    existing_user = await db.users.find_one({"username": username})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User already exists")
+    
+    hashed_password = get_password_hash(password)
+    user = User(username=username, hashed_password=hashed_password)
+    await db.users.insert_one(user.dict())
+    
+    return {"message": "Admin user created successfully"}
+
+
+# Blog endpoints
+@api_router.get("/blog/posts", response_model=List[BlogPost])
+async def get_all_posts(published_only: bool = True):
+    """Get all blog posts"""
+    query = {"published": True} if published_only else {}
+    posts = await db.blog_posts.find(query).sort("date", -1).to_list(100)
+    return [BlogPost(**post) for post in posts]
+
+
+@api_router.get("/blog/posts/{slug}", response_model=BlogPost)
+async def get_post_by_slug(slug: str):
+    """Get a single blog post by slug"""
+    post = await db.blog_posts.find_one({"slug": slug})
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    # Increment views
+    await db.blog_posts.update_one(
+        {"slug": slug},
+        {"$inc": {"views": 1}}
+    )
+    
+    return BlogPost(**post)
+
+
+@api_router.post("/blog/posts", response_model=BlogPost)
+async def create_post(post_data: BlogPostCreate, current_user: str = Depends(get_current_user)):
+    """Create a new blog post (protected)"""
+    # Check if slug already exists
+    existing = await db.blog_posts.find_one({"slug": post_data.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="A post with this slug already exists")
+    
+    post = BlogPost(**post_data.dict())
+    await db.blog_posts.insert_one(post.dict())
+    logger.info(f"Blog post created: {post.title} by {current_user}")
+    
+    return post
+
+
+@api_router.put("/blog/posts/{post_id}", response_model=BlogPost)
+async def update_post(post_id: str, post_data: BlogPostUpdate, current_user: str = Depends(get_current_user)):
+    """Update a blog post (protected)"""
+    existing = await db.blog_posts.find_one({"id": post_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    update_data = {k: v for k, v in post_data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    
+    await db.blog_posts.update_one({"id": post_id}, {"$set": update_data})
+    
+    updated_post = await db.blog_posts.find_one({"id": post_id})
+    logger.info(f"Blog post updated: {post_id} by {current_user}")
+    
+    return BlogPost(**updated_post)
+
+
+@api_router.delete("/blog/posts/{post_id}")
+async def delete_post(post_id: str, current_user: str = Depends(get_current_user)):
+    """Delete a blog post (protected)"""
+    result = await db.blog_posts.delete_one({"id": post_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    logger.info(f"Blog post deleted: {post_id} by {current_user}")
+    return {"message": "Blog post deleted successfully"}
+
+
+@api_router.post("/blog/upload-image")
+async def upload_image(file: UploadFile = File(...), current_user: str = Depends(get_current_user)):
+    """Upload an image for blog post"""
+    # Create uploads directory if it doesn't exist
+    upload_dir = Path("/app/frontend/public/blog-images")
+    upload_dir.mkdir(exist_ok=True)
+    
+    # Save file
+    file_path = upload_dir / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
+    with file_path.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Return public URL
+    return {"url": f"/blog-images/{file_path.name}"}
+
+
+# Original endpoints
 @api_router.get("/")
 async def root():
     return {"message": "Fidelis Logic API"}

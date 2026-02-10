@@ -2,7 +2,7 @@
 
 export const stats = [
   {
-    number: "150+",
+    number: "100+",
     label: "Projects Delivered"
   },
   {
@@ -10,14 +10,14 @@ export const stats = [
     label: "Client Satisfaction"
   },
   {
-    number: "10+",
+    number: "15+",
     label: "Years Experience"
   }
 ];
 
 export const heroData = {
   title: "Simplifying Modern Workplace Technology Decisions",
-  subtitle: "We bridge the gap between business needs and technology solutions—helping UAE organizations choose, design, and implement the right workplace technology with confidence.",
+  subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence.",
   ctaPrimary: "Book a Free Consultation",
   ctaSecondary: "Explore Solutions",
   image: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d"
@@ -27,7 +27,7 @@ export const segments = [
   {
     id: "meeting-rooms",
     title: "Meeting Rooms & AV Systems",
-    description: "Design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD meeting spaces with professional audio-visual systems.",
+    description: "Design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD Meeting spaces with professional audio-visual systems.",
     icon: "Presentation",
     image: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
     link: "/solutions/meeting-rooms"
@@ -35,7 +35,7 @@ export const segments = [
   {
     id: "headsets",
     title: "Enterprise Headsets & Collaboration Devices",
-    description: "Standardize communication devices across your organization—from call centers to executive suites.",
+    description: "Standardize communication devices across your organization - from Call Centers to Executive suites.",
     icon: "Headphones",
     image: "https://images.unsplash.com/photo-1724260793422-7754e5d06fbe",
     link: "/solutions/headsets"
@@ -43,14 +43,14 @@ export const segments = [
   {
     id: "workspace-experience",
     title: "Room Booking & Workspace Experience",
-    description: "Hot desking, room booking panels, visitor management, and workplace analytics platforms.",
+    description: "Hot desking, Room booking panels, Visitor management, and Workplace analytics platforms.",
     icon: "Calendar",
     image: "https://images.unsplash.com/photo-1718220216044-006f43e3a9b1",
     link: "/solutions/workspace-experience"
   },
   {
     id: "business-apps",
-    title: "Business Applications for SMBs",
+    title: "Business Applications for Small and Medium Businesses",
     description: "ERP, HRMS, and CRM implementation with integration, training, and ongoing support.",
     icon: "BarChart3",
     image: "https://images.unsplash.com/photo-1573497019414-e44d0759d00e",
@@ -84,22 +84,22 @@ export const howWeHelp = [
 export const whyChooseUs = [
   {
     title: "Vendor-Neutral Guidance",
-    description: "We recommend solutions based on your needs, not vendor partnerships. Our loyalty is to your outcome.",
+    description: "We recommend solutions based on your needs, not Vendor partnerships. Our loyalty is to your outcome.",
     icon: "Shield"
   },
   {
     title: "UAE Delivery Experience",
-    description: "Deep understanding of regional procurement, compliance, vendor ecosystems, and support infrastructure.",
+    description: "Deep understanding of regional Procurement, Compliance, Vendor ecosystems, and Support infrastructure.",
     icon: "MapPin"
   },
   {
     title: "Lifecycle Support",
-    description: "From assessment through implementation to ongoing support—we stay with you beyond go-live.",
+    description: "From assessment through implementation to ongoing support - we stay with you beyond go-live.",
     icon: "RefreshCw"
   },
   {
     title: "Measurable Outcomes",
-    description: "Clear KPIs, structured project delivery, and documentation that ensures your investment delivers results.",
+    description: "Clear KPIs, Structured Project Delivery, and documentation that ensures your investment delivers results.",
     icon: "Target"
   }
 ];

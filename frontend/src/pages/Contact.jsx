@@ -20,7 +20,7 @@ import { contactInfo, formTopics } from "../data/mock";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const WEB3FORMS_KEY = "99d6039b-83fa-461a-9eac-331206d2f378";
+const WEB3FORMS_KEY = process.env.REACT_APP_WEB3FORMS_KEY;
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -289,9 +289,10 @@ Reply to: ${formData.email}
                   </form>
                 </CardContent>
               </Card>
-
+            </div>
+            <div className="space-y-8">
               {/* MS Bookings Alternative */}
-              <Card className="border-0 shadow-lg mt-8">
+              {/* <Card className="border-0 shadow-lg mt-8">
                 <CardContent className="p-8">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Or Schedule Directly
@@ -300,17 +301,35 @@ Reply to: ${formData.email}
                     Use Microsoft Bookings to schedule a time that works for you.
                   </p>
                   <div className="bg-gray-50 rounded-lg p-8 text-center border-2 border-dashed border-gray-300">
-                    <p className="text-gray-500 mb-4">Microsoft Bookings Widget</p>
+                     <p className="text-gray-500 mb-4">Microsoft Bookings Widget</p> 
                     <p className="text-sm text-gray-400">
-                      [Embed your MS Bookings iframe here]
+                      <iframe src='https://outlook.office.com/book/WebBooking@fidelislogic.com/?ismsaljsauthenabled' width='100%' height='100%' scrolling='yes'> </iframe>
                     </p>
                   </div>
                 </CardContent>
-              </Card>
-            </div>
+              </Card> */}
+            {/*
+              <Card className="border-0 shadow-lg">
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Other Options
+                  </h3>
+                  <div className="space-y-3">
+                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
+                      Request Site Survey
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
+                      Get Budgetary Quote
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
+                      Download Capability Deck
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card> */}
 
             {/* Contact Information */}
-            <div className="space-y-8">
+            
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">
                   Get in Touch
@@ -346,15 +365,7 @@ Reply to: ${formData.email}
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin className="text-blue-600" size={24} />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
-                      <p className="text-gray-600">{contactInfo.location}</p>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
 
@@ -364,19 +375,19 @@ Reply to: ${formData.email}
                 </h3>
                 <div className="flex space-x-4">
                   <a
-                    href={contactInfo.linkedin}
+                    href={'https://www.linkedin.com/company/fidelis-logic/'} target="_blank"
                     className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
                   >
                     <Linkedin size={24} />
                   </a>
                   <a
-                    href={contactInfo.youtube}
+                    href={'https://www.youtube.com/@fidelislogic'} target ="_blank"
                     className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
                   >
                     <Youtube size={24} />
                   </a>
                   <a
-                    href={contactInfo.instagram}
+                    href={'https://www.instagram.com/fidelislogic/'} target ="_blank"
                     className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
                   >
                     <Instagram size={24} />
@@ -384,7 +395,7 @@ Reply to: ${formData.email}
                 </div>
               </div>
 
-              <Card className="border-0 shadow-lg bg-blue-50">
+             {/* <Card className="border-0 shadow-lg bg-blue-50">
                 <CardContent className="p-8">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Business Hours
@@ -397,26 +408,9 @@ Reply to: ${formData.email}
                     UAE Standard Time (GMT+4)
                   </p>
                 </CardContent>
-              </Card>
+              </Card> */}
 
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Other Options
-                  </h3>
-                  <div className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
-                      Request Site Survey
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
-                      Get Budgetary Quote
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
-                      Download Capability Deck
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              
             </div>
           </div>
         </div>

@@ -44,22 +44,22 @@ export const Footer = () => {
           <div>
             <div className="flex items-center">
               <img
-                src="/Logo_White_Large V2.png"
+                src="/Logo_White_Large.png"
                 alt="Fidelis Logic"
-                className="h-6 w-55" />
+                className="h-7 w-55" />
 
             </div>
             <p className="!font-extralight !text-xs !text-left !mt-[10px] !mb-[24px] text-gray-400">Simplifying Modern Workplace Technology decisions for organizations.
 
             </p>
             <div className="flex space-x-4">
-              <a href={contactInfo.linkedin} className="text-gray-400 hover:text-blue-400 transition-colors">
+              <a href={'https://www.linkedin.com/company/fidelis-logic/'} target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
                 <Linkedin size={20} />
               </a>
-              <a href={contactInfo.youtube} className="text-gray-400 hover:text-blue-400 transition-colors">
+              <a href={'https://www.youtube.com/@fidelislogic'} target ="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
                 <Youtube size={20} />
               </a>
-              <a href={contactInfo.instagram} className="text-gray-400 hover:text-blue-400 transition-colors">
+              <a href={'https://www.instagram.com/fidelislogic/'} target ="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
                 <Instagram size={20} />
               </a>
             </div>

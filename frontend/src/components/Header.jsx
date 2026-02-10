@@ -23,9 +23,9 @@ export const Header = () => {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center">
             <img 
-              src="/Logo_Color_Large V2.png" 
+              src="/Logo_Color_Large.png" 
               alt="Fidelis Logic" 
-              className="h-7 w-auto"
+              className="h-10 w-auto"
             />
           </Link>
 
@@ -34,9 +34,9 @@ export const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-7 py-2 text-sm font-medium rounded-lg transition-colors ${
                   isActive(item.href)
-                    ? "text-blue-600 bg-blue-50"
+                    ? "text-blue-700 bg-blue-50"
                     : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                 }`}
               >
