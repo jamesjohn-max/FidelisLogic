@@ -16,15 +16,17 @@ import {
 } from "../components/ui/select";
 import { toast } from "sonner";
 import axios from "axios";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import { 
   Save, 
   ArrowLeft, 
   Image as ImageIcon, 
-  Upload,
   Eye,
-  Loader2
+  Loader2,
+  Bold,
+  Italic,
+  List,
+  Link as LinkIcon,
+  Heading
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -36,28 +38,6 @@ const categories = [
   "Industry Insights",
   "Case Studies",
   "Product Reviews"
-];
-
-const quillModules = {
-  toolbar: [
-    [{ 'header': [1, 2, 3, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    [{ 'indent': '-1'}, { 'indent': '+1' }],
-    ['link', 'image', 'video'],
-    ['blockquote', 'code-block'],
-    [{ 'color': [] }, { 'background': [] }],
-    ['clean']
-  ],
-};
-
-const quillFormats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike',
-  'list', 'bullet', 'indent',
-  'link', 'image', 'video',
-  'blockquote', 'code-block',
-  'color', 'background'
 ];
 
 export const BlogEditor = () => {
