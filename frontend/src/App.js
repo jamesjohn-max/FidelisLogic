@@ -13,6 +13,9 @@ import { About } from "./pages/About";
 import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
 import { Contact } from "./pages/Contact";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { BlogEditor } from "./pages/BlogEditor";
 import { Toaster } from "./components/ui/sonner";
 
 // Suppress ResizeObserver errors (common React/Radix UI issue, doesn't affect functionality)
@@ -31,25 +34,39 @@ const suppressResizeObserverError = () => {
 
 suppressResizeObserverError();
 
+// Layout wrapper for public pages
+const PublicLayout = ({ children }) => (
+  <>
+    <Header />
+    {children}
+    <Footer />
+  </>
+);
+
 function App() {
   return (
     <HelmetProvider>
       <div className="App">
         <BrowserRouter>
-          <Header />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/solutions/meeting-rooms" element={<MeetingRooms />} />
-            <Route path="/solutions/headsets" element={<Headsets />} />
-            <Route path="/solutions/workspace-experience" element={<WorkspaceExperience />} />
-            <Route path="/solutions/business-apps" element={<BusinessApps />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/contact" element={<Contact />} />
+            {/* Public Routes */}
+            <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
+            <Route path="/solutions" element={<PublicLayout><Solutions /></PublicLayout>} />
+            <Route path="/solutions/meeting-rooms" element={<PublicLayout><MeetingRooms /></PublicLayout>} />
+            <Route path="/solutions/headsets" element={<PublicLayout><Headsets /></PublicLayout>} />
+            <Route path="/solutions/workspace-experience" element={<PublicLayout><WorkspaceExperience /></PublicLayout>} />
+            <Route path="/solutions/business-apps" element={<PublicLayout><BusinessApps /></PublicLayout>} />
+            <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+            <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
+            <Route path="/blog/:slug" element={<PublicLayout><BlogPost /></PublicLayout>} />
+            <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+            
+            {/* Admin Routes (no header/footer) */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/blog" element={<AdminDashboard />} />
+            <Route path="/admin/blog/new" element={<BlogEditor />} />
+            <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
           </Routes>
-          <Footer />
           <Toaster />
         </BrowserRouter>
       </div>
