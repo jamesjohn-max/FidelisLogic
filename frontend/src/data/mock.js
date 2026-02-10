@@ -20,7 +20,7 @@ export const heroData = {
   subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence.",
   ctaPrimary: "Book a Free Consultation",
   ctaSecondary: "Explore Solutions",
-  image: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d"
+  image: "/HeroImage.png"
 };
 
 export const segments = [
