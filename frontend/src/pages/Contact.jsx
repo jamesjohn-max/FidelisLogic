@@ -20,7 +20,6 @@ import { contactInfo, formTopics } from "../data/mock";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const WEB3FORMS_KEY = process.env.REACT_APP_WEB3FORMS_KEY;
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
@@ -50,8 +49,8 @@ export const Contact = () => {
     setFormData((prev) => ({ ...prev, topic: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setIsSubmitting(true);
 
     try {
@@ -66,68 +65,35 @@ export const Contact = () => {
         message: formData.message
       });
 
-      // Send email via Web3Forms (client-side using JSON)
-      const emailMessage = `
-New Consultation Request Received
+      // Send email via Web3Forms using official pattern
+      const web3FormData = new FormData(event.target);
+      web3FormData.append("access_key", "99d6039b-83fa-461a-9eac-331206d2f378");
+      web3FormData.append("subject", `New Consultation Request from ${formData.name}`);
 
-Contact Details:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Name: ${formData.name}
-${formData.company ? `Company: ${formData.company}` : ''}
-Email: ${formData.email}
-${formData.phone ? `Phone: ${formData.phone}` : ''}
-Topic: ${formData.topic}
-${formData.preferred_date ? `Preferred Date/Time: ${formData.preferred_date}` : ''}
-
-Message:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${formData.message}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-This email was sent from the Fidelis Logic website contact form.
-      `.trim();
-
-      // Web3Forms API call using JSON
-      const web3Data = {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Consultation Request from ${formData.name}`,
-        from_name: formData.name,
-        name: formData.name,
-        email: formData.email,
-        message: emailMessage
-      };
-
-      const web3Response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(web3Data)
+        body: web3FormData
       });
 
-      const responseData = await web3Response.json();
+      const data = await response.json();
       
-      if (responseData.success) {
+      if (data.success) {
         toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
+        event.target.reset();
+        setFormData({
+          name: "",
+          company: "",
+          email: "",
+          phone: "",
+          topic: "",
+          preferred_date: "",
+          message: ""
+        });
       } else {
-        console.error("Web3Forms error:", responseData);
+        console.error("Web3Forms error:", data);
         // Still show success since data was saved to database
         toast.success("Your request has been received. We'll contact you within 24 hours.");
       }
-      
-      // Reset form
-      setFormData({
-        name: "",
-        company: "",
-        email: "",
-        phone: "",
-        topic: "",
-        preferred_date: "",
-        message: ""
-      });
     } catch (error) {
       console.error("Form submission error:", error);
       toast.error("Failed to send request. Please try again or email us directly at info@fidelislogic.com");
@@ -136,8 +102,8 @@ This email was sent from the Fidelis Logic website contact form.
     }
   };
 
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault();
+  const handleNewsletterSubmit = async (event) => {
+    event.preventDefault();
     setIsSubscribing(true);
 
     try {
@@ -146,21 +112,16 @@ This email was sent from the Fidelis Logic website contact form.
         email: newsletterEmail
       });
 
-      // Send email notification via Web3Forms using JSON
-      const web3Data = {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Newsletter Subscription: ${newsletterEmail}`,
-        email: newsletterEmail,
-        message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
-      };
+      // Send notification via Web3Forms
+      const web3FormData = new FormData();
+      web3FormData.append("access_key", "99d6039b-83fa-461a-9eac-331206d2f378");
+      web3FormData.append("subject", `New Newsletter Subscription: ${newsletterEmail}`);
+      web3FormData.append("email", newsletterEmail);
+      web3FormData.append("message", `New newsletter subscription from: ${newsletterEmail}`);
 
       await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(web3Data)
+        body: web3FormData
       });
 
       if (response.data.status === "info") {
