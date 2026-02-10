@@ -66,7 +66,7 @@ export const Contact = () => {
         message: formData.message
       });
 
-      // Send email via Web3Forms (client-side fetch)
+      // Send email via Web3Forms (client-side using FormData)
       const emailMessage = `
 New Consultation Request Received
 
@@ -90,22 +90,19 @@ This email was sent from the Fidelis Logic website contact form.
 Reply to: ${formData.email}
       `.trim();
 
-      // Use native fetch for Web3Forms (required for free tier)
+      // Create FormData for Web3Forms submission
+      const web3FormData = new FormData();
+      web3FormData.append('access_key', WEB3FORMS_KEY);
+      web3FormData.append('subject', `New Consultation Request from ${formData.name}`);
+      web3FormData.append('from_name', formData.name);
+      web3FormData.append('name', formData.name);
+      web3FormData.append('email', formData.email);
+      web3FormData.append('message', emailMessage);
+      web3FormData.append('replyto', formData.email);
+
       const web3Response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `New Consultation Request from ${formData.name}`,
-          from_name: formData.name,
-          name: formData.name,
-          email: formData.email,
-          message: emailMessage,
-          replyto: formData.email
-        })
+        body: web3FormData
       });
 
       const web3Data = await web3Response.json();
