@@ -576,25 +576,6 @@ export const BlogEditor = () => {
           </div>
         </div>
       </form>
-
-      {/* Custom styles for Quill editor */}
-      <style>{`
-        .ql-container {
-          min-height: 350px;
-          font-size: 16px;
-        }
-        .ql-editor {
-          min-height: 350px;
-        }
-        .ql-toolbar {
-          border-top-left-radius: 0.5rem;
-          border-top-right-radius: 0.5rem;
-        }
-        .ql-container {
-          border-bottom-left-radius: 0.5rem;
-          border-bottom-right-radius: 0.5rem;
-        }
-      `}</style>
     </AdminLayout>
   );
 };
