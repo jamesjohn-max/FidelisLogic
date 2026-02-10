@@ -143,19 +143,16 @@ Reply to: ${formData.email}
         email: newsletterEmail
       });
 
-      // Send email notification via Web3Forms using fetch
+      // Send email notification via Web3Forms using FormData
+      const web3FormData = new FormData();
+      web3FormData.append('access_key', WEB3FORMS_KEY);
+      web3FormData.append('subject', `New Newsletter Subscription: ${newsletterEmail}`);
+      web3FormData.append('email', newsletterEmail);
+      web3FormData.append('message', `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`);
+
       await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `New Newsletter Subscription: ${newsletterEmail}`,
-          email: newsletterEmail,
-          message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
-        })
+        body: web3FormData
       });
 
       if (response.data.status === "info") {
