@@ -94,36 +94,51 @@ export const Blog = () => {
       {/* Blog Posts Grid */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPosts.map((post) => (
-              <Link key={post.id} to={`/blog/${post.slug}`}>
-                <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0">
-                  <CardContent className="p-0">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-48 object-cover rounded-t-lg"
-                    />
-                    <div className="p-6">
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-                          {post.category}
-                        </span>
-                        <span className="text-xs text-gray-500">{post.date}</span>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="animate-spin text-blue-600" size={32} />
+            </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No posts found in this category.</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPosts.map((post) => (
+                <Link key={post.id} to={`/blog/${post.slug}`}>
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0">
+                    <CardContent className="p-0">
+                      <img
+                        src={post.image || post.featured_image || "https://images.unsplash.com/photo-1497366216548-37526070297c"}
+                        alt={post.title}
+                        className="w-full h-48 object-cover rounded-t-lg"
+                      />
+                      <div className="p-6">
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                            {post.category}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {typeof post.date === 'string' && post.date.includes('-') 
+                              ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                              : post.date
+                            }
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-3 leading-snug">
+                          {post.title}
+                        </h3>
+                        <p className="text-gray-600 leading-relaxed mb-4">{post.excerpt}</p>
+                        <div className="flex items-center text-blue-600 font-medium text-sm">
+                          Read More <ArrowRight className="ml-2" size={16} />
+                        </div>
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-3 leading-snug">
-                        {post.title}
-                      </h3>
-                      <p className="text-gray-600 leading-relaxed mb-4">{post.excerpt}</p>
-                      <div className="flex items-center text-blue-600 font-medium text-sm">
-                        Read More <ArrowRight className="ml-2" size={16} />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
