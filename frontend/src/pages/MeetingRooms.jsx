@@ -167,9 +167,9 @@ export const MeetingRooms = () => {
                 <ArrowRight className="ml-2" size={20} />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
+            {/*<Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
               Request Site Survey
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>
