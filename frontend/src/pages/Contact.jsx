@@ -31,9 +31,7 @@ export const Contact = () => {
     preferred_date: "",
     message: ""
   });
-  const [newsletterEmail, setNewsletterEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubscribing, setIsSubscribing] = useState(false);
 
   const breadcrumbs = [
     { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
@@ -96,47 +94,6 @@ export const Contact = () => {
       toast.error("Failed to send request. Please try again or email us directly at info@fidelislogic.com");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleNewsletterSubmit = async (event) => {
-    event.preventDefault();
-    setIsSubscribing(true);
-
-    try {
-      // Save to database
-      const response = await axios.post(`${BACKEND_URL}/api/newsletter`, {
-        email: newsletterEmail
-      });
-
-      // Try to send notification via Web3Forms (may fail in preview environment)
-      try {
-        const web3FormData = new FormData();
-        web3FormData.append("access_key", "99d6039b-83fa-461a-9eac-331206d2f378");
-        web3FormData.append("subject", `New Newsletter Subscription: ${newsletterEmail}`);
-        web3FormData.append("email", newsletterEmail);
-        web3FormData.append("message", `New newsletter subscription from: ${newsletterEmail}`);
-
-        await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          body: web3FormData
-        });
-      } catch (emailError) {
-        console.log("Email notification skipped (preview environment)");
-      }
-
-      if (response.data.status === "info") {
-        toast.info(response.data.message);
-      } else {
-        toast.success(response.data.message || "Successfully subscribed!");
-      }
-      
-      setNewsletterEmail("");
-    } catch (error) {
-      console.error("Newsletter subscription error:", error);
-      toast.error("Failed to subscribe. Please try again.");
-    } finally {
-      setIsSubscribing(false);
     }
   };
 
