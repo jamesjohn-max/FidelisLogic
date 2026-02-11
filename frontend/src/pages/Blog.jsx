@@ -141,28 +141,6 @@ export const Blog = () => {
           )}
         </div>
       </section>
-
-      {/* Newsletter CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Stay Updated
-          </h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Subscribe to our newsletter for insights on modern workplace technology.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600"
-            />
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              Subscribe
-            </Button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
