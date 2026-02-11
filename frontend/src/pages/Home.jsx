@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star, Loader2 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
@@ -17,10 +18,35 @@ import {
   roomTypes,
   partners,
   testimonials,
-  blogPosts
+  blogPosts as staticBlogPosts
 } from "../data/mock";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const Home = () => {
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
+        const apiPosts = response.data.map(post => ({
+          ...post,
+          image: post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c"
+        }));
+        setBlogPosts(apiPosts.length > 0 ? apiPosts : staticBlogPosts);
+      } catch (error) {
+        console.error("Error fetching blog posts:", error);
+        setBlogPosts(staticBlogPosts);
+      } finally {
+        setIsLoadingPosts(false);
+      }
+    };
+    fetchPosts();
+  }, []);
+
   const breadcrumbs = [
     { name: "Home", url: typeof window !== "undefined" ? window.location.origin : "" }
   ];
