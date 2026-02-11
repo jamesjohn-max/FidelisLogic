@@ -22,7 +22,7 @@ export const About = () => {
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            About Modern Workplace Solutions
+            About Us
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
             We reduce complexity in modern workplace technology decisions—helping UAE organizations choose, implement, and optimize the right solutions with confidence.
@@ -42,7 +42,7 @@ export const About = () => {
               />
             </div>
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900">Our Mission</h2>
+              <h2 className="text-4xl font-bold text-gray-900 text-center">Our Mission</h2>
               <p className="text-lg text-gray-600 leading-relaxed">
                 The modern workplace technology market is overwhelming. Vendors promote overlapping products with confusing feature sets, leaving organizations unsure what to buy and how to integrate it.
               </p>
@@ -145,14 +145,14 @@ export const About = () => {
             <Card className="border-0 shadow-lg">
               <CardContent className="p-8 text-center">
                 <h3 className="text-lg font-semibold text-gray-900">AV & Devices</h3>
-                <p className="text-gray-600 mt-2">Poly, Logitech, Jabra, Crestron</p>
+                <p className="text-gray-600 mt-2">Poly, Logitech, Neat, Yealink, Jabra, Lenovo, Crestron etc.</p>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
-
-      {/* Team Section */}
+    {/* Hiding it for now  
+       Team Section 
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -162,7 +162,7 @@ export const About = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2].map((i) => (
               <Card key={i} className="border-0 shadow-lg">
                 <CardContent className="p-8 text-center">
                   <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-4"></div>
@@ -176,7 +176,7 @@ export const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

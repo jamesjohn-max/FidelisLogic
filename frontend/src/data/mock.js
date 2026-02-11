@@ -37,7 +37,7 @@ export const segments = [
     title: "Enterprise Headsets & Collaboration Devices",
     description: "Standardize communication devices across your organization - from Call Centers to Executive suites.",
     icon: "Headphones",
-    image: "https://images.unsplash.com/photo-1724260793422-7754e5d06fbe",
+    image: "/EnterpriseHeadsets.png",
     link: "/solutions/headsets"
   },
   {
@@ -45,7 +45,7 @@ export const segments = [
     title: "Room Booking & Workspace Experience",
     description: "Hot desking, Room booking panels, Visitor management, and Workplace analytics platforms.",
     icon: "Calendar",
-    image: "https://images.unsplash.com/photo-1718220216044-006f43e3a9b1",
+    image: "/bookingsystem.png",
     link: "/solutions/workspace-experience"
   },
   {
@@ -53,7 +53,7 @@ export const segments = [
     title: "Business Applications for Small and Medium Businesses",
     description: "ERP, HRMS, and CRM implementation with integration, training, and ongoing support.",
     icon: "BarChart3",
-    image: "https://images.unsplash.com/photo-1573497019414-e44d0759d00e",
+    image: "/businessapps.png",
     link: "/solutions/business-apps"
   }
 ];
@@ -396,11 +396,7 @@ export const workspaceExperienceDetails = {
   ],
   platforms: [
     "Flowscape",
-    "ROOMZ",
-    "Joan",
-    "Condeco",
-    "Envoy",
-    "Robin"
+    "ROOMZ"
   ]
 };
 
