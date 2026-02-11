@@ -1,15 +1,63 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, blogPostSchema } from "../components/StructuredData";
-import { blogPosts } from "../data/mock";
-import { ArrowLeft, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, Tag, Loader2 } from "lucide-react";
+import axios from "axios";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const BlogPost = () => {
   const { slug } = useParams();
-  const post = blogPosts.find((p) => p.slug === slug);
+  const [post, setPost] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  if (!post) {
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        // Fetch all posts and find the one matching the slug
+        const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
+        const allPosts = response.data;
+        const foundPost = allPosts.find((p) => p.slug === slug);
+        
+        if (foundPost) {
+          setPost(foundPost);
+          // Get related posts (same category, different post)
+          const related = allPosts
+            .filter((p) => p.category === foundPost.category && p.id !== foundPost.id)
+            .slice(0, 3);
+          setRelatedPosts(related);
+        } else {
+          setError(true);
+        }
+      } catch (err) {
+        console.error("Error fetching post:", err);
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [slug]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-32 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <Loader2 className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
+          <p className="text-gray-600">Loading article...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not found state
+  if (error || !post) {
     return (
       <div className="min-h-screen pt-32 px-4">
         <div className="max-w-4xl mx-auto text-center">
@@ -30,23 +78,40 @@ export const BlogPost = () => {
     { name: post.title, url: typeof window !== "undefined" ? window.location.href : "" }
   ];
 
-  const relatedPosts = blogPosts
-    .filter((p) => p.category === post.category && p.id !== post.id)
-    .slice(0, 3);
+  // Format date
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Get the featured image
+  const featuredImage = post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c";
 
   return (
     <div className="min-h-screen">
       <SEO
-        title={post.title}
-        description={post.excerpt}
-        keywords={`${post.category}, workplace technology, IT consulting`}
+        title={post.seo_title || post.title}
+        description={post.seo_description || post.excerpt}
+        keywords={post.seo_keywords || `${post.category}, workplace technology, IT consulting`}
         ogType="article"
-        ogImage={post.image}
+        ogImage={featuredImage}
         article={true}
         publishedDate={post.date}
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
-      <StructuredData data={blogPostSchema(post)} />
+      <StructuredData data={blogPostSchema({
+        ...post,
+        image: featuredImage
+      })} />
+
       {/* Hero Section */}
       <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -63,13 +128,16 @@ export const BlogPost = () => {
             </span>
             <span className="text-sm text-gray-500 flex items-center">
               <Calendar className="mr-2" size={16} />
-              {post.date}
+              {formatDate(post.date)}
             </span>
           </div>
           <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
             {post.title}
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">{post.excerpt}</p>
+          {post.author && (
+            <p className="text-sm text-gray-500 mt-4">By {post.author}</p>
+          )}
         </div>
       </section>
 
@@ -77,7 +145,7 @@ export const BlogPost = () => {
       <section className="px-4 sm:px-6 lg:px-8 mb-12">
         <div className="max-w-5xl mx-auto">
           <img
-            src={post.image}
+            src={featuredImage}
             alt={post.title}
             className="w-full h-96 object-cover rounded-2xl shadow-2xl"
           />
@@ -87,27 +155,11 @@ export const BlogPost = () => {
       {/* Article Content */}
       <section className="px-4 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-3xl mx-auto">
-          <div className="prose prose-lg max-w-none">
-            <p className="text-gray-700 leading-relaxed mb-6">
-              This is a placeholder article. In a production environment, this would contain the full article content with proper formatting, images, and structured sections.
-            </p>
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Introduction</h2>
-            <p className="text-gray-700 leading-relaxed mb-6">
-              Modern workplace technology decisions are complex. Organizations face an overwhelming number of vendors, products, and implementation approaches. This article explores key considerations and best practices.
-            </p>
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Key Considerations</h2>
-            <p className="text-gray-700 leading-relaxed mb-6">
-              When evaluating workplace technology solutions, several factors should guide your decision-making process. These include functional requirements, integration complexity, total cost of ownership, and vendor support in your region.
-            </p>
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Implementation Best Practices</h2>
-            <p className="text-gray-700 leading-relaxed mb-6">
-              Successful implementations require structured project management, clear stakeholder communication, comprehensive user training, and post-deployment support. Vendor-neutral consulting helps navigate these complexities.
-            </p>
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusion</h2>
-            <p className="text-gray-700 leading-relaxed mb-6">
-              The right technology partner helps you cut through market noise and deliver outcomes aligned with your business objectives. Contact us to discuss your specific requirements.
-            </p>
-          </div>
+          {/* Render HTML content */}
+          <div 
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
 
           {/* CTA Box */}
           <div className="bg-blue-50 rounded-2xl p-8 mt-12">
@@ -138,7 +190,7 @@ export const BlogPost = () => {
                 <Link key={relatedPost.id} to={`/blog/${relatedPost.slug}`}>
                   <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <img
-                      src={relatedPost.image}
+                      src={relatedPost.featured_image || relatedPost.image || "https://images.unsplash.com/photo-1497366216548-37526070297c"}
                       alt={relatedPost.title}
                       className="w-full h-48 object-cover"
                     />
