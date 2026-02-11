@@ -113,7 +113,7 @@ export const Contact = () => {
             Let's Talk About Your Technology Needs
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
-            Schedule a free consultation to discuss how we can help simplify your modern workplace technology decisions.
+            Schedule a free consultation to discuss how we can help simplify your modern workplace technology decisions. 
           </p>
         </div>
       </section>
@@ -127,7 +127,7 @@ export const Contact = () => {
               <Card className="border-0 shadow-2xl">
                 <CardContent className="p-8">
                   <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                    Book a Free Consultation
+                    Book your Free Consultation
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Hidden input for topic to be captured by FormData */}

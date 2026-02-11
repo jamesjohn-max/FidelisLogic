@@ -48,7 +48,7 @@ export const AdminLayout = ({ children }) => {
           {/* Logo */}
           <div className="p-6 border-b border-gray-200">
             <Link to="/" className="flex items-center gap-2">
-              <img src="/logo-color.png" alt="Fidelis Logic" className="h-8" />
+              <img src="/Logo_Color_Large.png" alt="Fidelis Logic" className="h-8" />
             </Link>
             <p className="text-xs text-gray-500 mt-2">Admin Panel</p>
           </div>
