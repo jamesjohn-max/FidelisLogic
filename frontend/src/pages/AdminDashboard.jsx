@@ -219,6 +219,7 @@ export const AdminDashboard = () => {
                       <Button
                         variant="outline"
                         size="sm"
+                        data-testid={`view-post-${post.id}`}
                         onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
                       >
                         <Eye size={16} />
@@ -226,6 +227,7 @@ export const AdminDashboard = () => {
                       <Button
                         variant="outline"
                         size="sm"
+                        data-testid={`edit-post-${post.id}`}
                         onClick={() => navigate(`/admin/blog/edit/${post.id}`)}
                       >
                         <Edit size={16} />
@@ -235,6 +237,7 @@ export const AdminDashboard = () => {
                           <Button
                             variant="destructive"
                             size="sm"
+                            data-testid={`confirm-delete-${post.id}`}
                             onClick={() => handleDelete(post.id)}
                           >
                             Confirm
@@ -242,6 +245,7 @@ export const AdminDashboard = () => {
                           <Button
                             variant="outline"
                             size="sm"
+                            data-testid={`cancel-delete-${post.id}`}
                             onClick={() => setDeleteConfirm(null)}
                           >
                             Cancel
