@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Star, Loader2 } from "lucide-react";
+import { ArrowRight, Star, Loader2, HelpCircle } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../components/ui/accordion";
 import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
 import { FAQSchema, consultingFAQs } from "../components/FAQSchema";
