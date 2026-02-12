@@ -150,9 +150,32 @@ async def delete_post(post_id: str, current_user: str = Depends(get_current_user
     return {"message": "Blog post deleted successfully"}
 
 
+# Maximum file size: 5MB
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
+ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+
 @api_router.post("/blog/upload-image")
 async def upload_image(file: UploadFile = File(...), current_user: str = Depends(get_current_user)):
-    """Upload an image for blog post"""
+    """Upload an image for blog post (max 5MB, jpg/png/gif/webp only)"""
+    
+    # Check file extension
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    # Check file size by reading content
+    contents = await file.read()
+    file_size = len(contents)
+    
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size is 5MB. Your file: {file_size / (1024*1024):.2f}MB"
+        )
+    
     # Create uploads directory if it doesn't exist
     upload_dir = Path("/app/frontend/public/blog-images")
     upload_dir.mkdir(exist_ok=True)
@@ -160,7 +183,7 @@ async def upload_image(file: UploadFile = File(...), current_user: str = Depends
     # Save file
     file_path = upload_dir / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
     with file_path.open("wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        buffer.write(contents)
     
     # Return public URL
     return {"url": f"/blog-images/{file_path.name}"}
