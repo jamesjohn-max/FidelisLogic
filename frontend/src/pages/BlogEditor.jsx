@@ -430,7 +430,7 @@ export const BlogEditor = () => {
                   <Input
                     id="author"
                     value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
                     className="mt-2"
                   />
                 </div>
