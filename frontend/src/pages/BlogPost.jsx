@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
-import { StructuredData, breadcrumbSchema, blogPostSchema } from "../components/StructuredData";
-import { ArrowLeft, Calendar, Tag, Loader2 } from "lucide-react";
+import { StructuredData, breadcrumbSchema, blogPostSchema, articleSchema } from "../components/StructuredData";
+import { ArrowLeft, Calendar, Tag, User, Clock, Loader2 } from "lucide-react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -18,14 +18,12 @@ export const BlogPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        // Fetch all posts and find the one matching the slug
         const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
         const allPosts = response.data;
         const foundPost = allPosts.find((p) => p.slug === slug);
         
         if (foundPost) {
           setPost(foundPost);
-          // Get related posts (same category, different post)
           const related = allPosts
             .filter((p) => p.category === foundPost.category && p.id !== foundPost.id)
             .slice(0, 3);
@@ -92,11 +90,21 @@ export const BlogPost = () => {
     }
   };
 
+  // Calculate reading time
+  const calculateReadingTime = (content) => {
+    if (!content) return "1 min read";
+    const text = content.replace(/<[^>]*>/g, '');
+    const wordCount = text.split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200);
+    return `${readingTime} min read`;
+  };
+
   // Get the featured image
   const featuredImage = post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c";
 
   return (
     <div className="min-h-screen">
+      {/* SEO Meta Tags */}
       <SEO
         title={post.seo_title || post.title}
         description={post.seo_description || post.excerpt}
@@ -106,10 +114,18 @@ export const BlogPost = () => {
         article={true}
         publishedDate={post.date}
       />
+      
+      {/* Structured Data for SEO */}
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       <StructuredData data={blogPostSchema({
         ...post,
-        image: featuredImage
+        image: featuredImage,
+        featured_image: featuredImage
+      })} />
+      <StructuredData data={articleSchema({
+        ...post,
+        image: featuredImage,
+        featured_image: featuredImage
       })} />
 
       {/* Hero Section */}
@@ -121,7 +137,9 @@ export const BlogPost = () => {
               Back to Blog
             </Button>
           </Link>
-          <div className="flex items-center gap-4 mb-6">
+          
+          {/* Meta Info */}
+          <div className="flex flex-wrap items-center gap-4 mb-6">
             <span className="text-sm font-medium text-blue-600 bg-blue-50 px-4 py-2 rounded-full flex items-center">
               <Tag className="mr-2" size={16} />
               {post.category}
@@ -130,13 +148,31 @@ export const BlogPost = () => {
               <Calendar className="mr-2" size={16} />
               {formatDate(post.date)}
             </span>
+            <span className="text-sm text-gray-500 flex items-center">
+              <Clock className="mr-2" size={16} />
+              {calculateReadingTime(post.content)}
+            </span>
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+          
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             {post.title}
           </h1>
+          
+          {/* Excerpt */}
           <p className="text-xl text-gray-600 leading-relaxed">{post.excerpt}</p>
+          
+          {/* Author */}
           {post.author && (
-            <p className="text-sm text-gray-500 mt-4">By {post.author}</p>
+            <div className="flex items-center mt-6 pt-6 border-t border-gray-200">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                <User size={20} className="text-blue-600" />
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">{post.author}</p>
+                <p className="text-sm text-gray-500">Author</p>
+              </div>
+            </div>
           )}
         </div>
       </section>
@@ -156,10 +192,27 @@ export const BlogPost = () => {
       <section className="px-4 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-3xl mx-auto">
           {/* Render HTML content */}
-          <div 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900"
+          <article 
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900 prose-a:text-blue-600"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          {/* Tags */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-500 mb-3">TAGS</h4>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag, index) => (
+                  <span 
+                    key={index}
+                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* CTA Box */}
           <div className="bg-blue-50 rounded-2xl p-8 mt-12">
@@ -201,7 +254,7 @@ export const BlogPost = () => {
                       <h3 className="text-lg font-semibold text-gray-900 mt-3 mb-2">
                         {relatedPost.title}
                       </h3>
-                      <p className="text-sm text-gray-600">{relatedPost.excerpt}</p>
+                      <p className="text-sm text-gray-600 line-clamp-2">{relatedPost.excerpt}</p>
                     </div>
                   </div>
                 </Link>
