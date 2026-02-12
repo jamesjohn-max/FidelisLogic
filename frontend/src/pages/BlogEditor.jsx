@@ -304,7 +304,7 @@ export const BlogEditor = () => {
                   <Textarea
                     id="excerpt"
                     value={formData.excerpt}
-                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
                     placeholder="Brief summary of the post (appears in blog listings and search results)"
                     className="mt-2"
                     rows={3}
