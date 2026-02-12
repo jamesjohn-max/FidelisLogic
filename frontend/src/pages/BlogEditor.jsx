@@ -290,7 +290,7 @@ export const BlogEditor = () => {
                   <Input
                     id="slug"
                     value={formData.slug}
-                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
                     placeholder="post-url-slug"
                     className="mt-2"
                   />
