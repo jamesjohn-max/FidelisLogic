@@ -159,7 +159,8 @@ export const BlogEditor = () => {
         }
       );
 
-      setFormData({ ...formData, featured_image: response.data.url });
+      // Use functional update to avoid stale closure
+      setFormData(prev => ({ ...prev, featured_image: response.data.url }));
       toast.success("Image uploaded successfully");
     } catch (error) {
       console.error("Error uploading image:", error);
