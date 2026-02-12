@@ -352,7 +352,7 @@ export const BlogEditor = () => {
                   <Textarea
                     id="seo_description"
                     value={formData.seo_description}
-                    onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, seo_description: e.target.value }))}
                     placeholder="Meta description for search engines (defaults to excerpt)"
                     className="mt-2"
                     rows={2}
