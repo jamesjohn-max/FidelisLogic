@@ -13,7 +13,7 @@ import os
 import logging
 from typing import List, Optional
 from datetime import datetime
-import shutil
+import base64
 
 from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate
 from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, LoginRequest
