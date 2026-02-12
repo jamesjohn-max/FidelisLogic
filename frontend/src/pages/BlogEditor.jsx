@@ -467,7 +467,7 @@ export const BlogEditor = () => {
                       variant="secondary"
                       size="sm"
                       className="absolute top-2 right-2"
-                      onClick={() => setFormData({ ...formData, featured_image: "" })}
+                      onClick={() => setFormData(prev => ({ ...prev, featured_image: "" }))}
                     >
                       Remove
                     </Button>
