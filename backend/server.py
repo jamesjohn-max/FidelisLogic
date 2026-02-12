@@ -153,10 +153,23 @@ async def delete_post(post_id: str, current_user: str = Depends(get_current_user
 # Maximum file size: 5MB
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+MIME_TYPES = {
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp'
+}
 
 @api_router.post("/blog/upload-image")
 async def upload_image(file: UploadFile = File(...), current_user: str = Depends(get_current_user)):
-    """Upload an image for blog post (max 5MB, jpg/png/gif/webp only)"""
+    """Upload an image for blog post (max 5MB, jpg/png/gif/webp only)
+    
+    Returns a Base64 data URL for persistent storage in the database.
+    This approach works in containerized/ephemeral environments where
+    filesystem storage is not persistent.
+    """
+    import base64
     
     # Check file extension
     file_ext = Path(file.filename).suffix.lower()
@@ -176,17 +189,15 @@ async def upload_image(file: UploadFile = File(...), current_user: str = Depends
             detail=f"File too large. Maximum size is 5MB. Your file: {file_size / (1024*1024):.2f}MB"
         )
     
-    # Create uploads directory if it doesn't exist
-    upload_dir = Path("/app/frontend/public/blog-images")
-    upload_dir.mkdir(exist_ok=True)
+    # Convert to Base64 data URL
+    mime_type = MIME_TYPES.get(file_ext, 'image/jpeg')
+    base64_data = base64.b64encode(contents).decode('utf-8')
+    data_url = f"data:{mime_type};base64,{base64_data}"
     
-    # Save file
-    file_path = upload_dir / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
-    with file_path.open("wb") as buffer:
-        buffer.write(contents)
+    logger.info(f"Image uploaded by {current_user}: {file.filename} ({file_size / 1024:.1f}KB)")
     
-    # Return public URL
-    return {"url": f"/blog-images/{file_path.name}"}
+    # Return Base64 data URL (works directly in <img src>)
+    return {"url": data_url}
 
 
 # Original endpoints
