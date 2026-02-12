@@ -272,7 +272,7 @@ export const whyChooseUsAdvantages = [
 export const contactInfo = {
   email: "info@fidelislogic.com",
   phone: "+971 52 360 7270",
-  location: "Dubai, United Arab Emirates",
+  location: "Sharjah, United Arab Emirates",
   linkedin: "#",
   youtube: "#",
   instagram: "#"
@@ -332,7 +332,7 @@ export const headsetDetails = {
   hero: {
     title: "Enterprise Headsets & Collaboration Devices",
     subtitle: "Standardize communication devices across your organization with expert guidance on comfort, compatibility, and performance.",
-    image: "https://images.unsplash.com/photo-1724260793422-7754e5d06fbe"
+    image: "/EnterpriseHeadsets2.png"
   },
   personas: [
     {

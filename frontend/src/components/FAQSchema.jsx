@@ -34,7 +34,7 @@ export const consultingFAQs = [
   },
   {
     question: "What areas do you serve?",
-    answer: "We primarily serve organizations across the United Arab Emirates, with deep expertise in the Dubai market and understanding of regional compliance and vendor ecosystems."
+    answer: "We primarily serve organizations across the United Arab Emirates, with deep expertise in the Middle Eastern market and understanding of regional compliance and vendor ecosystems."
   },
   {
     question: "How long does a typical consultation take?",

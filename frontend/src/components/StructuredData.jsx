@@ -19,7 +19,7 @@ export const organizationSchema = {
   "logo": typeof window !== "undefined" ? `${window.location.origin}/logo-color.png` : "",
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": "Dubai",
+    "addressLocality": "Sharjah Media City Free Zone",
     "addressCountry": "AE"
   },
   "contactPoint": {
