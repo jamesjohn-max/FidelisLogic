@@ -367,7 +367,7 @@ export const BlogEditor = () => {
                   <Input
                     id="seo_keywords"
                     value={formData.seo_keywords}
-                    onChange={(e) => setFormData({ ...formData, seo_keywords: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, seo_keywords: e.target.value }))}
                     placeholder="keyword1, keyword2, keyword3"
                     className="mt-2"
                   />
