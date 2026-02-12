@@ -112,7 +112,7 @@ export const Footer = () => {
               </Link>
             </div>
             <p className="text-sm text-gray-500">
-              © 2025 Fidelis Logic LLC. All rights reserved.
+              © 2026 Fidelis Logic LLC. All rights reserved.
             </p>
           </div>
         </div>

@@ -115,6 +115,9 @@ export const Contact = () => {
           <p className="text-xl text-gray-600 leading-relaxed">
             Schedule a free consultation to discuss how we can help simplify your modern workplace technology decisions. 
           </p>
+          <p className="text-xl text-green-800 leading-relaxed">
+          Get expert advice — completely free, with zero obligation to proceed.
+          </p>
         </div>
       </section>
 
@@ -277,7 +280,20 @@ export const Contact = () => {
               </Card> */}
 
             {/* Contact Information */}
-            
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                  Why It's Free?
+                </h2>
+                    <p className="text-x text-grey-600 leading-relaxed">
+                    We believe in earning your trust first. Our free consultation includes:
+
+                    <p> ✓  Expert assessment of your needs </p>
+                    <p>✓  Tailored recommendations</p>
+                    <p>✓  Transparent pricing overview</p>
+                    <p>✓  No pressure, no obligation</p>
+                    </p>
+              </div>
+              
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">
                   Get in Touch
@@ -316,6 +332,8 @@ export const Contact = () => {
                   
                 </div>
               </div>
+
+              
 
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">

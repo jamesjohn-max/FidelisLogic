@@ -27,7 +27,7 @@ export const segments = [
   {
     id: "meeting-rooms",
     title: "Meeting Rooms & AV Systems",
-    description: "Design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD Meeting spaces with professional audio-visual systems.",
+    description: "We help design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD Meeting spaces with professional audio-visual systems.",
     icon: "Presentation",
     image: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
     link: "/solutions/meeting-rooms"
@@ -131,10 +131,10 @@ export const testimonials = [
 export const blogPosts = [
   {
     id: 1,
-    title: "Choosing Between Microsoft Teams Rooms and Zoom Rooms in 2025",
+    title: "Choosing Between Microsoft Teams Rooms and Zoom Rooms in 2026",
     excerpt: "A vendor-neutral comparison to help UAE organizations make informed meeting room technology decisions.",
     category: "Meeting Rooms",
-    date: "2025-01-15",
+    date: "2026-01-15",
     image: "https://images.unsplash.com/photo-1770048532712-4fde5ef7eb90",
     slug: "teams-rooms-vs-zoom-rooms-2025"
   },
@@ -143,7 +143,7 @@ export const blogPosts = [
     title: "The Hidden Costs of Poor Workplace Technology Decisions",
     excerpt: "Why upfront consulting saves money and frustration in the long run.",
     category: "Modern Work",
-    date: "2025-01-10",
+    date: "2026-01-10",
     image: "https://images.unsplash.com/photo-1630283017802-785b7aff9aac",
     slug: "hidden-costs-poor-tech-decisions"
   },
@@ -152,7 +152,7 @@ export const blogPosts = [
     title: "Hot Desking and Room Booking: Complete Guide for UAE Offices",
     excerpt: "How workspace experience platforms like Flowscape and ROOMZ optimize office utilization.",
     category: "Workspace Experience",
-    date: "2025-01-05",
+    date: "2026-01-05",
     image: "https://images.unsplash.com/photo-1718220216044-006f43e3a9b1",
     slug: "hot-desking-room-booking-guide"
   },
@@ -161,7 +161,7 @@ export const blogPosts = [
     title: "Enterprise Headset Buying Guide: Call Center to Executive Suite",
     excerpt: "How to choose the right collaboration devices for different user personas and use cases.",
     category: "Headsets",
-    date: "2024-12-28",
+    date: "2026-01-28",
     image: "https://images.unsplash.com/photo-1769069920308-40130d50ae58",
     slug: "enterprise-headset-buying-guide"
   },
@@ -170,7 +170,7 @@ export const blogPosts = [
     title: "ERP Implementation for SMBs: What to Expect",
     excerpt: "A realistic timeline and approach to business application deployments in small and medium businesses.",
     category: "SMB Apps",
-    date: "2024-12-20",
+    date: "2026-01-20",
     image: "https://images.unsplash.com/photo-1642957323739-5632d8a2ff3d",
     slug: "erp-implementation-smb-guide"
   },
@@ -179,7 +179,7 @@ export const blogPosts = [
     title: "Meeting Room Design Best Practices for Microsoft Teams",
     excerpt: "Acoustic considerations, camera placement, network readiness, and commissioning standards.",
     category: "Meeting Rooms",
-    date: "2024-12-15",
+    date: "2026-02-01",
     image: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d",
     slug: "meeting-room-design-best-practices"
   }
