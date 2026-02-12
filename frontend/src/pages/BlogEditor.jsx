@@ -501,7 +501,7 @@ export const BlogEditor = () => {
                   <Input
                     id="image_url"
                     value={formData.featured_image}
-                    onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, featured_image: e.target.value }))}
                     placeholder="https://..."
                     className="mt-2"
                   />
