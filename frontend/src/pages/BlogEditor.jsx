@@ -392,7 +392,7 @@ export const BlogEditor = () => {
                     id="published"
                     checked={formData.published}
                     onCheckedChange={(checked) => 
-                      setFormData({ ...formData, published: checked })
+                      setFormData(prev => ({ ...prev, published: checked }))
                     }
                   />
                 </div>
