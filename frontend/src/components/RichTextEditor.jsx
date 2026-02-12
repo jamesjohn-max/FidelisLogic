@@ -83,12 +83,12 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
     },
   });
 
-  // Update editor content when prop changes
+  // Only update editor content when it's truly different (avoid infinite loops)
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
+    if (editor && content && editor.getHTML() !== content && !editor.isFocused) {
+      editor.commands.setContent(content, false);
     }
-  }, [content, editor]);
+  }, [content]);
 
   const setLink = useCallback(() => {
     if (!editor) return;
