@@ -338,7 +338,7 @@ export const BlogEditor = () => {
                   <Input
                     id="seo_title"
                     value={formData.seo_title}
-                    onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, seo_title: e.target.value }))}
                     placeholder="SEO optimized title (defaults to post title)"
                     className="mt-2"
                   />
