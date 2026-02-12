@@ -319,7 +319,7 @@ export const BlogEditor = () => {
                 <Label className="mb-3 block">Content *</Label>
                 <RichTextEditor
                   content={formData.content}
-                  onChange={(content) => setFormData({ ...formData, content })}
+                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
                   placeholder="Start writing your blog post..."
                 />
               </CardContent>
