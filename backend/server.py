@@ -169,8 +169,6 @@ async def upload_image(file: UploadFile = File(...), current_user: str = Depends
     This approach works in containerized/ephemeral environments where
     filesystem storage is not persistent.
     """
-    import base64
-    
     # Check file extension
     file_ext = Path(file.filename).suffix.lower()
     if file_ext not in ALLOWED_EXTENSIONS:
