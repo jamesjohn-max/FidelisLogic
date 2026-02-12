@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
-import { StructuredData, breadcrumbSchema, blogPostSchema, articleSchema } from "../components/StructuredData";
+import { StructuredData, breadcrumbSchema, blogPostSchema } from "../components/StructuredData";
 import { ArrowLeft, Calendar, Tag, User, Clock, Loader2 } from "lucide-react";
 import axios from "axios";
 
@@ -18,7 +18,7 @@ export const BlogPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
+        const response = await axios.get(BACKEND_URL + "/api/blog/posts");
         const allPosts = response.data;
         const foundPost = allPosts.find((p) => p.slug === slug);
         
@@ -42,7 +42,6 @@ export const BlogPost = () => {
     fetchPost();
   }, [slug]);
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="min-h-screen pt-32 px-4">
@@ -54,7 +53,6 @@ export const BlogPost = () => {
     );
   }
 
-  // Not found state
   if (error || !post) {
     return (
       <div className="min-h-screen pt-32 px-4">
@@ -70,13 +68,6 @@ export const BlogPost = () => {
     );
   }
 
-  const breadcrumbs = [
-    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
-    { name: "Blog", url: typeof window !== "undefined" ? `${window.location.origin}/blog` : "" },
-    { name: post.title, url: typeof window !== "undefined" ? window.location.href : "" }
-  ];
-
-  // Format date
   const formatDate = (dateString) => {
     if (!dateString) return "";
     try {
@@ -85,50 +76,56 @@ export const BlogPost = () => {
         month: 'long',
         day: 'numeric'
       });
-    } catch {
+    } catch (e) {
       return dateString;
     }
   };
 
-  // Calculate reading time
   const calculateReadingTime = (content) => {
     if (!content) return "1 min read";
     const text = content.replace(/<[^>]*>/g, '');
     const wordCount = text.split(/\s+/).length;
     const readingTime = Math.ceil(wordCount / 200);
-    return `${readingTime} min read`;
+    return readingTime + " min read";
   };
 
-  // Get the featured image
   const featuredImage = post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c";
+  
+  const breadcrumbData = [
+    { name: "Home", url: window.location.origin + "/" },
+    { name: "Blog", url: window.location.origin + "/blog" },
+    { name: post.title, url: window.location.href }
+  ];
+
+  const schemaPost = {
+    title: post.title,
+    excerpt: post.excerpt,
+    seo_title: post.seo_title,
+    seo_description: post.seo_description,
+    seo_keywords: post.seo_keywords,
+    featured_image: featuredImage,
+    image: featuredImage,
+    date: post.date,
+    author: post.author,
+    category: post.category,
+    tags: post.tags
+  };
 
   return (
     <div className="min-h-screen">
-      {/* SEO Meta Tags */}
       <SEO
         title={post.seo_title || post.title}
         description={post.seo_description || post.excerpt}
-        keywords={post.seo_keywords || `${post.category}, workplace technology, IT consulting`}
+        keywords={post.seo_keywords || post.category}
         ogType="article"
         ogImage={featuredImage}
         article={true}
         publishedDate={post.date}
       />
       
-      {/* Structured Data for SEO */}
-      <StructuredData data={breadcrumbSchema(breadcrumbs)} />
-      <StructuredData data={blogPostSchema({
-        ...post,
-        image: featuredImage,
-        featured_image: featuredImage
-      })} />
-      <StructuredData data={articleSchema({
-        ...post,
-        image: featuredImage,
-        featured_image: featuredImage
-      })} />
+      <StructuredData data={breadcrumbSchema(breadcrumbData)} />
+      <StructuredData data={blogPostSchema(schemaPost)} />
 
-      {/* Hero Section */}
       <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <Link to="/blog">
@@ -138,7 +135,6 @@ export const BlogPost = () => {
             </Button>
           </Link>
           
-          {/* Meta Info */}
           <div className="flex flex-wrap items-center gap-4 mb-6">
             <span className="text-sm font-medium text-blue-600 bg-blue-50 px-4 py-2 rounded-full flex items-center">
               <Tag className="mr-2" size={16} />
@@ -154,15 +150,12 @@ export const BlogPost = () => {
             </span>
           </div>
           
-          {/* Title */}
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             {post.title}
           </h1>
           
-          {/* Excerpt */}
           <p className="text-xl text-gray-600 leading-relaxed">{post.excerpt}</p>
           
-          {/* Author */}
           {post.author && (
             <div className="flex items-center mt-6 pt-6 border-t border-gray-200">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -177,7 +170,6 @@ export const BlogPost = () => {
         </div>
       </section>
 
-      {/* Featured Image */}
       <section className="px-4 sm:px-6 lg:px-8 mb-12">
         <div className="max-w-5xl mx-auto">
           <img
@@ -188,16 +180,13 @@ export const BlogPost = () => {
         </div>
       </section>
 
-      {/* Article Content */}
       <section className="px-4 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-3xl mx-auto">
-          {/* Render HTML content */}
           <article 
             className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900 prose-a:text-blue-600"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
-          {/* Tags */}
           {post.tags && post.tags.length > 0 && (
             <div className="mt-12 pt-8 border-t border-gray-200">
               <h4 className="text-sm font-semibold text-gray-500 mb-3">TAGS</h4>
@@ -214,7 +203,6 @@ export const BlogPost = () => {
             </div>
           )}
 
-          {/* CTA Box */}
           <div className="bg-blue-50 rounded-2xl p-8 mt-12">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               Need Expert Guidance?
@@ -231,7 +219,6 @@ export const BlogPost = () => {
         </div>
       </section>
 
-      {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
           <div className="max-w-7xl mx-auto">
@@ -240,7 +227,7 @@ export const BlogPost = () => {
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               {relatedPosts.map((relatedPost) => (
-                <Link key={relatedPost.id} to={`/blog/${relatedPost.slug}`}>
+                <Link key={relatedPost.id} to={"/blog/" + relatedPost.slug}>
                   <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <img
                       src={relatedPost.featured_image || relatedPost.image || "https://images.unsplash.com/photo-1497366216548-37526070297c"}
