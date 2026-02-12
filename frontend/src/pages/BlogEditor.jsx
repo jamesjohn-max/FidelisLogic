@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminLayout } from "../components/AdminLayout";
+import { RichTextEditor } from "../components/RichTextEditor";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -22,11 +23,7 @@ import {
   Image as ImageIcon, 
   Eye,
   Loader2,
-  Bold,
-  Italic,
-  List,
-  Link as LinkIcon,
-  Heading
+  Upload
 } from "lucide-react";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -77,7 +74,6 @@ export const BlogEditor = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("admin_token");
-      // Get all posts including unpublished
       const response = await axios.get(`${BACKEND_URL}/api/blog/posts?published_only=false`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -133,6 +129,19 @@ export const BlogEditor = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File too large. Maximum size is 5MB.");
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type. Use JPG, PNG, GIF, or WebP.");
+      return;
+    }
+
     setIsUploading(true);
     try {
       const token = localStorage.getItem("admin_token");
@@ -154,7 +163,8 @@ export const BlogEditor = () => {
       toast.success("Image uploaded successfully");
     } catch (error) {
       console.error("Error uploading image:", error);
-      toast.error("Failed to upload image");
+      const errorMsg = error.response?.data?.detail || "Failed to upload image";
+      toast.error(errorMsg);
     } finally {
       setIsUploading(false);
     }
@@ -164,7 +174,7 @@ export const BlogEditor = () => {
     e.preventDefault();
     
     if (!formData.title || !formData.content || !formData.category) {
-      toast.error("Please fill in all required fields");
+      toast.error("Please fill in all required fields (Title, Content, Category)");
       return;
     }
 
@@ -245,7 +255,7 @@ export const BlogEditor = () => {
                 Preview
               </Button>
             )}
-            <Button type="submit" disabled={isSaving}>
+            <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
               {isSaving ? (
                 <Loader2 className="animate-spin mr-2" size={18} />
               ) : (
@@ -259,7 +269,7 @@ export const BlogEditor = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Title */}
+            {/* Title & Slug */}
             <Card>
               <CardContent className="p-6 space-y-4">
                 <div>
@@ -269,7 +279,7 @@ export const BlogEditor = () => {
                     value={formData.title}
                     onChange={handleTitleChange}
                     placeholder="Enter post title"
-                    className="mt-2"
+                    className="mt-2 text-lg"
                     required
                   />
                 </div>
@@ -289,12 +299,12 @@ export const BlogEditor = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="excerpt">Excerpt</Label>
+                  <Label htmlFor="excerpt">Excerpt / Summary</Label>
                   <Textarea
                     id="excerpt"
                     value={formData.excerpt}
                     onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                    placeholder="Brief summary of the post"
+                    placeholder="Brief summary of the post (appears in blog listings and search results)"
                     className="mt-2"
                     rows={3}
                   />
@@ -305,108 +315,22 @@ export const BlogEditor = () => {
             {/* Content Editor */}
             <Card>
               <CardContent className="p-6">
-                <Label>Content *</Label>
-                <p className="text-xs text-gray-500 mb-2">
-                  You can use HTML tags for formatting: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a href=""&gt;
-                </p>
-                <div className="mt-2">
-                  {/* Simple formatting toolbar */}
-                  <div className="flex items-center gap-1 p-2 border border-b-0 rounded-t-lg bg-gray-50">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const textarea = document.getElementById('content');
-                        const start = textarea.selectionStart;
-                        const end = textarea.selectionEnd;
-                        const text = formData.content;
-                        const selected = text.substring(start, end);
-                        const newText = text.substring(0, start) + `<strong>${selected}</strong>` + text.substring(end);
-                        setFormData({ ...formData, content: newText });
-                      }}
-                      title="Bold"
-                    >
-                      <Bold size={16} />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const textarea = document.getElementById('content');
-                        const start = textarea.selectionStart;
-                        const end = textarea.selectionEnd;
-                        const text = formData.content;
-                        const selected = text.substring(start, end);
-                        const newText = text.substring(0, start) + `<em>${selected}</em>` + text.substring(end);
-                        setFormData({ ...formData, content: newText });
-                      }}
-                      title="Italic"
-                    >
-                      <Italic size={16} />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const text = formData.content;
-                        setFormData({ ...formData, content: text + '\n<h2></h2>' });
-                      }}
-                      title="Heading"
-                    >
-                      <Heading size={16} />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const text = formData.content;
-                        setFormData({ ...formData, content: text + '\n<ul>\n  <li></li>\n</ul>' });
-                      }}
-                      title="List"
-                    >
-                      <List size={16} />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const url = prompt('Enter URL:');
-                        if (url) {
-                          const textarea = document.getElementById('content');
-                          const start = textarea.selectionStart;
-                          const end = textarea.selectionEnd;
-                          const text = formData.content;
-                          const selected = text.substring(start, end) || 'Link text';
-                          const newText = text.substring(0, start) + `<a href="${url}">${selected}</a>` + text.substring(end);
-                          setFormData({ ...formData, content: newText });
-                        }
-                      }}
-                      title="Link"
-                    >
-                      <LinkIcon size={16} />
-                    </Button>
-                  </div>
-                  <Textarea
-                    id="content"
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    placeholder="Write your blog post content here. Use HTML tags for formatting..."
-                    className="min-h-[400px] font-mono text-sm rounded-t-none"
-                    required
-                  />
-                </div>
+                <Label className="mb-3 block">Content *</Label>
+                <RichTextEditor
+                  content={formData.content}
+                  onChange={(content) => setFormData({ ...formData, content })}
+                  placeholder="Start writing your blog post..."
+                />
               </CardContent>
             </Card>
 
             {/* SEO Settings */}
             <Card>
               <CardContent className="p-6 space-y-4">
-                <h3 className="font-semibold text-gray-900">SEO Settings</h3>
+                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                  🔍 SEO Settings
+                </h3>
+                <p className="text-sm text-gray-500">Optimize your post for search engines and AI tools</p>
                 
                 <div>
                   <Label htmlFor="seo_title">SEO Title</Label>
@@ -414,9 +338,12 @@ export const BlogEditor = () => {
                     id="seo_title"
                     value={formData.seo_title}
                     onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
-                    placeholder="SEO optimized title"
+                    placeholder="SEO optimized title (defaults to post title)"
                     className="mt-2"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.seo_title?.length || 0}/60 characters (recommended)
+                  </p>
                 </div>
 
                 <div>
@@ -425,10 +352,13 @@ export const BlogEditor = () => {
                     id="seo_description"
                     value={formData.seo_description}
                     onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
-                    placeholder="Meta description for search engines"
+                    placeholder="Meta description for search engines (defaults to excerpt)"
                     className="mt-2"
                     rows={2}
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.seo_description?.length || 0}/160 characters (recommended)
+                  </p>
                 </div>
 
                 <div>
@@ -440,6 +370,9 @@ export const BlogEditor = () => {
                     placeholder="keyword1, keyword2, keyword3"
                     className="mt-2"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Separate keywords with commas
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -464,8 +397,8 @@ export const BlogEditor = () => {
                 </div>
                 <p className="text-xs text-gray-500">
                   {formData.published 
-                    ? "Post is visible to the public" 
-                    : "Post is saved as draft"
+                    ? "✅ Post is visible to the public" 
+                    : "📝 Post is saved as draft"
                   }
                 </p>
               </CardContent>
@@ -519,6 +452,7 @@ export const BlogEditor = () => {
             <Card>
               <CardContent className="p-6 space-y-4">
                 <h3 className="font-semibold text-gray-900">Featured Image</h3>
+                <p className="text-xs text-gray-500">Max 5MB • JPG, PNG, GIF, WebP</p>
                 
                 {formData.featured_image ? (
                   <div className="relative">
@@ -546,7 +480,7 @@ export const BlogEditor = () => {
                       <Loader2 className="animate-spin mx-auto text-blue-600" size={32} />
                     ) : (
                       <>
-                        <ImageIcon className="mx-auto text-gray-400 mb-2" size={32} />
+                        <Upload className="mx-auto text-gray-400 mb-2" size={32} />
                         <p className="text-sm text-gray-600">Click to upload image</p>
                       </>
                     )}
