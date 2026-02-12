@@ -412,7 +412,7 @@ export const BlogEditor = () => {
                   <Label htmlFor="category">Category *</Label>
                   <Select 
                     value={formData.category} 
-                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
                   >
                     <SelectTrigger className="mt-2">
                       <SelectValue placeholder="Select category" />
