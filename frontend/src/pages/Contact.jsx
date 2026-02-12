@@ -107,7 +107,7 @@ export const Contact = () => {
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-32 pb-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Let's Talk About Your Technology Needs
@@ -281,7 +281,7 @@ export const Contact = () => {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="pt-8 text-3xl font-bold text-gray-900 mb-8">
                   Why It's Free?
                 </h2>
                     <p className="text-x text-grey-600 leading-relaxed">
