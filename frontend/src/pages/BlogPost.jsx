@@ -7,6 +7,7 @@ import { ArrowLeft, Calendar, Tag, User, Clock, Loader2 } from "lucide-react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1497366216548-37526070297c";
 
 export const BlogPost = () => {
   const { slug } = useParams();
@@ -18,14 +19,15 @@ export const BlogPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(BACKEND_URL + "/api/blog/posts");
+        const apiUrl = BACKEND_URL + "/api/blog/posts";
+        const response = await axios.get(apiUrl);
         const allPosts = response.data;
-        const foundPost = allPosts.find((p) => p.slug === slug);
+        const foundPost = allPosts.find(function(p) { return p.slug === slug; });
         
         if (foundPost) {
           setPost(foundPost);
           const related = allPosts
-            .filter((p) => p.category === foundPost.category && p.id !== foundPost.id)
+            .filter(function(p) { return p.category === foundPost.category && p.id !== foundPost.id; })
             .slice(0, 3);
           setRelatedPosts(related);
         } else {
@@ -68,7 +70,7 @@ export const BlogPost = () => {
     );
   }
 
-  const formatDate = (dateString) => {
+  var formatDate = function(dateString) {
     if (!dateString) return "";
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -81,23 +83,24 @@ export const BlogPost = () => {
     }
   };
 
-  const calculateReadingTime = (content) => {
+  var calculateReadingTime = function(content) {
     if (!content) return "1 min read";
-    const text = content.replace(/<[^>]*>/g, '');
-    const wordCount = text.split(/\s+/).length;
-    const readingTime = Math.ceil(wordCount / 200);
+    var text = content.replace(/<[^>]*>/g, '');
+    var wordCount = text.split(/\s+/).length;
+    var readingTime = Math.ceil(wordCount / 200);
     return readingTime + " min read";
   };
 
-  const featuredImage = post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c";
+  var featuredImage = post.featured_image || post.image || DEFAULT_IMAGE;
+  var baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   
-  const breadcrumbData = [
-    { name: "Home", url: window.location.origin + "/" },
-    { name: "Blog", url: window.location.origin + "/blog" },
-    { name: post.title, url: window.location.href }
+  var breadcrumbData = [
+    { name: "Home", url: baseUrl + "/" },
+    { name: "Blog", url: baseUrl + "/blog" },
+    { name: post.title, url: typeof window !== "undefined" ? window.location.href : "" }
   ];
 
-  const schemaPost = {
+  var schemaPost = {
     title: post.title,
     excerpt: post.excerpt,
     seo_title: post.seo_title,
@@ -191,14 +194,16 @@ export const BlogPost = () => {
             <div className="mt-12 pt-8 border-t border-gray-200">
               <h4 className="text-sm font-semibold text-gray-500 mb-3">TAGS</h4>
               <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag, index) => (
-                  <span 
-                    key={index}
-                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {post.tags.map(function(tag, index) {
+                  return (
+                    <span 
+                      key={index}
+                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                    >
+                      {tag}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -226,26 +231,30 @@ export const BlogPost = () => {
               Related Articles
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {relatedPosts.map((relatedPost) => (
-                <Link key={relatedPost.id} to={"/blog/" + relatedPost.slug}>
-                  <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <img
-                      src={relatedPost.featured_image || relatedPost.image || "https://images.unsplash.com/photo-1497366216548-37526070297c"}
-                      alt={relatedPost.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-6">
-                      <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-                        {relatedPost.category}
-                      </span>
-                      <h3 className="text-lg font-semibold text-gray-900 mt-3 mb-2">
-                        {relatedPost.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 line-clamp-2">{relatedPost.excerpt}</p>
+              {relatedPosts.map(function(relatedPost) {
+                var postUrl = "/blog/" + relatedPost.slug;
+                var postImage = relatedPost.featured_image || relatedPost.image || DEFAULT_IMAGE;
+                return (
+                  <Link key={relatedPost.id} to={postUrl}>
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                      <img
+                        src={postImage}
+                        alt={relatedPost.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="p-6">
+                        <span className="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                          {relatedPost.category}
+                        </span>
+                        <h3 className="text-lg font-semibold text-gray-900 mt-3 mb-2">
+                          {relatedPost.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 line-clamp-2">{relatedPost.excerpt}</p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
