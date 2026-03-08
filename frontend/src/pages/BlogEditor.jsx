@@ -53,7 +53,7 @@ export const BlogEditor = () => {
     excerpt: "",
     content: "",
     category: "",
-    author: "Fidelis Logic",
+    author: "Inhouse Blogger",
     featured_image: "",
     published: false,
     seo_title: "",

@@ -26,7 +26,7 @@ export const FAQSchema = ({ faqs }) => {
 export const consultingFAQs = [
   {
     question: "What services does Fidelis Logic provide?",
-    answer: "Fidelis Logic specializes in modern workplace technology solutions including Microsoft Teams Rooms, Zoom Rooms, enterprise headsets, workspace experience platforms (room booking, hot desking), and business applications (ERP, HRMS, CRM) for UAE organizations."
+    answer: "Fidelis Logic specializes in modern workplace technology solutions including Meeting Rooms, enterprise headsets, workspace experience platforms (room booking, hot desking), and business applications (ERP, HRMS, CRM) for UAE organizations."
   },
   {
     question: "Do you work with specific vendors or are you vendor-neutral?",

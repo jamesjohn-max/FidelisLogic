@@ -157,7 +157,7 @@ export const WorkspaceExperience = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Platform Examples
+              Leading Platforms We Partner With
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               We work with leading workspace experience platforms available in the UAE, recommending based on your specific requirements, integration needs, and budget.
@@ -165,12 +165,37 @@ export const WorkspaceExperience = () => {
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             {platforms.map((platform, index) => (
-              <div
-                key={index}
-                className="bg-white px-8 py-4 rounded-lg shadow-md text-gray-700 font-medium"
+            
+           /* <div
+      key={index}
+      className="bg-white px-8 py-4 rounded-lg shadow-md text-gray-700 font-medium"
+            >
+              <a
+                href={platform.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
               >
-                {platform}
-              </div>
+                {platform.name}
+              </a>
+              </div> */
+
+             <a
+                key={index}
+                href={platform.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white px-6 py-4 rounded-lg shadow-md text-gray-700 font-medium flex items-center gap-3 hover:shadow-lg transition"
+              >
+                <img
+                  src={platform.logo}
+                  alt={`${platform.name} logo`}
+                  className="h-12 w-13 object-contain"
+                  loading="lazy"
+                />
+              
+              </a> 
+
             ))}
           </div>
         </div>
@@ -204,6 +229,14 @@ export const WorkspaceExperience = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Data-Driven Decisions</h3>
                 <p className="text-gray-600">
                   Analytics and reporting enable evidence-based workplace strategy and design.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-0 shadow-lg">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Less Downtime</h3>
+                <p className="text-gray-600">
+                  Proactive monitoring detects and diagnoses problems early, so IT resolves incidents faster with fewer escalations.
                 </p>
               </CardContent>
             </Card>

@@ -36,7 +36,7 @@ export const About = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1642957323739-5632d8a2ff3d"
+                src="\aboutus.png"
                 alt="Team collaboration"
                 className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
               />

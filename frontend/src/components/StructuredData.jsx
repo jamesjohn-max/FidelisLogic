@@ -14,7 +14,7 @@ export const organizationSchema = {
   "@type": "Organization",
   "name": "Fidelis Logic LLC",
   "legalName": "Fidelis Logic LLC",
-  "description": "UAE-based IT consulting firm specializing in modern workplace technology solutions including Microsoft Teams Rooms, Zoom Rooms, enterprise headsets, workspace experience platforms, and business applications.",
+  "description": "UAE-based IT consulting firm specializing in modern workplace technology solutions",
   "url": typeof window !== "undefined" ? window.location.origin : "",
   "logo": typeof window !== "undefined" ? `${window.location.origin}/logo-color.png` : "",
   "address": {

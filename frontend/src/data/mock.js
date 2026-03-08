@@ -392,11 +392,24 @@ export const workspaceExperienceDetails = {
       title: "Wayfinding",
       description: "Digital signage and maps to help employees and visitors navigate office spaces.",
       icon: "Map"
+    },
+    {
+      title: "Monitoring & Device Management",
+      description: "Real-time monitoring and analytics to reduce downtime, prevent incidents, and increase productivity.",
+      icon: "Binoculars"
     }
   ],
   platforms: [
-    "Flowscape",
-    "ROOMZ"
+   {
+   name: "ROOMZ",
+    href: "https://roomz.io",
+    logo: "/platform-images/roomz.png"
+   },
+   {
+    name: "morbit",
+    href: "https://www.morbit.co.uk",
+    logo: "/platform-images/morbit.png"
+   }
   ]
 };
 
