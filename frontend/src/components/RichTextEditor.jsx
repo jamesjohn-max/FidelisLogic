@@ -36,6 +36,9 @@ import {
   Unlink,
   Image as ImageIcon,
   Youtube as YoutubeIcon,
+  Video,
+  Upload,
+  Globe,
   AlignLeft,
   AlignCenter,
   AlignRight,
@@ -54,17 +57,23 @@ import {
   RemoveFormatting,
   Palette,
   RowsIcon,
-  ColumnsIcon
+  ColumnsIcon,
+  Loader2
 } from 'lucide-react';
 import { Button } from './ui/button';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from './ui/dropdown-menu';
+import { toast } from 'sonner';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const MenuButton = ({ onClick, isActive, disabled, children, title }) => (
   <Button
@@ -97,7 +106,10 @@ const TEXT_COLORS = [
 ];
 
 export const RichTextEditor = ({ content, onChange, placeholder = "Start writing your blog post..." }) => {
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
   
   const editor = useEditor({
     extensions: [
@@ -180,7 +192,8 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   }, [editor]);
 
-  const addImage = useCallback(() => {
+  // Image Functions
+  const addImageFromUrl = useCallback(() => {
     if (!editor) return;
     
     const url = window.prompt('Enter image URL:');
@@ -190,10 +203,59 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
     }
   }, [editor]);
 
+  const handleImageUpload = useCallback(async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor) return;
+
+    // Validate file
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image too large. Maximum size is 5MB.');
+      return;
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Use JPG, PNG, GIF, or WebP.');
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const token = localStorage.getItem('admin_token');
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await axios.post(
+        `${BACKEND_URL}/api/blog/upload-image`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      // Insert the image at cursor position
+      editor.chain().focus().setImage({ src: response.data.url }).run();
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error(error.response?.data?.detail || 'Failed to upload image');
+    } finally {
+      setIsUploadingImage(false);
+      // Reset the input
+      if (imageInputRef.current) {
+        imageInputRef.current.value = '';
+      }
+    }
+  }, [editor]);
+
+  // Video Functions
   const addYoutubeVideo = useCallback(() => {
     if (!editor) return;
     
-    const url = window.prompt('Enter YouTube URL:');
+    const url = window.prompt('Enter YouTube URL (e.g., https://www.youtube.com/watch?v=...)');
     
     if (url) {
       editor.commands.setYoutubeVideo({
@@ -201,6 +263,91 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
         width: 640,
         height: 360,
       });
+    }
+  }, [editor]);
+
+  const addVimeoVideo = useCallback(() => {
+    if (!editor) return;
+    
+    const url = window.prompt('Enter Vimeo URL (e.g., https://vimeo.com/123456789)');
+    
+    if (url) {
+      // Extract Vimeo ID and create embed
+      const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+      if (vimeoMatch) {
+        const vimeoId = vimeoMatch[1];
+        const embedHtml = `<div class="video-embed vimeo-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 1em 0;">
+          <iframe src="https://player.vimeo.com/video/${vimeoId}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 0.5em;" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>`;
+        editor.chain().focus().insertContent(embedHtml).run();
+      } else {
+        toast.error('Invalid Vimeo URL. Please use format: https://vimeo.com/123456789');
+      }
+    }
+  }, [editor]);
+
+  const addVideoFromUrl = useCallback(() => {
+    if (!editor) return;
+    
+    const url = window.prompt('Enter direct video URL (MP4, WebM, etc.)');
+    
+    if (url) {
+      const videoHtml = `<div class="video-container" style="margin: 1em 0;">
+        <video controls style="width: 100%; max-width: 100%; border-radius: 0.5em;">
+          <source src="${url}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>`;
+      editor.chain().focus().insertContent(videoHtml).run();
+    }
+  }, [editor]);
+
+  const handleVideoUpload = useCallback(async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor) return;
+
+    // Validate file size (50MB max for videos)
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('Video too large. Maximum size is 50MB.');
+      return;
+    }
+
+    const allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Invalid file type. Use MP4, WebM, or OGG.');
+      return;
+    }
+
+    setIsUploadingVideo(true);
+    try {
+      // Convert video to base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result;
+        const videoHtml = `<div class="video-container" style="margin: 1em 0;">
+          <video controls style="width: 100%; max-width: 100%; border-radius: 0.5em;">
+            <source src="${base64}" type="${file.type}">
+            Your browser does not support the video tag.
+          </video>
+        </div>`;
+        editor.chain().focus().insertContent(videoHtml).run();
+        toast.success('Video uploaded successfully');
+        setIsUploadingVideo(false);
+      };
+      reader.onerror = () => {
+        toast.error('Failed to read video file');
+        setIsUploadingVideo(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading video:', error);
+      toast.error('Failed to upload video');
+      setIsUploadingVideo(false);
+    } finally {
+      // Reset the input
+      if (videoInputRef.current) {
+        videoInputRef.current.value = '';
+      }
     }
   }, [editor]);
 
@@ -229,6 +376,22 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
 
   return (
     <div className="border rounded-lg overflow-hidden bg-white">
+      {/* Hidden file inputs */}
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/gif,image/webp"
+        onChange={handleImageUpload}
+        className="hidden"
+      />
+      <input
+        ref={videoInputRef}
+        type="file"
+        accept="video/mp4,video/webm,video/ogg"
+        onChange={handleVideoUpload}
+        className="hidden"
+      />
+
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-0.5 p-2 border-b bg-gray-50">
         {/* Undo/Redo */}
@@ -551,7 +714,7 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
 
         <Divider />
 
-        {/* Links & Media */}
+        {/* Links */}
         <MenuButton
           onClick={setLink}
           isActive={editor.isActive('link')}
@@ -567,18 +730,81 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
             <Unlink size={16} />
           </MenuButton>
         )}
-        <MenuButton
-          onClick={addImage}
-          title="Add Image (URL)"
-        >
-          <ImageIcon size={16} />
-        </MenuButton>
-        <MenuButton
-          onClick={addYoutubeVideo}
-          title="Embed YouTube Video"
-        >
-          <YoutubeIcon size={16} />
-        </MenuButton>
+
+        <Divider />
+
+        {/* Image Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              title="Insert Image"
+              disabled={isUploadingImage}
+              className="p-2 h-8 w-8 text-gray-600 hover:bg-gray-100"
+            >
+              {isUploadingImage ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <ImageIcon size={16} />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Insert Image</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => imageInputRef.current?.click()}>
+              <Upload size={14} className="mr-2" />
+              Upload from Computer
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={addImageFromUrl}>
+              <Globe size={14} className="mr-2" />
+              Insert from URL
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Video Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              title="Insert Video"
+              disabled={isUploadingVideo}
+              className="p-2 h-8 w-8 text-gray-600 hover:bg-gray-100"
+            >
+              {isUploadingVideo ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Video size={16} />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Insert Video</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => videoInputRef.current?.click()}>
+              <Upload size={14} className="mr-2" />
+              Upload from Computer (max 50MB)
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={addYoutubeVideo}>
+              <YoutubeIcon size={14} className="mr-2" />
+              YouTube URL
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={addVimeoVideo}>
+              <Video size={14} className="mr-2" />
+              Vimeo URL
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={addVideoFromUrl}>
+              <Globe size={14} className="mr-2" />
+              Direct Video URL (MP4, etc.)
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <Divider />
 
@@ -775,12 +1001,21 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
           text-decoration: line-through;
           color: #9ca3af;
         }
-        /* YouTube Embed */
+        /* Video Embed Styles */
         .ProseMirror iframe {
           width: 100%;
           aspect-ratio: 16/9;
           border-radius: 0.5em;
           margin: 1em 0;
+        }
+        .ProseMirror .video-container,
+        .ProseMirror .video-embed {
+          margin: 1em 0;
+        }
+        .ProseMirror video {
+          width: 100%;
+          max-width: 100%;
+          border-radius: 0.5em;
         }
         /* Text Alignment */
         .ProseMirror [style*="text-align: center"] {
