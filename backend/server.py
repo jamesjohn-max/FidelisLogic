@@ -287,6 +287,107 @@ async def health_check():
     return {"status": "healthy", "service": "fidelis-logic-api"}
 
 
+# ==================== DEALS ENDPOINTS ====================
+
+@api_router.get("/deals", response_model=List[Deal])
+async def get_all_deals(published_only: bool = True):
+    """Get all deals"""
+    query = {"published": True} if published_only else {}
+    deals = await db.deals.find(query).sort("created_at", -1).to_list(100)
+    return [Deal(**deal) for deal in deals]
+
+
+@api_router.get("/deals/{slug}", response_model=Deal)
+async def get_deal_by_slug(slug: str):
+    """Get a single deal by slug"""
+    deal = await db.deals.find_one({"slug": slug})
+    if not deal:
+        raise HTTPException(status_code=404, detail="Deal not found")
+    
+    # Increment views
+    await db.deals.update_one(
+        {"slug": slug},
+        {"$inc": {"views": 1}}
+    )
+    
+    return Deal(**deal)
+
+
+@api_router.post("/deals", response_model=Deal)
+async def create_deal(deal_data: DealCreate, current_user: str = Depends(get_current_user)):
+    """Create a new deal (protected)"""
+    # Check if slug already exists
+    existing = await db.deals.find_one({"slug": deal_data.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="A deal with this slug already exists")
+    
+    deal = Deal(**deal_data.dict())
+    await db.deals.insert_one(deal.dict())
+    logger.info(f"Deal created: {deal.title} by {current_user}")
+    
+    return deal
+
+
+@api_router.put("/deals/{deal_id}", response_model=Deal)
+async def update_deal(deal_id: str, deal_data: DealUpdate, current_user: str = Depends(get_current_user)):
+    """Update a deal (protected)"""
+    existing = await db.deals.find_one({"id": deal_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Deal not found")
+    
+    update_data = {k: v for k, v in deal_data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    
+    await db.deals.update_one({"id": deal_id}, {"$set": update_data})
+    
+    updated_deal = await db.deals.find_one({"id": deal_id})
+    logger.info(f"Deal updated: {deal_id} by {current_user}")
+    
+    return Deal(**updated_deal)
+
+
+@api_router.delete("/deals/{deal_id}")
+async def delete_deal(deal_id: str, current_user: str = Depends(get_current_user)):
+    """Delete a deal (protected)"""
+    result = await db.deals.delete_one({"id": deal_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Deal not found")
+    
+    logger.info(f"Deal deleted: {deal_id} by {current_user}")
+    return {"message": "Deal deleted successfully"}
+
+
+@api_router.post("/deals/upload-image")
+async def upload_deal_image(file: UploadFile = File(...), current_user: str = Depends(get_current_user)):
+    """Upload an image for a deal (max 5MB, jpg/png/gif/webp only)"""
+    # Check file extension
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    # Check file size by reading content
+    contents = await file.read()
+    file_size = len(contents)
+    
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size is 5MB. Your file: {file_size / (1024*1024):.2f}MB"
+        )
+    
+    # Convert to Base64 data URL
+    mime_type = MIME_TYPES.get(file_ext, 'image/jpeg')
+    base64_data = base64.b64encode(contents).decode('utf-8')
+    data_url = f"data:{mime_type};base64,{base64_data}"
+    
+    logger.info(f"Deal image uploaded by {current_user}: {file.filename} ({file_size / 1024:.1f}KB)")
+    
+    return {"url": data_url}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
