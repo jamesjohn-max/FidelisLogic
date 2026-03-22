@@ -28,7 +28,7 @@ export const AdminLogin = () => {
       localStorage.setItem("admin_token", response.data.access_token);
       
       toast.success("Login successful!");
-      navigate("/admin/blog");
+      navigate("/admin");  // Redirect to admin selection page
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Invalid username or password");
@@ -48,7 +48,7 @@ export const AdminLogin = () => {
               className="h-16 mx-auto mb-4"
             />
             <h1 className="text-2xl font-bold text-gray-900">Admin Login</h1>
-            <p className="text-gray-600 mt-2">Blog Management System</p>
+            <p className="text-gray-600 mt-2">Content Management System</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
