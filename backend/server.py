@@ -17,6 +17,7 @@ import base64
 
 from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate
 from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, LoginRequest
+from deal_models import Deal, DealCreate, DealUpdate
 from auth import verify_password, get_password_hash, create_access_token, decode_access_token
 from email_service import email_service
 
