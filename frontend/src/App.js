@@ -13,10 +13,15 @@ import { BusinessApps } from "./pages/BusinessApps";
 import { About } from "./pages/About";
 import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
+import { SmartDeals } from "./pages/SmartDeals";
+import { DealPost } from "./pages/DealPost";
 import { Contact } from "./pages/Contact";
 import { AdminLogin } from "./pages/AdminLogin";
+import { AdminSelection } from "./pages/AdminSelection";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { BlogEditor } from "./pages/BlogEditor";
+import { AdminDealsDashboard } from "./pages/AdminDealsDashboard";
+import { DealEditor } from "./pages/DealEditor";
 import { Toaster } from "./components/ui/sonner";
 
 // Suppress ResizeObserver errors (common React/Radix UI issue, doesn't affect functionality)
