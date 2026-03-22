@@ -66,13 +66,19 @@ function App() {
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
             <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
             <Route path="/blog/:slug" element={<PublicLayout><BlogPost /></PublicLayout>} />
+            <Route path="/deals" element={<PublicLayout><SmartDeals /></PublicLayout>} />
+            <Route path="/deals/:slug" element={<PublicLayout><DealPost /></PublicLayout>} />
             <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
             
             {/* Admin Routes (no header/footer) */}
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminSelection />} />
             <Route path="/admin/blog" element={<AdminDashboard />} />
             <Route path="/admin/blog/new" element={<BlogEditor />} />
             <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
+            <Route path="/admin/deals" element={<AdminDealsDashboard />} />
+            <Route path="/admin/deals/new" element={<DealEditor />} />
+            <Route path="/admin/deals/edit/:id" element={<DealEditor />} />
           </Routes>
           <Toaster />
         </BrowserRouter>
