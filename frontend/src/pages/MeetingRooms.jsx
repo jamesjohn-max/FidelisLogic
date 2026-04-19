@@ -4,8 +4,11 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { FAQSection } from "../components/FAQSection";
+import { FAQSchema, meetingRoomsFAQs } from "../components/FAQSchema";
 import { seoConfig } from "../data/seoConfig";
-import { meetingRoomDetails } from "../data/mock";
+import { meetingRoomDetails } from "../data/siteContent";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const MeetingRooms = () => {
@@ -32,8 +35,16 @@ export const MeetingRooms = () => {
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       <StructuredData data={service} />
+      <FAQSchema faqs={meetingRoomsFAQs} />
+      <Breadcrumbs
+        items={[
+          { name: "Solutions", href: "/solutions" },
+          { name: "Meeting Rooms & AV" }
+        ]}
+        className="pt-24"
+      />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -150,6 +161,13 @@ export const MeetingRooms = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection
+        faqs={meetingRoomsFAQs}
+        subtitle="Everything you need to know about designing and deploying modern meeting rooms."
+        testIdPrefix="meeting-rooms-faq"
+      />
 
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">

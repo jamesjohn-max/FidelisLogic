@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Linkedin, Youtube, Instagram, Mail, Phone, MapPin } from "lucide-react";
-import { contactInfo } from "../data/mock";
+import { contactInfo } from "../data/siteContent";
 
 export const Footer = () => {
   return (

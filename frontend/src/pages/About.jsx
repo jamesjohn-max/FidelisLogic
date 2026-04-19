@@ -1,6 +1,7 @@
 import { Card, CardContent } from "../components/ui/card";
 import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { seoConfig } from "../data/seoConfig";
 
 export const About = () => {
@@ -18,14 +19,15 @@ export const About = () => {
       />
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <Breadcrumbs items={[{ name: "About" }]} className="pt-24" />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             About Us
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
-            We reduce complexity in modern workplace technology decisions—helping UAE organizations choose, implement, and optimize the right solutions with confidence.
+            We reduce complexity in modern workplace technology decisions—helping UAE organizations choose, implement, and optimize the right solutions with confidence through their trusted technolog partners.
           </p>
         </div>
       </section>
@@ -44,11 +46,11 @@ export const About = () => {
             <div className="space-y-6">
               <h2 className="text-4xl font-bold text-gray-900 text-center">Our Mission</h2>
               <p className="text-lg text-gray-600 leading-relaxed">
-                The modern workplace technology market is overwhelming. Vendors promote overlapping products with confusing feature sets, leaving organizations unsure what to buy and how to integrate it.
+                We help organizations cut through the complexity of workplace technology by providing structured consulting, vendor-neutral guidance, and expert delivery support.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
-                We bridge the gap between business needs and technology solutions. Through structured consulting, vendor-neutral guidance, and expert implementation, we help you make informed decisions and deliver measurable outcomes.
-              </p>
+                The result is confident technology decisions and successful implementation through trusted resellers or system integrators.
+               </p> 
             </div>
           </div>
         </div>
@@ -123,13 +125,13 @@ export const About = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Certifications & Partner Ecosystem
+              Trusted Partner Ecosystem
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We work across leading OEMs and distributors in the UAE. Solutions delivered based on project fit, availability, and support ecosystem.
+              We work with leading OEMs and distributors in the UAE, supporting solutions that are chosen based on customer requirements, project fit, availability, and delivery readiness.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             <Card className="border-0 shadow-lg">
               <CardContent className="p-8 text-center">
                 <h3 className="text-lg font-semibold text-gray-900">Microsoft Ecosystem</h3>
@@ -146,6 +148,12 @@ export const About = () => {
               <CardContent className="p-8 text-center">
                 <h3 className="text-lg font-semibold text-gray-900">AV & Devices</h3>
                 <p className="text-gray-600 mt-2">Poly, Logitech, Neat, Yealink, Jabra, Lenovo, Crestron etc.</p>
+              </CardContent>
+            </Card>
+             <Card className="border-0 shadow-lg">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-lg font-semibold text-gray-900">Workspace Experience</h3>
+                <p className="text-gray-600 mt-2">ROOMZ, Morbit.</p>
               </CardContent>
             </Card>
           </div>

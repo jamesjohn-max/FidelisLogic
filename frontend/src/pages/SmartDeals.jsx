@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { SEO } from "../components/SEO";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { ArrowRight, Loader2, Clock, Tag, ExternalLink } from "lucide-react";
 import axios from "axios";
 
@@ -75,8 +76,10 @@ export const SmartDeals = () => {
         keywords="IT deals, technology discounts, meeting room deals, enterprise headset offers, business software deals"
       />
 
+      <Breadcrumbs items={[{ name: "Smart Deals" }]} className="pt-24" />
+
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-orange-50 to-white">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-orange-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <Badge className="mb-4 bg-orange-100 text-orange-700 hover:bg-orange-100">
             <Tag className="mr-1" size={14} />

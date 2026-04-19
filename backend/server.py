@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks, Depends, UploadFile, File, Form
+from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks, Depends, UploadFile, File, Form, Request
+from fastapi.responses import Response
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -386,6 +387,102 @@ async def upload_deal_image(file: UploadFile = File(...), current_user: str = De
     logger.info(f"Deal image uploaded by {current_user}: {file.filename} ({file_size / 1024:.1f}KB)")
     
     return {"url": data_url}
+
+
+# ==================== SITEMAP ====================
+
+SITEMAP_STATIC_PAGES = [
+    ("/", "1.0", "weekly"),
+    ("/solutions", "0.9", "weekly"),
+    ("/solutions/meeting-rooms", "0.8", "monthly"),
+    ("/solutions/headsets", "0.8", "monthly"),
+    ("/solutions/workspace-experience", "0.8", "monthly"),
+    ("/solutions/business-apps", "0.8", "monthly"),
+    ("/about", "0.7", "monthly"),
+    ("/blog", "0.8", "weekly"),
+    ("/deals", "0.8", "weekly"),
+    ("/contact", "0.9", "monthly"),
+]
+
+
+def _resolve_base_url(request: Request) -> str:
+    base = os.environ.get("SITE_BASE_URL", "").strip().rstrip("/")
+    if base:
+        return base
+    # Fallback to request host so preview environments still produce valid URLs
+    return str(request.base_url).rstrip("/")
+
+
+def _fmt_date(d) -> str:
+    if isinstance(d, datetime):
+        return d.strftime("%Y-%m-%d")
+    if isinstance(d, str) and d:
+        return d[:10]
+    return datetime.utcnow().strftime("%Y-%m-%d")
+
+
+@api_router.get("/sitemap.xml")
+async def sitemap(request: Request):
+    """Dynamic sitemap including static pages, published blog posts, and active deals."""
+    base = _resolve_base_url(request)
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+
+    url_entries: List[str] = []
+
+    # Static pages
+    for path, priority, changefreq in SITEMAP_STATIC_PAGES:
+        url_entries.append(
+            f"  <url>\n"
+            f"    <loc>{base}{path}</loc>\n"
+            f"    <lastmod>{today}</lastmod>\n"
+            f"    <changefreq>{changefreq}</changefreq>\n"
+            f"    <priority>{priority}</priority>\n"
+            f"  </url>"
+        )
+
+    # Published blog posts
+    blog_cursor = db.blog_posts.find({"published": True}, {"_id": 0, "slug": 1, "updated_at": 1, "date": 1})
+    async for post in blog_cursor:
+        slug = post.get("slug")
+        if not slug:
+            continue
+        lastmod = _fmt_date(post.get("updated_at") or post.get("date"))
+        url_entries.append(
+            f"  <url>\n"
+            f"    <loc>{base}/blog/{slug}</loc>\n"
+            f"    <lastmod>{lastmod}</lastmod>\n"
+            f"    <changefreq>monthly</changefreq>\n"
+            f"    <priority>0.6</priority>\n"
+            f"  </url>"
+        )
+
+    # Active (non-expired) deals
+    now = datetime.utcnow()
+    deals_cursor = db.deals.find({"published": True}, {"_id": 0, "slug": 1, "updated_at": 1, "end_date": 1})
+    async for deal in deals_cursor:
+        slug = deal.get("slug")
+        if not slug:
+            continue
+        end_date = deal.get("end_date")
+        if isinstance(end_date, datetime) and end_date < now:
+            continue  # skip expired
+        lastmod = _fmt_date(deal.get("updated_at"))
+        url_entries.append(
+            f"  <url>\n"
+            f"    <loc>{base}/deals/{slug}</loc>\n"
+            f"    <lastmod>{lastmod}</lastmod>\n"
+            f"    <changefreq>daily</changefreq>\n"
+            f"    <priority>0.7</priority>\n"
+            f"  </url>"
+        )
+
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "\n".join(url_entries)
+        + "\n</urlset>\n"
+    )
+    return Response(content=xml, media_type="application/xml")
 
 
 # Include the router in the main app

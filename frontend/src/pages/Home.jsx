@@ -23,9 +23,8 @@ import {
   whyChooseUsAdvantages,
   roomTypes,
   partners,
-  testimonials,
-  blogPosts as staticBlogPosts
-} from "../data/mock";
+  testimonials
+} from "../data/siteContent";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -42,10 +41,10 @@ export const Home = () => {
           ...post,
           image: post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c"
         }));
-        setBlogPosts(apiPosts.length > 0 ? apiPosts : staticBlogPosts);
+        setBlogPosts(apiPosts);
       } catch (error) {
         console.error("Error fetching blog posts:", error);
-        setBlogPosts(staticBlogPosts);
+        setBlogPosts([]);
       } finally {
         setIsLoadingPosts(false);
       }

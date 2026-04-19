@@ -4,8 +4,8 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { seoConfig } from "../data/seoConfig";
-import { blogPosts as staticBlogPosts } from "../data/mock";
 import { ArrowRight, Loader2 } from "lucide-react";
 import axios from "axios";
 
@@ -20,17 +20,14 @@ export const Blog = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
-        // Combine API posts with static posts, API posts first
         const apiPosts = response.data.map(post => ({
           ...post,
           image: post.featured_image || "https://images.unsplash.com/photo-1497366216548-37526070297c"
         }));
-        // Only use static posts if no API posts exist
-        setPosts(apiPosts.length > 0 ? apiPosts : staticBlogPosts);
+        setPosts(apiPosts);
       } catch (error) {
         console.error("Error fetching blog posts:", error);
-        // Fallback to static posts on error
-        setPosts(staticBlogPosts);
+        setPosts([]);
       } finally {
         setIsLoading(false);
       }
@@ -58,8 +55,9 @@ export const Blog = () => {
         keywords={seoConfig.blog.keywords}
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <Breadcrumbs items={[{ name: "Blog" }]} className="pt-24" />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Insights & Guidance

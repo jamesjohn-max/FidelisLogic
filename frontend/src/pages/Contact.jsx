@@ -13,10 +13,11 @@ import {
 } from "../components/ui/select";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, organizationSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { seoConfig } from "../data/seoConfig";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin, Linkedin, Youtube, Instagram } from "lucide-react";
-import { contactInfo, formTopics } from "../data/mock";
+import { contactInfo, formTopics } from "../data/siteContent";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -106,8 +107,9 @@ export const Contact = () => {
       />
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <Breadcrumbs items={[{ name: "Contact" }]} className="pt-24" />
       {/* Hero Section */}
-      <section className="pt-32 pb-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-8 pb-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Let's Talk About Your Technology Needs

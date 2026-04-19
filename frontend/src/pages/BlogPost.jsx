@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { ArrowLeft, Calendar, Tag, User, Clock, Loader2 } from "lucide-react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
@@ -102,7 +103,15 @@ export const BlogPost = () => {
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
 
-      <section className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+      <Breadcrumbs
+        items={[
+          { name: "Blog", href: "/blog" },
+          { name: post.title }
+        ]}
+        className="pt-24"
+      />
+
+      <section className="pt-4 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <Link to="/blog">
             <Button variant="outline" className="mb-8">

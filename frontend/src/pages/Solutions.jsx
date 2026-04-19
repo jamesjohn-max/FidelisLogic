@@ -4,8 +4,9 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { seoConfig } from "../data/seoConfig";
-import { segments } from "../data/mock";
+import { segments } from "../data/siteContent";
 import { ArrowRight } from "lucide-react";
 
 export const Solutions = () => {
@@ -22,8 +23,9 @@ export const Solutions = () => {
         keywords={seoConfig.solutions.keywords}
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <Breadcrumbs items={[{ name: "Solutions" }]} className="pt-24" />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Modern Workplace Solutions

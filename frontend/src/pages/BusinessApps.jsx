@@ -4,8 +4,11 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { FAQSection } from "../components/FAQSection";
+import { FAQSchema, businessAppsFAQs } from "../components/FAQSchema";
 import { seoConfig } from "../data/seoConfig";
-import { businessAppsDetails } from "../data/mock";
+import { businessAppsDetails } from "../data/siteContent";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const BusinessApps = () => {
@@ -32,8 +35,16 @@ export const BusinessApps = () => {
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       <StructuredData data={service} />
+      <FAQSchema faqs={businessAppsFAQs} />
+      <Breadcrumbs
+        items={[
+          { name: "Solutions", href: "/solutions" },
+          { name: "Business Applications" }
+        ]}
+        className="pt-24"
+      />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -227,6 +238,13 @@ export const BusinessApps = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection
+        faqs={businessAppsFAQs}
+        subtitle="Answers to common questions about ERP, HRMS, and CRM implementation for SMBs."
+        testIdPrefix="business-apps-faq"
+      />
 
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">

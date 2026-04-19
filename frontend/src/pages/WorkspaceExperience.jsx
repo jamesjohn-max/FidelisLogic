@@ -4,8 +4,11 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { FAQSection } from "../components/FAQSection";
+import { FAQSchema, workspaceFAQs } from "../components/FAQSchema";
 import { seoConfig } from "../data/seoConfig";
-import { workspaceExperienceDetails } from "../data/mock";
+import { workspaceExperienceDetails } from "../data/siteContent";
 import { ArrowRight } from "lucide-react";
 
 export const WorkspaceExperience = () => {
@@ -32,8 +35,16 @@ export const WorkspaceExperience = () => {
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       <StructuredData data={service} />
+      <FAQSchema faqs={workspaceFAQs} />
+      <Breadcrumbs
+        items={[
+          { name: "Solutions", href: "/solutions" },
+          { name: "Workspace Experience" }
+        ]}
+        className="pt-24"
+      />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
@@ -243,6 +254,13 @@ export const WorkspaceExperience = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection
+        faqs={workspaceFAQs}
+        subtitle="Answers to common questions about room booking, hot desking, and workspace platforms."
+        testIdPrefix="workspace-faq"
+      />
 
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">

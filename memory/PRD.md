@@ -21,6 +21,32 @@ Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeti
 - **Database:** MongoDB
 - **Authentication:** JWT for admin panel
 
+### Phase 5: Smart Deals + CMS Split (Completed - December 2025)
+- Smart Deals CMS branch (Blogs vs Deals admin split)
+- Deals CRUD with start/end date auto-expiry logic
+- Public Deals listing + detail pages
+- Enhanced TipTap editor (colors, alignment, tables, task lists, video/image embed)
+
+### Phase 6: SEO & Backlog Cleanup (Completed - December 19, 2025)
+**Blog Content Migration**
+- Seeded 6 legacy blog posts from former `mock.js` into MongoDB (idempotent script at `/app/backend/scripts/seed_legacy_blog_posts.py`)
+- Renamed `mock.js` → `siteContent.js` (content clarity, removed `blogPosts` export)
+- Deleted `mock.js`; updated all 9 import sites
+
+**Dynamic Sitemap**
+- New `GET /api/sitemap.xml` returning `application/xml` with static pages + all published blog posts + active non-expired deals
+- Added `SITE_BASE_URL` env var in `backend/.env` (default `https://fidelislogic.com`)
+- Removed static `public/sitemap.xml`; updated `robots.txt` to reference `/api/sitemap.xml`
+
+**FAQ Schema + Visible FAQ Sections**
+- New `FAQSection.jsx` accordion component (reusable)
+- Expanded FAQ content (5–6 Q&A) for MeetingRooms, Headsets, WorkspaceExperience, BusinessApps
+- Each service page now renders visible `<FAQSection>` + JSON-LD `<FAQSchema>` (FAQPage structured data)
+
+**Breadcrumb Navigation**
+- New `Breadcrumbs.jsx` component with visible UI + `BreadcrumbList` JSON-LD
+- Added to: Solutions, Meeting Rooms, Headsets, Workspace, Business Apps, About, Blog, BlogPost, Smart Deals, DealPost, Contact
+
 ## What's Been Implemented
 
 ### Phase 1: Core Website (Completed)
@@ -117,23 +143,14 @@ Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeti
 
 ## Pending Issues
 
-### P1: Contact Form Email Notifications
-- **Status:** NOT WORKING
-- **Issue:** Web3Forms free tier blocks server-side API calls (403 error)
-- **Current behavior:** Form submissions saved to database, no email sent
-- **Recommended fix:** Switch to Resend email service
-
-### P2: Microsoft Bookings Integration
-- **Status:** NOT STARTED
-- **Requirement:** Embed MS Bookings for consultation scheduling
+_(None active — contact form emails confirmed working by user on Dec 19, 2025; MS Bookings removed from roadmap.)_
 
 ## Upcoming Tasks (Priority Order)
-1. **P1:** Fix contact form email notifications (switch to Resend)
-2. **P2:** Microsoft Bookings integration
-3. **P2:** Migrate remaining mock blog posts from `mock.js` to database
-4. **P2:** Dynamic sitemap generation for new blog posts
-5. **P3:** FAQ schema for service pages
-6. **P3:** Breadcrumb navigation
+_No P1/P2 tasks queued. Possible future enhancements:_
+- FAQ/schema expansion on remaining pages (About, Contact)
+- Additional structured data types (HowTo, Product for deals)
+- Image optimization pipeline for Base64 media
+- Analytics dashboard for blog/deal views
 
 ## Admin Credentials
 - **URL:** `/admin/login`

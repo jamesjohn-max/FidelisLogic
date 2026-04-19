@@ -1,4 +1,5 @@
-// Mock data for IT consulting website
+// Static site content (company info, service page details, hero copy)
+// Blog posts are served dynamically from the backend — do not store posts here.
 
 export const stats = [
   {
@@ -17,7 +18,7 @@ export const stats = [
 
 export const heroData = {
   title: "Simplifying Modern Workplace Technology Decisions",
-  subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence.",
+  subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence while working through their trusted vendors.",
   ctaPrimary: "Book a Free Consultation",
   ctaSecondary: "Explore Solutions",
   image: "/HeroImage.png"
@@ -72,7 +73,7 @@ export const howWeHelp = [
   {
     step: "03",
     title: "Deliver",
-    description: "We implement solutions using best-fit vendors, manage installation, commissioning, and ensure quality outcomes."
+    description: "We work alongside the customer’s preferred reseller or system integrator so the solution is deployed smoothly and successfully."
   },
   {
     step: "04",
@@ -83,23 +84,23 @@ export const howWeHelp = [
 
 export const whyChooseUs = [
   {
-    title: "Vendor-Neutral Guidance",
-    description: "We recommend solutions based on your needs, not Vendor partnerships. Our loyalty is to your outcome.",
+    title: "Business-First, Vendor-Neutral Guidance",
+    description: "We recommend solutions based on your business needs, operational goals, and user requirements, not on a one-size-fits-all product push.",
     icon: "Shield"
   },
   {
-    title: "UAE Delivery Experience",
-    description: "Deep understanding of regional Procurement, Compliance, Vendor ecosystems, and Support infrastructure.",
-    icon: "MapPin"
+    title: "Work Through Your Trusted Vendors",
+    description: "We work with your preferred reseller or system integrator, so you keep existing relationships while gaining expert guidance and delivery support.",
+    icon: "Handshake"
   },
   {
-    title: "Lifecycle Support",
-    description: "From assessment through implementation to ongoing support - we stay with you beyond go-live.",
+    title: "End-to-End Delivery Support",
+    description: "From assessment and solution design to deployment and post-go-live support, we help make sure the solution is implemented successfully.",
     icon: "RefreshCw"
   },
   {
-    title: "Measurable Outcomes",
-    description: "Clear KPIs, Structured Project Delivery, and documentation that ensures your investment delivers results.",
+    title: "Outcomes That Matter",
+    description: "Better-fit solutions, smoother deployments, lower risk, and stronger results for both customers and delivery partners.",
     icon: "Target"
   }
 ];
@@ -125,63 +126,6 @@ export const testimonials = [
     company: "SMB Technology Startup",
     content: "Their business applications consulting transformed our operations. From ERP selection to training, they delivered a solution that actually works for our team.",
     rating: 5
-  }
-];
-
-export const blogPosts = [
-  {
-    id: 1,
-    title: "Choosing Between Microsoft Teams Rooms and Zoom Rooms in 2026",
-    excerpt: "A vendor-neutral comparison to help UAE organizations make informed meeting room technology decisions.",
-    category: "Meeting Rooms",
-    date: "2026-01-15",
-    image: "https://images.unsplash.com/photo-1770048532712-4fde5ef7eb90",
-    slug: "teams-rooms-vs-zoom-rooms-2025"
-  },
-  {
-    id: 2,
-    title: "The Hidden Costs of Poor Workplace Technology Decisions",
-    excerpt: "Why upfront consulting saves money and frustration in the long run.",
-    category: "Modern Work",
-    date: "2026-01-10",
-    image: "https://images.unsplash.com/photo-1630283017802-785b7aff9aac",
-    slug: "hidden-costs-poor-tech-decisions"
-  },
-  {
-    id: 3,
-    title: "Hot Desking and Room Booking: Complete Guide for UAE Offices",
-    excerpt: "How workspace experience platforms like Flowscape and ROOMZ optimize office utilization.",
-    category: "Workspace Experience",
-    date: "2026-01-05",
-    image: "https://images.unsplash.com/photo-1718220216044-006f43e3a9b1",
-    slug: "hot-desking-room-booking-guide"
-  },
-  {
-    id: 4,
-    title: "Enterprise Headset Buying Guide: Call Center to Executive Suite",
-    excerpt: "How to choose the right collaboration devices for different user personas and use cases.",
-    category: "Headsets",
-    date: "2026-01-28",
-    image: "https://images.unsplash.com/photo-1769069920308-40130d50ae58",
-    slug: "enterprise-headset-buying-guide"
-  },
-  {
-    id: 5,
-    title: "ERP Implementation for SMBs: What to Expect",
-    excerpt: "A realistic timeline and approach to business application deployments in small and medium businesses.",
-    category: "SMB Apps",
-    date: "2026-01-20",
-    image: "https://images.unsplash.com/photo-1642957323739-5632d8a2ff3d",
-    slug: "erp-implementation-smb-guide"
-  },
-  {
-    id: 6,
-    title: "Meeting Room Design Best Practices for Microsoft Teams",
-    excerpt: "Acoustic considerations, camera placement, network readiness, and commissioning standards.",
-    category: "Meeting Rooms",
-    date: "2026-02-01",
-    image: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d",
-    slug: "meeting-room-design-best-practices"
   }
 ];
 
