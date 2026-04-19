@@ -48,18 +48,18 @@ export const Breadcrumbs = ({ items = [], className = "" }) => {
               return (
                 <li
                   key={`${item.name}-${index}`}
-                  className="flex items-center gap-1.5"
+                  className="flex items-center gap-2"
                   data-testid={`breadcrumb-item-${index}`}
                 >
                   {index > 0 && (
                     <ChevronRight
-                      className="w-3.5 h-3.5 text-gray-400"
+                      className="w-4 h-4 text-gray-400"
                       aria-hidden="true"
                     />
                   )}
                   {isLast || !item.href ? (
                     <span
-                      className="font-medium text-brand-dark"
+                      className="font-semibold text-brand-dark"
                       aria-current="page"
                       data-testid={`breadcrumb-current`}
                     >
@@ -68,10 +68,10 @@ export const Breadcrumbs = ({ items = [], className = "" }) => {
                   ) : (
                     <Link
                       to={item.href}
-                      className="hover:text-brand-red transition-colors flex items-center gap-1"
+                      className="text-gray-700 hover:text-brand-red transition-colors flex items-center gap-1.5"
                       data-testid={`breadcrumb-link-${index}`}
                     >
-                      {isHome && <Home className="w-3.5 h-3.5" aria-hidden="true" />}
+                      {isHome && <Home className="w-4 h-4" aria-hidden="true" />}
                       {!isHome && item.name}
                       {isHome && <span className="sr-only">{item.name}</span>}
                     </Link>
