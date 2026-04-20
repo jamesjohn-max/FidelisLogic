@@ -7,6 +7,7 @@ import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/S
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { FAQSection } from "../components/FAQSection";
 import { FAQSchema, headsetsFAQs } from "../components/FAQSchema";
+import { SolutionBrands } from "../components/SolutionBrands";
 import { seoConfig } from "../data/seoConfig";
 import { headsetDetails } from "../data/siteContent";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
@@ -171,6 +172,13 @@ export const Headsets = () => {
           </p>
         </div>
       </section>
+
+      {/* Brand Ecosystem */}
+      <SolutionBrands
+        solutionSlug="headsets"
+        title="Headset brands we standardize on"
+        subtitle="Persona-fit recommendations backed by fleet-management tooling — so comfort, certification, and IT operations are all addressed."
+      />
 
       {/* FAQ Section */}
       <FAQSection

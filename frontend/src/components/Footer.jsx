@@ -53,6 +53,11 @@ export const Footer = () => {
                   Business Applications
                 </Link>
               </li>
+              <li>
+                <Link to="/brands" className="text-sm hover:text-blue-400 transition-colors">
+                  Brand Ecosystem
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -70,14 +75,14 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm hover:text-blue-400 transition-colors">
-                  Contact
+                <Link to="/deals" className="text-sm hover:text-blue-400 transition-colors">
+                  Smart Deals
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-sm hover:text-blue-400 transition-colors">
-                  Download Capability Deck
-                </a>
+                <Link to="/contact" className="text-sm hover:text-blue-400 transition-colors">
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>

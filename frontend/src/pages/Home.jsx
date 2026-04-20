@@ -218,6 +218,15 @@ export const Home = () => {
       {/* Testimonials Section */}
       {/* Removed as per client request */}
 
+      {/* Trusted Brands / Strategic Partnerships */}
+      <TrustedBrands
+        title="Trusted by our customers, delivered through curated partnerships."
+        subtitle="We stand behind a deliberately short list of platforms — the same brands our customers rely on across meeting rooms, headsets, and workspace experience."
+        variant="compact"
+        background="white"
+        testIdPrefix="home-trusted-brands"
+      />
+
       {/* Featured Blog Posts Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">

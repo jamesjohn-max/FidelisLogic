@@ -10,13 +10,16 @@ export const Header = () => {
   const navigation = [
     { name: "Home", href: "/" },
     { name: "Solutions", href: "/solutions" },
-    { name: "Smart Deals", href: "/deals" },
+    { name: "Brands", href: "/brands" },
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" }
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === "/") return location.pathname === "/";
+    return location.pathname === path || location.pathname.startsWith(path + "/");
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-50 border-b border-gray-100">

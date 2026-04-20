@@ -2,6 +2,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
 import { Breadcrumbs } from "../components/Breadcrumbs";
+import { TrustedBrands } from "../components/TrustedBrands";
 import { seoConfig } from "../data/seoConfig";
 
 export const About = () => {
@@ -159,6 +160,70 @@ export const About = () => {
           </div>
         </div>
       </section>
+
+      {/* Partner Ecosystem Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" data-testid="about-partner-ecosystem-section">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-5 gap-12 mb-14">
+            <div className="lg:col-span-2">
+              <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
+                Partner Ecosystem
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark mb-6 leading-tight">
+                A curated ecosystem — not a vendor catalog.
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Fidelis Logic is a UAE-based advisory and delivery partner with a
+                deliberately short list of strategic brand partners. Each one earns its
+                place because it solves a specific problem better than the alternatives.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                That discipline lets us stay honest with customers. If none of our partners
+                is the right fit for your problem, we'll tell you — and help you find the
+                one that is.
+              </p>
+            </div>
+            <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
+              {[
+                {
+                  title: "Strategic, not transactional",
+                  body: "We co-invest in relationships with vendors whose roadmaps align with our customers' futures — not whoever has the biggest margin this quarter."
+                },
+                {
+                  title: "Authorized and accountable",
+                  body: "We are authorized deployment partners for the brands we represent, with certifications, direct vendor support escalation, and lifecycle ownership."
+                },
+                {
+                  title: "Vendor-neutral recommendations",
+                  body: "Our advisory layer is not locked to any single brand. Recommendations are driven by your business case, not a quota sheet."
+                },
+                {
+                  title: "Work through your channels",
+                  body: "We integrate with your preferred resellers and system integrators — or deliver directly. Either way, the buck stops with us."
+                }
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="bg-gray-50 border border-gray-200 rounded-xl p-6"
+                  data-testid={`about-ecosystem-pillar-${item.title.toLowerCase().replace(/[^a-z]+/g, '-')}`}
+                >
+                  <h3 className="text-base font-semibold text-brand-dark mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Detailed brand grid */}
+      <TrustedBrands
+        title="Meet the brands behind our deliveries."
+        subtitle="Each partner is chosen for a specific role in the modern workplace stack — from room booking and device management to headsets and video collaboration."
+        variant="detailed"
+        background="gray"
+        testIdPrefix="about-brand-ecosystem"
+      />
     {/* Hiding it for now  
        Team Section 
       <section className="py-20 px-4 sm:px-6 lg:px-8">

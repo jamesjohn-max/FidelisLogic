@@ -7,6 +7,7 @@ import { StructuredData, breadcrumbSchema, serviceSchema } from "../components/S
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { FAQSection } from "../components/FAQSection";
 import { FAQSchema, workspaceFAQs } from "../components/FAQSchema";
+import { SolutionBrands } from "../components/SolutionBrands";
 import { seoConfig } from "../data/seoConfig";
 import { workspaceExperienceDetails } from "../data/siteContent";
 import { ArrowRight } from "lucide-react";
@@ -254,6 +255,13 @@ export const WorkspaceExperience = () => {
           </div>
         </div>
       </section>
+
+      {/* Brand Ecosystem */}
+      <SolutionBrands
+        solutionSlug="workspace-experience"
+        title="Featured workspace platforms"
+        subtitle="Our strategic partners for room booking, workspace analytics, and device management — chosen for reliability at enterprise scale."
+      />
 
       {/* FAQ Section */}
       <FAQSection

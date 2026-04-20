@@ -15,6 +15,8 @@ import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
 import { SmartDeals } from "./pages/SmartDeals";
 import { DealPost } from "./pages/DealPost";
+import { Brands } from "./pages/Brands";
+import { BrandDetail } from "./pages/BrandDetail";
 import { Contact } from "./pages/Contact";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminSelection } from "./pages/AdminSelection";
@@ -22,6 +24,7 @@ import { AdminDashboard } from "./pages/AdminDashboard";
 import { BlogEditor } from "./pages/BlogEditor";
 import { AdminDealsDashboard } from "./pages/AdminDealsDashboard";
 import { DealEditor } from "./pages/DealEditor";
+import { FloatingDealsButton } from "./components/FloatingDealsButton";
 import { Toaster } from "./components/ui/sonner";
 
 // Suppress ResizeObserver errors (common React/Radix UI issue, doesn't affect functionality)
@@ -45,6 +48,7 @@ const PublicLayout = ({ children }) => (
   <>
     <Header />
     {children}
+    <FloatingDealsButton />
     <Footer />
   </>
 );
@@ -68,6 +72,8 @@ function App() {
             <Route path="/blog/:slug" element={<PublicLayout><BlogPost /></PublicLayout>} />
             <Route path="/deals" element={<PublicLayout><SmartDeals /></PublicLayout>} />
             <Route path="/deals/:slug" element={<PublicLayout><DealPost /></PublicLayout>} />
+            <Route path="/brands" element={<PublicLayout><Brands /></PublicLayout>} />
+            <Route path="/brands/:slug" element={<PublicLayout><BrandDetail /></PublicLayout>} />
             <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
             
             {/* Admin Routes (no header/footer) */}
