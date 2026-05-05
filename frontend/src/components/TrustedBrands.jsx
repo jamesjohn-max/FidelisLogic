@@ -53,13 +53,16 @@ export const TrustedBrands = ({
                     {brand.logoText}
                   </span>
                   <span
-                    className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${
+                    className={`inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-full ${
                       brand.partnershipType === "Distribution Partner"
-                        ? "bg-amber-50 text-amber-800 border-amber-200"
-                        : "bg-slate-100 text-slate-600 border-slate-200"
+                        ? "bg-amber-600 text-white"
+                        : "bg-white text-slate-700 border border-slate-300"
                     }`}
                     data-testid={`${testIdPrefix}-partnership-${brand.slug}`}
                   >
+                    {brand.partnershipType !== "Distribution Partner" && (
+                      <span className="w-1 h-1 rounded-full bg-amber-500 shrink-0" aria-hidden="true" />
+                    )}
                     {brand.partnershipType === "Distribution Partner" ? "Distribution" : "Channel"}
                   </span>
                 </Link>
