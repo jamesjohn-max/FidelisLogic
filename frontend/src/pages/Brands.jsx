@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { brands, getBrandsSorted, getFeaturedBrands } from "../data/brands";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { PartnershipBadge } from "../components/PartnershipBadge";
 
 const categories = [
   "All",
@@ -93,9 +94,16 @@ export const Brands = () => {
                     >
                       {brand.logoText}
                     </div>
-                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
-                      {brand.category}
-                    </Badge>
+                    <div className="flex flex-col items-end gap-2">
+                      <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+                        {brand.category}
+                      </Badge>
+                      <PartnershipBadge
+                        type={brand.partnershipType}
+                        size="xs"
+                        testId={`brand-featured-partnership-${brand.slug}`}
+                      />
+                    </div>
                   </div>
                   <h3 className="text-2xl font-semibold text-brand-dark mb-3">
                     {brand.tagline}
@@ -139,6 +147,11 @@ export const Brands = () => {
                   >
                     {brand.logoText}
                   </div>
+                  <PartnershipBadge
+                    type={brand.partnershipType}
+                    size="xs"
+                    testId={`brand-card-partnership-${brand.slug}`}
+                  />
                 </div>
                 <div className="text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">
                   {brand.category}

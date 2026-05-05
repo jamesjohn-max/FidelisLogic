@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { solutionBrandMap, getBrandBySlug } from "../data/brands";
+import { PartnershipBadge } from "./PartnershipBadge";
 
 /**
  * Inline section on solution pages that surfaces the brands Fidelis Logic
@@ -55,6 +56,13 @@ export const SolutionBrands = ({
                     Featured
                   </span>
                 )}
+              </div>
+              <div className="mb-3">
+                <PartnershipBadge
+                  type={brand.partnershipType}
+                  size="xs"
+                  testId={`solution-brand-partnership-${brand.slug}`}
+                />
               </div>
               <p className="text-sm font-semibold text-brand-dark mb-2">{brand.tagline}</p>
               <p className="text-sm text-gray-600 leading-relaxed flex-1 mb-4">

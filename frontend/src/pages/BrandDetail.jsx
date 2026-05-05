@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { getBrandBySlug, getBrandsSorted } from "../data/brands";
 import { ArrowRight, CheckCircle2, Sparkles, ArrowLeft } from "lucide-react";
+import { PartnershipBadge } from "../components/PartnershipBadge";
 
 export const BrandDetail = () => {
   const { slug } = useParams();
@@ -71,12 +72,19 @@ export const BrandDetail = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
             <div className="lg:col-span-3">
-              {brand.featured && (
-                <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-blue-100 mb-4" data-testid="brand-featured-badge">
-                  <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                  Featured Partner
-                </Badge>
-              )}
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                {brand.featured && (
+                  <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-blue-100" data-testid="brand-featured-badge">
+                    <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                    Featured Partner
+                  </Badge>
+                )}
+                <PartnershipBadge
+                  type={brand.partnershipType}
+                  size="sm"
+                  testId="brand-partnership-badge"
+                />
+              </div>
               <div
                 className="text-5xl sm:text-6xl font-bold tracking-tight mb-6"
                 style={accentTextStyle}
@@ -112,6 +120,16 @@ export const BrandDetail = () => {
                   At a glance
                 </p>
                 <dl className="space-y-4">
+                  <div>
+                    <dt className="text-sm text-gray-500 mb-1">Partnership</dt>
+                    <dd>
+                      <PartnershipBadge
+                        type={brand.partnershipType}
+                        size="sm"
+                        testId="brand-partnership-badge-glance"
+                      />
+                    </dd>
+                  </div>
                   <div>
                     <dt className="text-sm text-gray-500 mb-1">Category</dt>
                     <dd className="text-base font-semibold text-brand-dark">{brand.category}</dd>
@@ -292,6 +310,13 @@ export const BrandDetail = () => {
                   style={{ color: b.accentColor }}
                 >
                   {b.logoText}
+                </div>
+                <div className="mb-2">
+                  <PartnershipBadge
+                    type={b.partnershipType}
+                    size="xs"
+                    testId={`brand-related-partnership-${b.slug}`}
+                  />
                 </div>
                 <p className="text-sm text-gray-500 uppercase tracking-wider font-medium mb-2">
                   {b.category}

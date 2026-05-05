@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { getBrandsSorted } from "../data/brands";
+import { PartnershipBadge } from "./PartnershipBadge";
 
 /**
  * Section that surfaces the curated brand ecosystem. Used on the homepage
@@ -41,15 +42,25 @@ export const TrustedBrands = ({
                 <Link
                   key={brand.slug}
                   to={`/brands/${brand.slug}`}
-                  className="group flex items-center justify-center px-4 py-6 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all"
+                  className="group flex flex-col items-center justify-center px-4 py-6 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all"
                   data-testid={`${testIdPrefix}-logo-${brand.slug}`}
-                  title={`Explore ${brand.name}`}
+                  title={`${brand.name} — ${brand.partnershipType}`}
                 >
                   <span
-                    className="text-lg font-bold tracking-tight group-hover:scale-105 transition-transform"
+                    className="text-lg font-bold tracking-tight group-hover:scale-105 transition-transform mb-2"
                     style={{ color: brand.accentColor }}
                   >
                     {brand.logoText}
+                  </span>
+                  <span
+                    className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${
+                      brand.partnershipType === "Distribution Partner"
+                        ? "bg-amber-50 text-amber-800 border-amber-200"
+                        : "bg-slate-100 text-slate-600 border-slate-200"
+                    }`}
+                    data-testid={`${testIdPrefix}-partnership-${brand.slug}`}
+                  >
+                    {brand.partnershipType === "Distribution Partner" ? "Distribution" : "Channel"}
                   </span>
                 </Link>
               ))}
@@ -87,6 +98,13 @@ export const TrustedBrands = ({
                         Featured
                       </span>
                     )}
+                  </div>
+                  <div className="mb-3">
+                    <PartnershipBadge
+                      type={brand.partnershipType}
+                      size="xs"
+                      testId={`${testIdPrefix}-detailed-partnership-${brand.slug}`}
+                    />
                   </div>
                   <p className="text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">
                     {brand.category}

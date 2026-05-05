@@ -13,6 +13,7 @@ import {
 import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
 import { FAQSchema, consultingFAQs } from "../components/FAQSchema";
+import { TrustedBrands } from "../components/TrustedBrands";
 import { seoConfig } from "../data/seoConfig";
 import {
   heroData,
