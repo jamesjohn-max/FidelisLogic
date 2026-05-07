@@ -7,6 +7,7 @@ import { Badge } from "../components/ui/badge";
 import { brands, getBrandsSorted, getFeaturedBrands } from "../data/brands";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
+import { analytics } from "../lib/analytics";
 
 const categories = [
   "All",
@@ -51,7 +52,12 @@ export const Brands = () => {
               over its lifecycle.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/contact">
+              <Link
+                to="/contact"
+                onClick={() =>
+                  analytics.partnerBriefingClick({ location: "brands_hub_hero" })
+                }
+              >
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" data-testid="brands-hero-cta">
                   Book a Partner Briefing
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -220,7 +226,12 @@ export const Brands = () => {
             Book a 30-minute briefing. We'll discuss your estate, use cases, and
             constraints — and send you a shortlist of 2–3 brands that actually fit.
           </p>
-          <Link to="/contact">
+          <Link
+            to="/contact"
+            onClick={() =>
+              analytics.partnerBriefingClick({ location: "brands_hub_footer" })
+            }
+          >
             <Button
               size="lg"
               className="bg-white text-blue-700 hover:bg-blue-50"

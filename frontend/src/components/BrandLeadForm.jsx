@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
+import { analytics } from "../lib/analytics";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -16,11 +17,16 @@ export const BrandLeadForm = ({ brand, variant = "full" }) => {
   const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState("");
+  const [tracked, setTracked] = useState(false);
 
   const isCompact = variant === "compact";
   const formId = `brand-lead-${variant}-${brand.slug}`;
 
   const handleChange = (e) => {
+    if (!tracked) {
+      analytics.brandLeadStart({ brand: brand.slug, variant });
+      setTracked(true);
+    }
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -42,9 +48,20 @@ export const BrandLeadForm = ({ brand, variant = "full" }) => {
 
     try {
       await axios.post(`${BACKEND_URL}/api/contact`, payload);
+      analytics.brandLeadSubmit({
+        brand: brand.slug,
+        brand_name: brand.name,
+        variant,
+        partnership_type: brand.partnershipType,
+      });
       setStatus("success");
       setForm({ name: "", email: "", company: "", message: "" });
     } catch (err) {
+      analytics.brandLeadSubmitError({
+        brand: brand.slug,
+        variant,
+        error: err?.response?.status || "network",
+      });
       setStatus("error");
       setErrorMsg(
         err?.response?.data?.detail ||

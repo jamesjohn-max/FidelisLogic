@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Tag, X } from "lucide-react";
 import axios from "axios";
+import { analytics } from "../lib/analytics";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -47,6 +48,7 @@ export const FloatingDealsButton = () => {
   return (
     <Link
       to="/deals"
+      onClick={() => analytics.floatingDealsClick({ active_count: activeCount, source_path: path })}
       aria-label={`Smart Deals — ${activeCount} active`}
       data-testid="floating-deals-button"
       className="fixed bottom-6 right-6 z-40 group"

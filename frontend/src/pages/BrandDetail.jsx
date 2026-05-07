@@ -8,6 +8,7 @@ import { getBrandBySlug, getBrandsSorted } from "../data/brands";
 import { ArrowRight, CheckCircle2, Sparkles, ArrowLeft } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
 import { BrandLeadForm } from "../components/BrandLeadForm";
+import { analytics } from "../lib/analytics";
 
 export const BrandDetail = () => {
   const { slug } = useParams();
@@ -100,7 +101,16 @@ export const BrandDetail = () => {
                 {brand.longDescription}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/contact">
+                <Link
+                  to="/contact"
+                  onClick={() =>
+                    analytics.consultationCtaClick({
+                      location: "brand_hero",
+                      brand: brand.slug,
+                      brand_name: brand.name,
+                    })
+                  }
+                >
                   <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" data-testid="brand-hero-cta-primary">
                     Book a {brand.name} Consultation
                     <ArrowRight className="w-4 h-4 ml-2" />

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { solutionBrandMap, getBrandBySlug } from "../data/brands";
 import { PartnershipBadge } from "./PartnershipBadge";
+import { analytics } from "../lib/analytics";
 
 /**
  * Inline section on solution pages that surfaces the brands Fidelis Logic
@@ -41,6 +42,13 @@ export const SolutionBrands = ({
             <Link
               key={brand.slug}
               to={`/brands/${brand.slug}`}
+              onClick={() =>
+                analytics.solutionBrandClick({
+                  brand: brand.slug,
+                  brand_name: brand.name,
+                  solution: solutionSlug,
+                })
+              }
               className="group bg-gray-50 border border-gray-200 rounded-xl p-6 hover:bg-white hover:border-blue-300 hover:shadow-lg transition-all flex flex-col"
               data-testid={`solution-brand-${brand.slug}`}
             >

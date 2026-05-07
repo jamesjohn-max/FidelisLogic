@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { Mail, Phone, MapPin, Linkedin, Youtube, Instagram } from "lucide-react";
 import { contactInfo, formTopics } from "../data/siteContent";
 import axios from "axios";
+import { analytics } from "../lib/analytics";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -80,6 +81,7 @@ export const Contact = () => {
       }
 
       toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
+      analytics.contactFormSubmit({ topic: formData.topic || "general" });
       event.target.reset();
       setFormData({
         name: "",

@@ -14,6 +14,7 @@ import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
 import { FAQSchema, consultingFAQs } from "../components/FAQSchema";
 import { TrustedBrands } from "../components/TrustedBrands";
+import { analytics } from "../lib/analytics";
 import { seoConfig } from "../data/seoConfig";
 import {
   heroData,
@@ -88,7 +89,12 @@ export const Home = () => {
                 {heroData.subtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/contact">
+                <Link
+                  to="/contact"
+                  onClick={() =>
+                    analytics.consultationCtaClick({ location: "home_hero" })
+                  }
+                >
                   <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                     {heroData.ctaPrimary}
                     <ArrowRight className="ml-2" size={20} />
@@ -335,7 +341,12 @@ export const Home = () => {
           <p className="text-xl text-gray-600 mb-8">
             Book a free consultation to discuss your modern workplace technology needs.
           </p>
-          <Link to="/contact">
+          <Link
+            to="/contact"
+            onClick={() =>
+              analytics.consultationCtaClick({ location: "home_footer" })
+            }
+          >
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
               Schedule Discovery Call
               <ArrowRight className="ml-2" size={20} />

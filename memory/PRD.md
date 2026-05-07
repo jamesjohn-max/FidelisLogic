@@ -74,6 +74,19 @@ Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeti
 - Single tag, served once on the SPA shell — applies to every route (Home, /brands, /brands/:slug, etc.)
 - Verified: `window.dataLayer` initialized, `window.gtag` function active, persists across SPA navigation
 
+**GA4 Conversion Event Tracking (Phase 7.1 — Feb 7, 2026)**
+- New `/app/frontend/src/lib/analytics.js` thin gtag wrapper (safely no-ops if blocked)
+- Events tracked across high-intent CTAs:
+  - `consultation_cta_click` — Header (desktop + mobile), Home hero, Home footer CTA, Brand-detail hero CTA. Params: `location`, `source_path`, `brand` (when applicable)
+  - `partner_briefing_click` — `/brands` hub hero + footer CTAs. Params: `location`
+  - `brand_lead_start` — fires on first keystroke in any BrandLeadForm. Params: `brand`, `variant` (compact/full)
+  - `brand_lead_submit` — fires on successful brand lead submission. Params: `brand`, `brand_name`, `variant`, `partnership_type`
+  - `brand_lead_submit_error` — fires on submission failure. Params: `brand`, `variant`, `error`
+  - `contact_form_submit` — fires on `/contact` page form success. Params: `topic`
+  - `floating_deals_click` — fires on Smart Deals FAB click. Params: `active_count`, `source_path`
+  - `solution_brand_click` — fires on solution-page brand card click. Params: `brand`, `brand_name`, `solution`
+- Verified live in browser via `window.gtag` wrapping — events fire with correct names and params
+
 **SEO Robustness**
 - `meta name="robots" content="index, follow"` emitted via SEO component on every page
 - `robots.txt` permits Googlebot, Bingbot, Applebot, GPTBot, ChatGPT-User, anthropic-ai, Claude-Web, PerplexityBot, CCBot

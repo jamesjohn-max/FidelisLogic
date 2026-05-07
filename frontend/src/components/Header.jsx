@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { analytics } from "../lib/analytics";
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,7 +51,15 @@ export const Header = () => {
           </div>
 
           <div className="hidden lg:flex items-center space-x-4">
-            <Link to="/contact">
+            <Link
+              to="/contact"
+              onClick={() =>
+                analytics.consultationCtaClick({
+                  location: "header_desktop",
+                  source_path: location.pathname,
+                })
+              }
+            >
               <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                 Book Free Consultation
               </Button>
@@ -82,7 +91,16 @@ export const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>
+              <Link
+                to="/contact"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  analytics.consultationCtaClick({
+                    location: "header_mobile",
+                    source_path: location.pathname,
+                  });
+                }}
+              >
                 <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-4">
                   Book Free Consultation
                 </Button>
