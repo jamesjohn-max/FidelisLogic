@@ -7,6 +7,7 @@ import { Badge } from "../components/ui/badge";
 import { getBrandBySlug, getBrandsSorted } from "../data/brands";
 import { ArrowRight, CheckCircle2, Sparkles, ArrowLeft } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
+import { BrandLeadForm } from "../components/BrandLeadForm";
 
 export const BrandDetail = () => {
   const { slug } = useParams();
@@ -114,7 +115,7 @@ export const BrandDetail = () => {
                 )}
               </div>
             </div>
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-5">
               <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
                   At a glance
@@ -151,6 +152,7 @@ export const BrandDetail = () => {
                   </div>
                 </dl>
               </div>
+              <BrandLeadForm brand={brand} variant="compact" />
             </div>
           </div>
         </div>
@@ -334,35 +336,20 @@ export const BrandDetail = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-            Ready to explore {brand.name} for your estate?
-          </h2>
-          <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Book a consultation and we'll bring the right solution architect, a clear
-            design for your use case, and a realistic commercial shape — no sales pressure.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/contact">
-              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50" data-testid="brand-footer-cta-primary">
-                Book a Consultation
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-            <Link to="/brands">
-              <Button
-                size="lg"
-                variant="outline"
-                className="bg-transparent border-white text-white hover:bg-white hover:text-blue-700"
-                data-testid="brand-footer-cta-secondary"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                All Brands
-              </Button>
-            </Link>
-          </div>
+      {/* Full lead form */}
+      <BrandLeadForm brand={brand} variant="full" />
+
+      {/* All brands link */}
+      <section className="pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-blue-50/40">
+        <div className="max-w-5xl mx-auto text-center">
+          <Link
+            to="/brands"
+            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold"
+            data-testid="brand-footer-cta-secondary"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to all brands
+          </Link>
         </div>
       </section>
     </div>
