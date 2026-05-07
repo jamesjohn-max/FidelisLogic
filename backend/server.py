@@ -298,6 +298,22 @@ async def get_all_deals(published_only: bool = True):
     return [Deal(**deal) for deal in deals]
 
 
+@api_router.get("/deals/active", response_model=List[Deal])
+async def get_active_deals():
+    """Return published, non-expired deals (used by the floating Smart Deals button)."""
+    now = datetime.utcnow()
+    query = {
+        "published": True,
+        "$or": [
+            {"end_date": {"$exists": False}},
+            {"end_date": None},
+            {"end_date": {"$gte": now}},
+        ],
+    }
+    deals = await db.deals.find(query).sort("created_at", -1).to_list(100)
+    return [Deal(**deal) for deal in deals]
+
+
 @api_router.get("/deals/{slug}", response_model=Deal)
 async def get_deal_by_slug(slug: str):
     """Get a single deal by slug"""

@@ -33,8 +33,7 @@ export const FloatingDealsButton = () => {
   const isHidden =
     dismissed ||
     path.startsWith("/admin") ||
-    path.startsWith("/deals") ||
-    activeCount === 0;
+    path.startsWith("/deals");
 
   if (isHidden) return null;
 
