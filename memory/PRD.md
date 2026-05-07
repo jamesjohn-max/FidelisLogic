@@ -74,7 +74,27 @@ Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeti
 - Single tag, served once on the SPA shell — applies to every route (Home, /brands, /brands/:slug, etc.)
 - Verified: `window.dataLayer` initialized, `window.gtag` function active, persists across SPA navigation
 
+**Cookie Consent + Conditional GA4 Loading (Phase 7.2 — Feb 7, 2026)**
+- New `lib/cookieConsent.js` helper + `components/CookieConsent.jsx` banner
+- GA4 (`gtag.js`) NO LONGER auto-loads from `index.html`. Only a tiny `dataLayer` + `gtag` stub is initialised at boot so analytics calls don't error pre-consent
+- Banner appears on first visit (bottom-left card with Accept / Decline)
+- Accept → `gtag.js` script dynamically injected, choice persisted as `granted` in localStorage
+- Decline → choice persisted as `denied`, GA script never loads
+- On subsequent visits, prior choice is honoured silently (no re-prompt)
+- Verified end-to-end: pre-consent state has no GA script in DOM; post-accept GA loads and persists across reloads; localStorage records `granted` / `denied`
+
 **GA4 Conversion Event Tracking (Phase 7.1 — Feb 7, 2026)**
+- New `/app/frontend/src/lib/analytics.js` thin gtag wrapper (safely no-ops if blocked or pre-consent)
+- Events tracked across high-intent CTAs:
+  - `consultation_cta_click` — Header (desktop + mobile), Home hero, Home footer CTA, Brand-detail hero CTA. Params: `location`, `source_path`, `brand` (when applicable)
+  - `partner_briefing_click` — `/brands` hub hero + footer CTAs. Params: `location`
+  - `brand_lead_start` — fires on first keystroke in any BrandLeadForm. Params: `brand`, `variant` (compact/full)
+  - `brand_lead_submit` — fires on successful brand lead submission. Params: `brand`, `brand_name`, `variant`, `partnership_type`
+  - `brand_lead_submit_error` — fires on submission failure. Params: `brand`, `variant`, `error`
+  - `contact_form_submit` — fires on `/contact` page form success. Params: `topic`
+  - `floating_deals_click` — fires on Smart Deals FAB click. Params: `active_count`, `source_path`
+  - `solution_brand_click` — fires on solution-page brand card click. Params: `brand`, `brand_name`, `solution`
+- Verified live in browser via `window.gtag` wrapping — events fire with correct names and params
 - New `/app/frontend/src/lib/analytics.js` thin gtag wrapper (safely no-ops if blocked)
 - Events tracked across high-intent CTAs:
   - `consultation_cta_click` — Header (desktop + mobile), Home hero, Home footer CTA, Brand-detail hero CTA. Params: `location`, `source_path`, `brand` (when applicable)

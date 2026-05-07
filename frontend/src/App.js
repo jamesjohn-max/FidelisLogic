@@ -25,6 +25,7 @@ import { BlogEditor } from "./pages/BlogEditor";
 import { AdminDealsDashboard } from "./pages/AdminDealsDashboard";
 import { DealEditor } from "./pages/DealEditor";
 import { FloatingDealsButton } from "./components/FloatingDealsButton";
+import { CookieConsent } from "./components/CookieConsent";
 import { Toaster } from "./components/ui/sonner";
 
 // Suppress ResizeObserver errors (common React/Radix UI issue, doesn't affect functionality)
@@ -86,6 +87,7 @@ function App() {
             <Route path="/admin/deals/new" element={<DealEditor />} />
             <Route path="/admin/deals/edit/:id" element={<DealEditor />} />
           </Routes>
+          <CookieConsent />
           <Toaster />
         </BrowserRouter>
       </div>

@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EEXXM8VHSC"></script>
+        <!-- Google tag (gtag.js) — loaded dynamically after cookie consent.
+             dataLayer is initialised early so analytics calls made before
+             consent are queued safely without throwing. See
+             /app/frontend/src/lib/cookieConsent.js for the loader. -->
         <script>
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-EEXXM8VHSC');
+          if (typeof window.gtag !== 'function') {
+            window.gtag = function () { window.dataLayer.push(arguments); };
+          }
         </script>
 
         <meta charset="utf-8" />
