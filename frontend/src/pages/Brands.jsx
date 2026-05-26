@@ -143,7 +143,7 @@ export const Brands = () => {
                 data-testid={`brand-card-${brand.slug}`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <BrandLogo brand={brand} size="md" testId={`brand-card-logo-${brand.slug}`} />
+                  <BrandLogo brand={brand} size="sm" testId={`brand-card-logo-${brand.slug}`} />
                   <PartnershipBadge
                     type={brand.partnershipType}
                     size="xs"
