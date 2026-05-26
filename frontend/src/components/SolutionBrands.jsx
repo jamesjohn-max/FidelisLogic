@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { solutionBrandMap, getBrandBySlug } from "../data/brands";
 import { PartnershipBadge } from "./PartnershipBadge";
+import { BrandLogo } from "./BrandLogo";
 import { analytics } from "../lib/analytics";
 
 /**
@@ -53,12 +54,11 @@ export const SolutionBrands = ({
               data-testid={`solution-brand-${brand.slug}`}
             >
               <div className="flex items-center justify-between mb-3">
-                <div
-                  className="text-xl font-bold"
-                  style={{ color: brand.accentColor }}
-                >
-                  {brand.logoText}
-                </div>
+                <BrandLogo
+                  brand={brand}
+                  size="md"
+                  testId={`solution-brand-logo-${brand.slug}`}
+                />
                 {brand.featured && (
                   <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded-full uppercase tracking-wider">
                     Featured

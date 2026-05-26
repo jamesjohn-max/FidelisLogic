@@ -35,7 +35,7 @@ Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeti
 
 **Dynamic Sitemap**
 - New `GET /api/sitemap.xml` returning `application/xml` with static pages + all published blog posts + active non-expired deals
-- Added `SITE_BASE_URL` env var in `backend/.env` (default `https://fidelislogic.com`)
+- Added `SITE_BASE_URL` env var in `backend/.env` (default `https://www.fidelislogic.com`)
 - Removed static `public/sitemap.xml`; updated `robots.txt` to reference `/api/sitemap.xml`
 
 **FAQ Schema + Visible FAQ Sections**
@@ -73,6 +73,13 @@ Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeti
 - Google tag `G-EEXXM8VHSC` installed in `frontend/public/index.html` immediately after `<head>` element
 - Single tag, served once on the SPA shell — applies to every route (Home, /brands, /brands/:slug, etc.)
 - Verified: `window.dataLayer` initialized, `window.gtag` function active, persists across SPA navigation
+
+**Brand Logo Placeholders (Phase 7.3 — Feb 8, 2026)**
+- New `components/BrandLogo.jsx` centralised renderer with graceful wordmark fallback (handles missing files / load errors without breaking the UI)
+- `logoImage` field added to each brand in `brands.js` pointing to `/brand-logos/<slug>.svg`
+- Generic SVG placeholders created at `/app/frontend/public/brand-logos/{roomz,morbit,jabra,poly,neat,yealink,logitech}.svg` — clearly labelled "LOGO PLACEHOLDER" using generic system fonts; user will replace with supplier-approved logos
+- All wordmark text usages replaced site-wide: Brands hub (featured + grid), BrandDetail (hero + related), TrustedBrands (compact + detailed), SolutionBrands cards
+- To swap: drop replacement file at the same path/filename, or change `logoImage` to `.png` if needed
 
 **Cookie Consent + Conditional GA4 Loading (Phase 7.2 — Feb 7, 2026)**
 - New `lib/cookieConsent.js` helper + `components/CookieConsent.jsx` banner

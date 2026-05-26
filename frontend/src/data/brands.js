@@ -13,7 +13,11 @@ export const brands = [
     category: "Workspace Experience",
     categorySlug: "workspace-experience",
     logoText: "ROOMZ",
-    accentColor: "#0EA5E9",
+    logoImages: [
+      "/brand-logos/roomz.png",
+      "/brand-logos/roomz.svg"
+    ],
+    accentColor: "#5EA5E9",
     heroImage: "/platform-images/roomz.png",
     shortDescription:
       "Swiss-engineered, battery-powered room booking panels and occupancy sensors that make hybrid offices run on time — without cabling, calendar conflicts, or ghost meetings.",
@@ -86,6 +90,10 @@ export const brands = [
     category: "Workspace Experience",
     categorySlug: "workspace-experience",
     logoText: "morbit",
+    logoImages: [
+      "/brand-logos/morbit.png",
+      "/brand-logos/morbit.svg"
+    ],
     accentColor: "#6366F1",
     heroImage: "/platform-images/morbit.png",
     shortDescription:
@@ -160,6 +168,10 @@ export const brands = [
     category: "Headsets & Devices",
     categorySlug: "headsets",
     logoText: "Jabra",
+    logoImages: [
+      "/brand-logos/jabra.png",
+      "/brand-logos/jabra.svg"
+    ],
     accentColor: "#E30613",
     heroImage: "https://images.unsplash.com/photo-1769069920308-40130d50ae58",
     shortDescription:
@@ -234,6 +246,10 @@ export const brands = [
     category: "Meeting Rooms & Headsets",
     categorySlug: "meeting-rooms",
     logoText: "Poly",
+    logoImages: [
+      "/brand-logos/poly.png",
+      "/brand-logos/poly.svg"
+    ],
     accentColor: "#00A3E0",
     heroImage: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
     shortDescription:
@@ -308,6 +324,10 @@ export const brands = [
     category: "Meeting Rooms",
     categorySlug: "meeting-rooms",
     logoText: "Neat.",
+    logoImages: [
+      "/brand-logos/neat.png",
+      "/brand-logos/neat.svg"
+    ],
     accentColor: "#FF5500",
     heroImage: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
     shortDescription:
@@ -381,6 +401,10 @@ export const brands = [
     category: "Meeting Rooms",
     categorySlug: "meeting-rooms",
     logoText: "Yealink",
+    logoImages: [
+      "/brand-logos/yealink.png",
+      "/brand-logos/yealink.svg"
+    ],
     accentColor: "#E30613",
     heroImage: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d",
     shortDescription:
@@ -455,6 +479,10 @@ export const brands = [
     category: "Meeting Rooms & Peripherals",
     categorySlug: "meeting-rooms",
     logoText: "Logitech",
+    logoImages: [
+      "/brand-logos/logitech.png",
+      "/brand-logos/logitech.svg"
+    ],
     accentColor: "#00B8FC",
     heroImage: "https://images.unsplash.com/photo-1770048532712-4fde5ef7eb90",
     shortDescription:

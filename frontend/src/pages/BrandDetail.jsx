@@ -7,6 +7,7 @@ import { Badge } from "../components/ui/badge";
 import { getBrandBySlug, getBrandsSorted } from "../data/brands";
 import { ArrowRight, CheckCircle2, Sparkles, ArrowLeft } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
+import { BrandLogo } from "../components/BrandLogo";
 import { BrandLeadForm } from "../components/BrandLeadForm";
 import { analytics } from "../lib/analytics";
 
@@ -31,9 +32,9 @@ export const BrandDetail = () => {
   const relatedSolutions = brand.relatedSolutions;
 
   const breadcrumbs = [
-    { name: "Home", url: "https://fidelislogic.com/" },
-    { name: "Brands", url: "https://fidelislogic.com/brands" },
-    { name: brand.name, url: `https://fidelislogic.com/brands/${brand.slug}` }
+    { name: "Home", url: "https://www.fidelislogic.com/" },
+    { name: "Brands", url: "https://www.fidelislogic.com/brands" },
+    { name: brand.name, url: `https://www.fidelislogic.com/brands/${brand.slug}` }
   ];
 
   const brandSchema = {
@@ -87,12 +88,8 @@ export const BrandDetail = () => {
                   testId="brand-partnership-badge"
                 />
               </div>
-              <div
-                className="text-5xl sm:text-6xl font-bold tracking-tight mb-6"
-                style={accentTextStyle}
-                data-testid="brand-logo-wordmark"
-              >
-                {brand.logoText}
+              <div className="mb-6" data-testid="brand-logo-wordmark">
+                <BrandLogo brand={brand} size="xl" />
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-dark mb-5 leading-tight" data-testid="brand-hero-title">
                 {brand.tagline}
@@ -317,11 +314,8 @@ export const BrandDetail = () => {
                 className="group bg-white border border-gray-200 rounded-xl p-6 hover:border-blue-300 hover:shadow-lg transition-all flex flex-col"
                 data-testid={`brand-related-${b.slug}`}
               >
-                <div
-                  className="text-xl font-bold mb-3"
-                  style={{ color: b.accentColor }}
-                >
-                  {b.logoText}
+                <div className="mb-3">
+                  <BrandLogo brand={b} size="sm" testId={`brand-related-logo-${b.slug}`} />
                 </div>
                 <div className="mb-2">
                   <PartnershipBadge

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { getBrandsSorted } from "../data/brands";
 import { PartnershipBadge } from "./PartnershipBadge";
+import { BrandLogo } from "./BrandLogo";
 
 /**
  * Section that surfaces the curated brand ecosystem. Used on the homepage
@@ -46,12 +47,13 @@ export const TrustedBrands = ({
                   data-testid={`${testIdPrefix}-logo-${brand.slug}`}
                   title={`${brand.name} — ${brand.partnershipType}`}
                 >
-                  <span
-                    className="text-lg font-bold tracking-tight group-hover:scale-105 transition-transform mb-2"
-                    style={{ color: brand.accentColor }}
-                  >
-                    {brand.logoText}
-                  </span>
+                  <div className="mb-2 group-hover:scale-105 transition-transform">
+                    <BrandLogo
+                      brand={brand}
+                      size="sm"
+                      testId={`${testIdPrefix}-logo-img-${brand.slug}`}
+                    />
+                  </div>
                   <span
                     className={`inline-flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-full ${
                       brand.partnershipType === "Distribution Partner"
@@ -90,12 +92,11 @@ export const TrustedBrands = ({
                   data-testid={`${testIdPrefix}-card-${brand.slug}`}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div
-                      className="text-2xl font-bold"
-                      style={{ color: brand.accentColor }}
-                    >
-                      {brand.logoText}
-                    </div>
+                    <BrandLogo
+                      brand={brand}
+                      size="md"
+                      testId={`${testIdPrefix}-card-logo-${brand.slug}`}
+                    />
                     {brand.featured && (
                       <span className="text-xs font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
                         Featured

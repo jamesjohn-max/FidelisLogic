@@ -7,6 +7,7 @@ import { Badge } from "../components/ui/badge";
 import { brands, getBrandsSorted, getFeaturedBrands } from "../data/brands";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
+import { BrandLogo } from "../components/BrandLogo";
 import { analytics } from "../lib/analytics";
 
 const categories = [
@@ -20,8 +21,8 @@ export const Brands = () => {
   const nonFeatured = sortedBrands.filter((b) => !b.featured);
 
   const breadcrumbs = [
-    { name: "Home", url: "https://fidelislogic.com/" },
-    { name: "Brands", url: "https://fidelislogic.com/brands" }
+    { name: "Home", url: "https://www.fidelislogic.com/" },
+    { name: "Brands", url: "https://www.fidelislogic.com/brands" }
   ];
 
   return (
@@ -94,12 +95,7 @@ export const Brands = () => {
                   data-testid={`brand-featured-${brand.slug}`}
                 >
                   <div className="flex items-start justify-between mb-6">
-                    <div
-                      className="text-3xl font-bold tracking-tight"
-                      style={{ color: brand.accentColor }}
-                    >
-                      {brand.logoText}
-                    </div>
+                    <BrandLogo brand={brand} size="lg" testId={`brand-featured-logo-${brand.slug}`} />
                     <div className="flex flex-col items-end gap-2">
                       <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
                         {brand.category}
@@ -147,12 +143,7 @@ export const Brands = () => {
                 data-testid={`brand-card-${brand.slug}`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div
-                    className="text-2xl font-bold"
-                    style={{ color: brand.accentColor }}
-                  >
-                    {brand.logoText}
-                  </div>
+                  <BrandLogo brand={brand} size="md" testId={`brand-card-logo-${brand.slug}`} />
                   <PartnershipBadge
                     type={brand.partnershipType}
                     size="xs"
