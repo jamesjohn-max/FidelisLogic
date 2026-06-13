@@ -53,7 +53,7 @@ export const FloatingDealsButton = () => {
       data-testid="floating-deals-button"
       className="fixed bottom-6 right-6 z-40 group"
     >
-      <div className="relative flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white rounded-full pl-4 pr-5 py-3 shadow-lg hover:shadow-xl transition-all">
+      <div className="relative flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full pl-4 pr-5 py-3 shadow-lg hover:shadow-xl transition-all">
         <Tag className="w-5 h-5" />
         <span className="font-semibold text-sm">Smart Deals</span>
         {activeCount > 0 && (

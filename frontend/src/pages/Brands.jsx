@@ -21,8 +21,8 @@ export const Brands = () => {
   const nonFeatured = sortedBrands.filter((b) => !b.featured);
 
   const breadcrumbs = [
-    { name: "Home", url: "https://www.fidelislogic.com/" },
-    { name: "Brands", url: "https://www.fidelislogic.com/brands" }
+    { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
+    { name: "Brands", url: typeof window !== "undefined" ? window.location.href : "" }
   ];
 
   return (
@@ -33,7 +33,7 @@ export const Brands = () => {
         keywords="workplace technology brands UAE, ROOMZ UAE partner, Morbit UAE, Jabra UAE, Poly UAE, Neat UAE, Yealink UAE, Logitech UAE, collaboration device partners"
       />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
-      <Breadcrumbs items={[{ name: "Brands" }]} />
+      <Breadcrumbs items={[{ name: "Brands" }]} className="pt-24" />
 
       {/* Hero */}
       <section className="pt-12 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">

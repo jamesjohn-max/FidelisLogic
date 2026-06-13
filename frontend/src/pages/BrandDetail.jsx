@@ -9,6 +9,7 @@ import { ArrowRight, CheckCircle2, Sparkles, ArrowLeft } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
 import { BrandLogo } from "../components/BrandLogo";
 import { BrandLeadForm } from "../components/BrandLeadForm";
+import { HeroCarousel } from "../components/HeroCarousel";
 import { analytics } from "../lib/analytics";
 
 export const BrandDetail = () => {
@@ -46,9 +47,7 @@ export const BrandDetail = () => {
   };
 
   const accentTint = `${brand.accentColor}0D`;
-  const heroBg = { background: `linear-gradient(135deg, ${accentTint} 0%, #ffffff 70%)` };
   const deliveryBg = { background: `linear-gradient(135deg, ${accentTint} 0%, #ffffff 100%)` };
-  const accentTextStyle = { color: brand.accentColor };
   const accentBgStyle = { backgroundColor: brand.accentColor };
 
   return (
@@ -67,17 +66,24 @@ export const BrandDetail = () => {
         ]}
       />
 
-      {/* Hero */}
-      <section
-        className="pt-12 pb-16 px-4 sm:px-6 lg:px-8"
-        style={heroBg}
-      >
-        <div className="max-w-6xl mx-auto">
+      {/* Hero — full-bleed carousel background */}
+      <section className="relative pt-12 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background carousel */}
+        <HeroCarousel
+          images={brand.heroImages || [brand.heroImage]}
+          testId={`brand-hero-carousel-${brand.slug}`}
+        />
+        {/* Dark gradient overlay for premium feel + text legibility */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/85 via-black/65 to-black/35 lg:from-black/85 lg:via-black/55 lg:to-black/30" />
+        {/* Subtle bottom fade so the hero blends into the next section */}
+        <div className="absolute inset-x-0 bottom-0 z-[1] h-24 bg-gradient-to-b from-transparent to-white/95" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
             <div className="lg:col-span-3">
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 {brand.featured && (
-                  <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-50 border-blue-100" data-testid="brand-featured-badge">
+                  <Badge className="bg-white/10 text-white hover:bg-white/15 border-white/20 backdrop-blur-sm" data-testid="brand-featured-badge">
                     <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                     Featured Partner
                   </Badge>
@@ -88,13 +94,16 @@ export const BrandDetail = () => {
                   testId="brand-partnership-badge"
                 />
               </div>
-              <div className="mb-6" data-testid="brand-logo-wordmark">
+              <div
+                className="mb-6 inline-flex items-center px-3 py-2 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm shadow-lg"
+                data-testid="brand-logo-wordmark"
+              >
                 <BrandLogo brand={brand} size="xl" />
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-dark mb-5 leading-tight" data-testid="brand-hero-title">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)]" data-testid="brand-hero-title">
                 {brand.tagline}
               </h1>
-              <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl" data-testid="brand-hero-description">
+              <p className="text-lg text-gray-200 leading-relaxed mb-8 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]" data-testid="brand-hero-description">
                 {brand.longDescription}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -108,14 +117,19 @@ export const BrandDetail = () => {
                     })
                   }
                 >
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" data-testid="brand-hero-cta-primary">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/40" data-testid="brand-hero-cta-primary">
                     Book a {brand.name} Consultation
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
                 {primarySolution && (
                   <Link to={primarySolution.href}>
-                    <Button variant="outline" size="lg" data-testid="brand-hero-cta-secondary">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="bg-white/5 border-white/40 text-white hover:bg-white/15 hover:text-white backdrop-blur-sm"
+                      data-testid="brand-hero-cta-secondary"
+                    >
                       Explore {primarySolution.name}
                     </Button>
                   </Link>
@@ -123,7 +137,7 @@ export const BrandDetail = () => {
               </div>
             </div>
             <div className="lg:col-span-2 space-y-5">
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+              <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-2xl shadow-black/40">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
                   At a glance
                 </p>

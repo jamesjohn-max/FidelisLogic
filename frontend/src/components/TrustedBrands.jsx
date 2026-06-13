@@ -25,7 +25,8 @@ export const TrustedBrands = ({
 
   return (
     <section className={`py-16 lg:py-20 px-4 sm:px-6 lg:px-8 ${bgClass}`} data-testid={`${testIdPrefix}-section`}>
-      <div className="max-w-6xl mx-auto">
+      {/* <div className="max-w-6xl mx-auto"> */}
+<div className="max-w-[1500px] mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
             Strategic Partnerships
@@ -38,19 +39,22 @@ export const TrustedBrands = ({
 
         {variant === "compact" ? (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-10">
+            {/* </> <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-10"> */}
+              <div className="w-full max-w-[1500px] mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-7 mb-10">
               {brands.map((brand) => (
                 <Link
                   key={brand.slug}
                   to={`/brands/${brand.slug}`}
-                  className="group flex flex-col items-center justify-center px-4 py-6 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all"
-                  data-testid={`${testIdPrefix}-logo-${brand.slug}`}
+                 
+                 className="group flex flex-col items-center justify-center min-h-[150px] px-6 py-8 bg-white border border-gray-200 rounded-2xl hover:border-blue-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                
+                 data-testid={`${testIdPrefix}-logo-${brand.slug}`}
                   title={`${brand.name} — ${brand.partnershipType}`}
                 >
-                  <div className="mb-2 group-hover:scale-105 transition-transform">
+                  <div className="mb-2 group-hover:scale-110 transition-transform">
                     <BrandLogo
                       brand={brand}
-                      size="sm"
+                      size="md"
                       testId={`${testIdPrefix}-logo-img-${brand.slug}`}
                     />
                   </div>

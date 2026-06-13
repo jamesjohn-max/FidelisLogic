@@ -199,7 +199,7 @@ export const DealPost = () => {
           <img 
             src={img} 
             alt={deal.title} 
-            className={`w-full h-96 object-cover rounded-2xl shadow-2xl ${expired ? "grayscale opacity-70" : ""}`} 
+            className={`w-full h-full object-cover rounded-2xl shadow-2xl ${expired ? "grayscale opacity-70" : ""}`} 
           />
         </div>
       </section>

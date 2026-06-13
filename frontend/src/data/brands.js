@@ -19,6 +19,12 @@ export const brands = [
     ],
     accentColor: "#5EA5E9",
     heroImage: "/platform-images/roomz.png",
+    heroImages: [
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "Swiss-engineered, battery-powered room booking panels and occupancy sensors that make hybrid offices run on time — without cabling, calendar conflicts, or ghost meetings.",
     longDescription:
@@ -96,6 +102,12 @@ export const brands = [
     ],
     accentColor: "#6366F1",
     heroImage: "/platform-images/morbit.png",
+    heroImages: [
+      "https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1664575601711-67110e027b9b?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "A single pane of glass for meeting room devices, collaboration endpoints, and workspace infrastructure — fewer tickets, less downtime, smarter space decisions.",
     longDescription:
@@ -174,6 +186,12 @@ export const brands = [
     ],
     accentColor: "#E30613",
     heroImage: "https://images.unsplash.com/photo-1769069920308-40130d50ae58",
+    heroImages: [
+      "https://images.unsplash.com/photo-1664575601711-67110e027b9b?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "Market-leading enterprise headsets and AI-powered video bars built for contact centres, hybrid workers, and executive collaboration — at the scale enterprise IT actually has to operate.",
     longDescription:
@@ -252,6 +270,12 @@ export const brands = [
     ],
     accentColor: "#00A3E0",
     heroImage: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
+    heroImages: [
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "Professional-grade video conferencing, voice devices, and headsets — Plantronics and Polycom heritage, now backed by HP's global enterprise reach.",
     longDescription:
@@ -330,6 +354,12 @@ export const brands = [
     ],
     accentColor: "#FF5500",
     heroImage: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
+    heroImages: [
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "Award-winning Norwegian-designed video devices that bring cinematic meeting experiences — and built-in workspace analytics — to Microsoft Teams Rooms and Zoom Rooms.",
     longDescription:
@@ -407,6 +437,12 @@ export const brands = [
     ],
     accentColor: "#E30613",
     heroImage: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d",
+    heroImages: [
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1664575601711-67110e027b9b?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "Broad portfolio of Microsoft Teams and Zoom certified room systems, desk phones, and headsets — built for scale rollouts where commercial value matters as much as certification.",
     longDescription:
@@ -485,6 +521,12 @@ export const brands = [
     ],
     accentColor: "#00B8FC",
     heroImage: "https://images.unsplash.com/photo-1770048532712-4fde5ef7eb90",
+    heroImages: [
+      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=2400&q=80"
+    ],
     shortDescription:
       "Widely deployed collaboration peripherals — Rally video systems, Zone headsets, and MeetUp cameras — covering every form factor from personal desk to boardroom.",
     longDescription:

@@ -14,6 +14,7 @@ import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
 import { FAQSchema, consultingFAQs } from "../components/FAQSchema";
 import { TrustedBrands } from "../components/TrustedBrands";
+import { HeroCarousel } from "../components/HeroCarousel";
 import { analytics } from "../lib/analytics";
 import { seoConfig } from "../data/seoConfig";
 import {
@@ -69,57 +70,66 @@ export const Home = () => {
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       <FAQSchema faqs={consultingFAQs} />
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-fidelis-cyan/15 via-blue-50 to-fidelis-blue/10"></div>
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-radial from-fidelis-cyan/30 to-transparent rounded-full blur-3xl animate-blob"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-radial from-fidelis-blue/25 to-transparent rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-gradient-radial from-fidelis-cyan/20 to-transparent rounded-full blur-3xl animate-blob animation-delay-4000"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                {heroData.title}
-              </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {heroData.subtitle}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  to="/contact"
-                  onClick={() =>
-                    analytics.consultationCtaClick({ location: "home_hero" })
-                  }
+      {/* Hero Section — full-bleed image background with overlay */}
+      <section className="relative min-h-[600px] lg:min-h-[660px] flex items-center pt-28 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Background carousel */}
+        <HeroCarousel images={heroData.images} testId="home-hero-carousel" />
+        {/* Multi-stop gradient overlay for premium feel + text legibility */}
+        {/*<div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/80 to-brand-dark/40 lg:from-brand-dark/95 lg:via-brand-dark/65 lg:to-brand-dark/10" /> */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/80 via-black/50 to-black/10 lg:from-black/82 lg:via-black/42 lg:to-black/0" />
+        {/* Subtle bottom fade so it doesn't compete with the stats section */}
+        <div className="absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-b from-transparent to-white/95" />
+
+        <div className="max-w-7xl mx-auto relative z-10 w-full">
+          {/*  <div className="max-w-2xl space-y-7" data-testid="home-hero-content"> */}
+            <div className="max-w-2xl space-y-7 bg-slate-950/40 backdrop-blur-xl rounded-3xl p-8 sm:p-10 border border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.45)]" data-testid="home-hero-content">
+            
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-[0.12em] backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-fidelis-cyan" aria-hidden="true" />
+              UAE Workplace Technology Advisory
+            </span>
+            
+           {/* <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight" data-testid="home-hero-title"> */}
+           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.08] tracking-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.75)]" data-testid="home-hero-title">
+              {heroData.title}
+            </h1>
+            {/* <p className="text-lg sm:text-xl text-gray-200 leading-relaxed max-w-xl"> */}
+              <p className="text-lg sm:text-xl text-gray-100 leading-relaxed max-w-xl drop-shadow-[0_3px_14px_rgba(0,0,0,0.7)]">
+              {heroData.subtitle}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <Link
+                to="/contact"
+                onClick={() =>
+                  analytics.consultationCtaClick({ location: "home_hero" })
+                }
+              >
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/30 rounded-xl px-7">
+                  {heroData.ctaPrimary}
+                  <ArrowRight className="ml-2" size={20} />
+                </Button>
+              </Link>
+              <Link to="/solutions">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white/8 border-white/35 text-white hover:bg-white/15 hover:text-white backdrop-blur-sm rounded-xl px-7"
                 >
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-                    {heroData.ctaPrimary}
-                    <ArrowRight className="ml-2" size={20} />
-                  </Button>
-                </Link>
-                <Link to="/solutions">
-                  <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
-                    {heroData.ctaSecondary}
-                  </Button>
-                </Link>
-              </div>
+                  {heroData.ctaSecondary}
+                </Button>
+              </Link>
+              
             </div>
-            <div className="relative">
-              <img
-                src={heroData.image}
-                alt="Modern workplace technology"
-                className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
-              />
-            </div>
+            
           </div>
+          
         </div>
       </section>
 
+   
+
       {/* Stats Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white border-y border-gray-100">
+      <section className="pt-16 pb-12 px-4 sm:px-6 lg:px-8 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 gap-8 text-center">
             {stats.map((stat, index) => (

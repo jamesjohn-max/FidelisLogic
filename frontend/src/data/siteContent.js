@@ -21,7 +21,17 @@ export const heroData = {
   subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence while working through their trusted vendors.",
   ctaPrimary: "Book a Free Consultation",
   ctaSecondary: "Explore Solutions",
-  image: "/HeroImage.png"
+  //image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80"
+    image: "/HeroImage.png",
+  // Carousel images — REPLACE these placeholders with brand-approved imagery.
+  // Order matters: first image is shown on initial paint.
+  images: [
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
+    "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=2400&q=80",
+    "https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=2400&q=80",
+    "https://images.unsplash.com/photo-1664575601711-67110e027b9b?auto=format&fit=crop&w=2400&q=80"
+  ]
 };
 
 export const segments = [
@@ -31,6 +41,7 @@ export const segments = [
     description: "We help design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD Meeting spaces with professional audio-visual systems.",
     icon: "Presentation",
     image: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
+    
     link: "/solutions/meeting-rooms"
   },
   {
