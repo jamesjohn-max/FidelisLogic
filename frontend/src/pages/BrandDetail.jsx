@@ -3,9 +3,8 @@ import { SEO } from "../components/SEO";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
 import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
 import { getBrandBySlug, getBrandsSorted } from "../data/brands";
-import { ArrowRight, CheckCircle2, Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowRight, CheckCircle2, ArrowLeft } from "lucide-react";
 import { PartnershipBadge } from "../components/PartnershipBadge";
 import { BrandLogo } from "../components/BrandLogo";
 import { BrandLeadForm } from "../components/BrandLeadForm";
@@ -80,19 +79,6 @@ export const BrandDetail = () => {
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="max-w-3xl">
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              {brand.featured && (
-                <Badge className="bg-white/10 text-white hover:bg-white/15 border-white/20 backdrop-blur-sm" data-testid="brand-featured-badge">
-                  <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                  Featured Partner
-                </Badge>
-              )}
-              <PartnershipBadge
-                type={brand.partnershipType}
-                size="sm"
-                testId="brand-partnership-badge"
-              />
-            </div>
             <div
               className="mb-6 inline-flex items-center px-3 py-2 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm shadow-lg"
               data-testid="brand-logo-wordmark"
@@ -254,7 +240,7 @@ export const BrandDetail = () => {
               </h2>
               <p className="text-gray-600 leading-relaxed">
                 {brand.name} earns its place in the estates where it clearly outperforms
-                alternatives on the factors that matter most. Here's where we typically
+                alternatives on the factors that matter most. Here&apos;s where we typically
                 position it.
               </p>
             </div>
