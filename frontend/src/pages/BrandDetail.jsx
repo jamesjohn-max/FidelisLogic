@@ -79,9 +79,12 @@ export const BrandDetail = () => {
         <div className="absolute inset-x-0 bottom-0 z-[1] h-24 bg-gradient-to-b from-transparent to-white/95" />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="max-w-3xl">
+          <div
+            className="max-w-3xl bg-white/10 border border-white/15 backdrop-blur-sm rounded-2xl shadow-2xl shadow-black/30 p-8 sm:p-10 lg:p-12"
+            data-testid="brand-hero-card"
+          >
             <div
-              className="mb-6 inline-flex items-center px-3 py-2 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm shadow-lg"
+              className="mb-6 inline-flex items-center"
               data-testid="brand-logo-wordmark"
             >
               <BrandLogo brand={brand} size="xl" />
@@ -89,7 +92,7 @@ export const BrandDetail = () => {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)]" data-testid="brand-hero-title">
               {brand.tagline}
             </h1>
-            <p className="text-lg text-gray-200 leading-relaxed mb-8 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]" data-testid="brand-hero-description">
+            <p className="text-lg text-gray-100 leading-relaxed mb-8 drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]" data-testid="brand-hero-description">
               {brand.longDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -113,7 +116,7 @@ export const BrandDetail = () => {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="bg-white/5 border-white/40 text-white hover:bg-white/15 hover:text-white backdrop-blur-sm"
+                    className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm"
                     data-testid="brand-hero-cta-secondary"
                   >
                     Explore {primarySolution.name}
