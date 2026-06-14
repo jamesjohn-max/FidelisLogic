@@ -79,71 +79,108 @@ export const BrandDetail = () => {
         <div className="absolute inset-x-0 bottom-0 z-[1] h-24 bg-gradient-to-b from-transparent to-white/95" />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-5 gap-12 items-center">
-            <div className="lg:col-span-3">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                {brand.featured && (
-                  <Badge className="bg-white/10 text-white hover:bg-white/15 border-white/20 backdrop-blur-sm" data-testid="brand-featured-badge">
-                    <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                    Featured Partner
-                  </Badge>
-                )}
-                <PartnershipBadge
-                  type={brand.partnershipType}
-                  size="sm"
-                  testId="brand-partnership-badge"
-                />
-              </div>
-              <div
-                className="mb-6 inline-flex items-center px-3 py-2 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm shadow-lg"
-                data-testid="brand-logo-wordmark"
+          <div className="max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              {brand.featured && (
+                <Badge className="bg-white/10 text-white hover:bg-white/15 border-white/20 backdrop-blur-sm" data-testid="brand-featured-badge">
+                  <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                  Featured Partner
+                </Badge>
+              )}
+              <PartnershipBadge
+                type={brand.partnershipType}
+                size="sm"
+                testId="brand-partnership-badge"
+              />
+            </div>
+            <div
+              className="mb-6 inline-flex items-center px-3 py-2 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm shadow-lg"
+              data-testid="brand-logo-wordmark"
+            >
+              <BrandLogo brand={brand} size="xl" />
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)]" data-testid="brand-hero-title">
+              {brand.tagline}
+            </h1>
+            <p className="text-lg text-gray-200 leading-relaxed mb-8 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]" data-testid="brand-hero-description">
+              {brand.longDescription}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/contact"
+                onClick={() =>
+                  analytics.consultationCtaClick({
+                    location: "brand_hero",
+                    brand: brand.slug,
+                    brand_name: brand.name,
+                  })
+                }
               >
-                <BrandLogo brand={brand} size="xl" />
-              </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)]" data-testid="brand-hero-title">
-                {brand.tagline}
-              </h1>
-              <p className="text-lg text-gray-200 leading-relaxed mb-8 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]" data-testid="brand-hero-description">
-                {brand.longDescription}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  to="/contact"
-                  onClick={() =>
-                    analytics.consultationCtaClick({
-                      location: "brand_hero",
-                      brand: brand.slug,
-                      brand_name: brand.name,
-                    })
-                  }
-                >
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/40" data-testid="brand-hero-cta-primary">
-                    Book a {brand.name} Consultation
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/40" data-testid="brand-hero-cta-primary">
+                  Book a {brand.name} Consultation
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              {primarySolution && (
+                <Link to={primarySolution.href}>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-white/5 border-white/40 text-white hover:bg-white/15 hover:text-white backdrop-blur-sm"
+                    data-testid="brand-hero-cta-secondary"
+                  >
+                    Explore {primarySolution.name}
                   </Button>
                 </Link>
-                {primarySolution && (
-                  <Link to={primarySolution.href}>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="bg-white/5 border-white/40 text-white hover:bg-white/15 hover:text-white backdrop-blur-sm"
-                      data-testid="brand-hero-cta-secondary"
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why this brand + At a glance */}
+      <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white" data-testid="brand-strengths-section">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-10 lg:gap-14">
+            {/* Left: Why brand */}
+            <div className="lg:col-span-2">
+              <div className="max-w-2xl mb-12">
+                <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
+                  Why {brand.name}
+                </p>
+                <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark leading-tight">
+                  What makes {brand.name} a deliberate choice in our ecosystem.
+                </h2>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8">
+                {strengths.map((strength, idx) => (
+                  <div key={idx} className="flex gap-4" data-testid={`brand-strength-${idx}`}>
+                    <div
+                      className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-white"
+                      style={accentBgStyle}
                     >
-                      Explore {primarySolution.name}
-                    </Button>
-                  </Link>
-                )}
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-brand-dark mb-2">
+                        {strength.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">{strength.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="lg:col-span-2 space-y-5">
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-2xl shadow-black/40">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
+
+            {/* Right: At a glance */}
+            <aside className="lg:col-span-1" data-testid="brand-glance-aside">
+              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-7 lg:sticky lg:top-24">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-5">
                   At a glance
                 </p>
-                <dl className="space-y-4">
+                <dl className="space-y-5">
                   <div>
-                    <dt className="text-sm text-gray-500 mb-1">Partnership</dt>
+                    <dt className="text-sm text-gray-500 mb-1.5">Partnership</dt>
                     <dd>
                       <PartnershipBadge
                         type={brand.partnershipType}
@@ -153,16 +190,16 @@ export const BrandDetail = () => {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-gray-500 mb-1">Category</dt>
+                    <dt className="text-sm text-gray-500 mb-1.5">Category</dt>
                     <dd className="text-base font-semibold text-brand-dark">{brand.category}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-gray-500 mb-1">Ideal for</dt>
+                    <dt className="text-sm text-gray-500 mb-1.5">Ideal for</dt>
                     <dd className="text-base text-brand-dark">{brand.useCases[0]}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm text-gray-500 mb-2">Proof points</dt>
-                    <dd className="space-y-2">
+                    <dt className="text-sm text-gray-500 mb-2.5">Proof points</dt>
+                    <dd className="space-y-2.5">
                       {brand.proofPoints.slice(0, 3).map((p) => (
                         <div key={p} className="flex items-start gap-2 text-sm text-gray-700">
                           <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
@@ -173,40 +210,7 @@ export const BrandDetail = () => {
                   </div>
                 </dl>
               </div>
-              <BrandLeadForm brand={brand} variant="compact" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why this brand */}
-      <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white" data-testid="brand-strengths-section">
-        <div className="max-w-6xl mx-auto">
-          <div className="max-w-2xl mb-12">
-            <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
-              Why {brand.name}
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark leading-tight">
-              What makes {brand.name} a deliberate choice in our ecosystem.
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {strengths.map((strength, idx) => (
-              <div key={idx} className="flex gap-4" data-testid={`brand-strength-${idx}`}>
-                <div
-                  className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-white"
-                  style={accentBgStyle}
-                >
-                  {idx + 1}
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-brand-dark mb-2">
-                    {strength.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">{strength.description}</p>
-                </div>
-              </div>
-            ))}
+            </aside>
           </div>
         </div>
       </section>

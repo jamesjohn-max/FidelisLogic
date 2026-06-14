@@ -171,28 +171,28 @@ export const BrandLeadForm = ({ brand, variant = "full" }) => {
         <div className="bg-white border border-gray-200 rounded-2xl shadow-md overflow-hidden">
           <div className="grid lg:grid-cols-5">
             <div className="lg:col-span-2 p-10 lg:p-12 bg-brand-dark text-white">
-              <p className="text-xs font-semibold text-blue-300 uppercase tracking-wider mb-4">
+              <p className="text-xs font-semibold text-fidelis-cyan uppercase tracking-wider mb-4">
                 Talk to a Solution Lead
               </p>
-              <h2 className="text-3xl font-bold mb-5 leading-tight">
+              <h2 className="text-3xl font-bold mb-5 leading-tight text-white">
                 Build a {brand.name} programme that fits your estate.
               </h2>
-              <p className="text-gray-300 leading-relaxed mb-8">
+              <p className="text-base text-gray-100 leading-relaxed mb-8">
                 Share a few details and a Fidelis Logic solution lead will follow up within
                 one business day with a tailored {brand.name} design, commercial shape, and
                 deployment plan — no sales pressure.
               </p>
-              <ul className="space-y-3 text-sm text-gray-300">
+              <ul className="space-y-3 text-sm text-gray-100">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-blue-300 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-fidelis-cyan shrink-0 mt-0.5" />
                   <span>UAE-based delivery and lifecycle support</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-blue-300 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-fidelis-cyan shrink-0 mt-0.5" />
                   <span>Vendor-neutral design — recommended only when {brand.name} fits</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-blue-300 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-fidelis-cyan shrink-0 mt-0.5" />
                   <span>Single point of accountability through go-live</span>
                 </li>
               </ul>
