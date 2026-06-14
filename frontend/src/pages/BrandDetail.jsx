@@ -63,10 +63,11 @@ export const BrandDetail = () => {
           { name: "Brands", href: "/brands" },
           { name: brand.name }
         ]}
+        className="pt-24"
       />
 
       {/* Hero — full-bleed carousel background */}
-      <section className="relative pt-12 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-6 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background carousel */}
         <HeroCarousel
           images={brand.heroImages || [brand.heroImage]}
