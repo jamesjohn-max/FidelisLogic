@@ -18,36 +18,51 @@ export const TrustedBrands = ({
   subtitle = "We partner deliberately with a short list of best-in-class platforms — chosen for outcomes, not quotas.",
   variant = "compact",
   background = "white",
+  density = "default",
   testIdPrefix = "trusted-brands"
 }) => {
   const brands = getBrandsSorted();
   const bgClass = background === "gray" ? "bg-gray-50" : "bg-white";
+  const isTight = density === "tight";
+  const sectionPadding = isTight
+    ? "py-8 lg:py-10"
+    : "py-16 lg:py-20";
+  const headerSpacing = isTight ? "mb-5" : "mb-12";
+  const headerLabelSpacing = isTight ? "mb-2" : "mb-3";
+  const titleClass = isTight
+    ? "text-xl sm:text-2xl font-bold text-brand-dark mb-2 leading-tight"
+    : "text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-dark mb-5 leading-tight";
+  const subtitleClass = isTight
+    ? "text-sm text-gray-600 leading-relaxed"
+    : "text-lg text-gray-600 leading-relaxed";
+  const cardClass = isTight
+    ? "group flex flex-col items-center justify-center min-h-[96px] px-4 py-3 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+    : "group flex flex-col items-center justify-center min-h-[150px] px-6 py-8 bg-white border border-gray-200 rounded-2xl hover:border-blue-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300";
+  const gridGap = isTight ? "gap-3 mb-5" : "gap-7 mb-10";
 
   return (
-    <section className={`py-16 lg:py-20 px-4 sm:px-6 lg:px-8 ${bgClass}`} data-testid={`${testIdPrefix}-section`}>
+    <section className={`${sectionPadding} px-4 sm:px-6 lg:px-8 ${bgClass}`} data-testid={`${testIdPrefix}-section`}>
       {/* <div className="max-w-6xl mx-auto"> */}
 <div className="max-w-[1500px] mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
+        <div className={`text-center max-w-3xl mx-auto ${headerSpacing}`}>
+          <p className={`text-sm font-semibold text-blue-600 uppercase tracking-wider ${headerLabelSpacing}`}>
             Strategic Partnerships
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-dark mb-5 leading-tight" data-testid={`${testIdPrefix}-title`}>
+          <h2 className={titleClass} data-testid={`${testIdPrefix}-title`}>
             {title}
           </h2>
-          <p className="text-lg text-gray-600 leading-relaxed">{subtitle}</p>
+          <p className={subtitleClass}>{subtitle}</p>
         </div>
 
         {variant === "compact" ? (
           <>
             {/* </> <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-10"> */}
-              <div className="w-full max-w-[1500px] mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-7 mb-10">
+              <div className={`w-full max-w-[1500px] mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 ${gridGap}`}>
               {brands.map((brand) => (
                 <Link
                   key={brand.slug}
                   to={`/brands/${brand.slug}`}
-                 
-                 className="group flex flex-col items-center justify-center min-h-[150px] px-6 py-8 bg-white border border-gray-200 rounded-2xl hover:border-blue-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                
+                 className={cardClass}
                  data-testid={`${testIdPrefix}-logo-${brand.slug}`}
                   title={`${brand.name} — ${brand.partnershipType}`}
                 >

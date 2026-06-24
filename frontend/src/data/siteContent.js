@@ -14,23 +14,35 @@ export const stats = [
     number: "15+",
     label: "Years Experience"
   }
-];
+]; 
 
 export const heroData = {
-  title: "Simplifying Modern Workplace Technology Decisions",
-  subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence while working through their trusted vendors.",
-  ctaPrimary: "Book a Free Consultation",
+  title: "Modern Workplace Technology.",
+  titleAccent: "Simplified.",
+  eyebrow: "Modern Workplace Solutions",
+  subtitle: "Vendor-neutral consulting helping UAE organisations design, deploy and manage meeting rooms, workspace experience platforms and business applications.",
+  ctaPrimary: "Book a Consultation",
   ctaSecondary: "Explore Solutions",
   //image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80"
     image: "/HeroImage.png",
   // Carousel images — REPLACE these placeholders with brand-approved imagery.
   // Order matters: first image is shown on initial paint.
   images: [
-    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
-    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
-    "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=2400&q=80",
-    "https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=2400&q=80",
-    "https://images.unsplash.com/photo-1664575601711-67110e027b9b?auto=format&fit=crop&w=2400&q=80"
+    "/hero-images/HeroImage.png",
+    "/hero-images/ROOMZ1.png",
+    "/hero-images/ROOMZ2.jpg",
+    "/hero-images/ROOMZ3.jpg",
+    "/hero-images/ROOMZ4.jpg",
+    "/hero-images/Neat1.jpg",
+    "/hero-images/Neat2.jpg",
+    "/hero-images/Neat3.jpg",
+    "/hero-images/Neat4.png",
+    "/hero-images/Logitech1.png",
+    "/hero-images/Logitech2.png",
+    "/hero-images/Logitech3.png",
+    "/hero-images/Jabra3.jpg",
+    "/hero-images/Jabra4.jpg",
+    "/hero-images/Jabra5.jpg",
   ]
 };
 
