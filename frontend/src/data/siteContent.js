@@ -17,11 +17,9 @@ export const stats = [
 ]; 
 
 export const heroData = {
-  title: "Modern Workplace Technology.",
-  titleAccent: "Simplified.",
-  eyebrow: "Modern Workplace Solutions",
-  subtitle: "Vendor-neutral consulting helping UAE organisations design, deploy and manage meeting rooms, workspace experience platforms and business applications.",
-  ctaPrimary: "Book a Consultation",
+  title: "Simplifying Modern Workplace Technology Decisions",
+  subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence while working through their trusted vendors.",
+  ctaPrimary: "Book a Free Consultation",
   ctaSecondary: "Explore Solutions",
   //image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80"
     image: "/HeroImage.png",
