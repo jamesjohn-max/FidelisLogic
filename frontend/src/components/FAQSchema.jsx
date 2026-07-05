@@ -1,7 +1,13 @@
 import { Helmet } from "react-helmet-async";
 
-// FAQ Schema component - injects JSON-LD structured data for SEO.
+// FAQ Schema component - emits FAQPage JSON-LD for indexing.
+// Uses both Helmet (for head placement) AND an inline <script> tag so the
+// schema reliably lands in the DOM. Googlebot parses JSON-LD from anywhere
+// in the document, so the inline body script is a valid fallback if Helmet
+// is filtered by the environment.
 export const FAQSchema = ({ faqs }) => {
+  if (!faqs || faqs.length === 0) return null;
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -14,11 +20,19 @@ export const FAQSchema = ({ faqs }) => {
       }
     }))
   };
+  const jsonString = JSON.stringify(schema);
 
   return (
-    <Helmet>
-      <script type="application/ld+json">{JSON.stringify(schema)}</script>
-    </Helmet>
+    <>
+      <Helmet>
+        <script type="application/ld+json">{jsonString}</script>
+      </Helmet>
+      <script
+        type="application/ld+json"
+        data-testid="faq-jsonld"
+        dangerouslySetInnerHTML={{ __html: jsonString }}
+      />
+    </>
   );
 };
 

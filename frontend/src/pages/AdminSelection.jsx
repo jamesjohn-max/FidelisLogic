@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Card, CardContent } from "../components/ui/card";
-import { FileText, Tag, ArrowRight } from "lucide-react";
+import { FileText, Tag, HelpCircle, ArrowRight } from "lucide-react";
 
 export const AdminSelection = () => {
   const navigate = useNavigate();
@@ -27,6 +27,13 @@ export const AdminSelection = () => {
       icon: Tag,
       color: "orange",
       path: "/admin/deals"
+    },
+    {
+      title: "Brand FAQs",
+      description: "Add, edit, and reorder per-brand FAQs. Published entries appear on the brand page and are indexed by search engines as FAQPage structured data.",
+      icon: HelpCircle,
+      color: "emerald",
+      path: "/admin/faqs"
     }
   ];
 
@@ -45,28 +52,29 @@ export const AdminSelection = () => {
         </div>
 
         {/* Selection Cards */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {sections.map((section) => {
             const Icon = section.icon;
-            const bgColor = section.color === "blue" ? "bg-blue-50" : "bg-orange-50";
-            const iconBgColor = section.color === "blue" ? "bg-blue-100" : "bg-orange-100";
-            const iconColor = section.color === "blue" ? "text-blue-600" : "text-orange-600";
-            const hoverBorder = section.color === "blue" ? "hover:border-blue-300" : "hover:border-orange-300";
-            const buttonBg = section.color === "blue" ? "bg-blue-600 hover:bg-blue-700" : "bg-orange-600 hover:bg-orange-700";
+            const palettes = {
+              blue: { bg: "bg-blue-50", iconBg: "bg-blue-100", icon: "text-blue-600", hover: "hover:border-blue-300", btn: "bg-blue-600 hover:bg-blue-700" },
+              orange: { bg: "bg-orange-50", iconBg: "bg-orange-100", icon: "text-orange-600", hover: "hover:border-orange-300", btn: "bg-orange-600 hover:bg-orange-700" },
+              emerald: { bg: "bg-emerald-50", iconBg: "bg-emerald-100", icon: "text-emerald-600", hover: "hover:border-emerald-300", btn: "bg-emerald-600 hover:bg-emerald-700" }
+            };
+            const p = palettes[section.color] || palettes.blue;
 
             return (
-              <Card 
+              <Card
                 key={section.title}
-                className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${hoverBorder} border-2 border-transparent`}
+                className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${p.hover} border-2 border-transparent`}
                 onClick={() => navigate(section.path)}
               >
                 <CardContent className="p-6">
-                  <div className={`${iconBgColor} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}>
-                    <Icon className={iconColor} size={28} />
+                  <div className={`${p.iconBg} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}>
+                    <Icon className={p.icon} size={28} />
                   </div>
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">{section.title}</h2>
                   <p className="text-gray-600 text-sm mb-4">{section.description}</p>
-                  <div className={`inline-flex items-center text-sm font-medium ${iconColor}`}>
+                  <div className={`inline-flex items-center text-sm font-medium ${p.icon}`}>
                     Go to {section.title.split(" ")[0]}
                     <ArrowRight size={16} className="ml-1" />
                   </div>

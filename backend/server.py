@@ -16,7 +16,7 @@ from typing import List, Optional
 from datetime import datetime
 import base64
 
-from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate
+from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate, FAQ, FAQCreate, FAQUpdate
 from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, LoginRequest
 from deal_models import Deal, DealCreate, DealUpdate
 from auth import verify_password, get_password_hash, create_access_token, decode_access_token
@@ -443,6 +443,83 @@ def _fmt_date(d) -> str:
     if isinstance(d, str) and d:
         return d[:10]
     return datetime.utcnow().strftime("%Y-%m-%d")
+
+
+# ==================== FAQs ====================
+
+@api_router.get("/faqs", response_model=List[FAQ])
+async def get_faqs(brand_slug: Optional[str] = None, published_only: bool = True):
+    """Public: list FAQs (optionally filtered by brand)."""
+    query = {}
+    if brand_slug:
+        query["brand_slug"] = brand_slug
+    if published_only:
+        query["published"] = True
+    faqs = await db.faqs.find(query, {"_id": 0}).sort([("order", 1), ("created_at", 1)]).to_list(500)
+    return [FAQ(**f) for f in faqs]
+
+
+@api_router.get("/admin/faqs", response_model=List[FAQ])
+async def list_faqs_admin(
+    brand_slug: Optional[str] = None,
+    current_user: str = Depends(get_current_user)
+):
+    """Admin: list all FAQs (published + drafts), optionally filtered by brand."""
+    query = {}
+    if brand_slug:
+        query["brand_slug"] = brand_slug
+    faqs = await db.faqs.find(query, {"_id": 0}).sort([("brand_slug", 1), ("order", 1), ("created_at", 1)]).to_list(1000)
+    return [FAQ(**f) for f in faqs]
+
+
+@api_router.get("/faqs/{faq_id}", response_model=FAQ)
+async def get_faq(faq_id: str, current_user: str = Depends(get_current_user)):
+    """Admin: fetch a single FAQ for editing."""
+    faq = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    if not faq:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    return FAQ(**faq)
+
+
+@api_router.post("/faqs", response_model=FAQ)
+async def create_faq(payload: FAQCreate, current_user: str = Depends(get_current_user)):
+    """Admin: create a new FAQ."""
+    now = datetime.utcnow()
+    faq = FAQ(
+        brand_slug=payload.brand_slug,
+        question=payload.question,
+        answer=payload.answer,
+        order=payload.order if payload.order is not None else 0,
+        published=payload.published if payload.published is not None else True,
+        created_at=now,
+        updated_at=now,
+    )
+    await db.faqs.insert_one(faq.dict())
+    return faq
+
+
+@api_router.put("/faqs/{faq_id}", response_model=FAQ)
+async def update_faq(faq_id: str, payload: FAQUpdate, current_user: str = Depends(get_current_user)):
+    """Admin: update an existing FAQ."""
+    existing = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    update_data = {k: v for k, v in payload.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    await db.faqs.update_one({"id": faq_id}, {"$set": update_data})
+    updated = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    return FAQ(**updated)
+
+
+@api_router.delete("/faqs/{faq_id}")
+async def delete_faq(faq_id: str, current_user: str = Depends(get_current_user)):
+    """Admin: delete a FAQ."""
+    result = await db.faqs.delete_one({"id": faq_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    return {"status": "success", "message": "FAQ deleted"}
+
+
 
 
 @api_router.get("/sitemap.xml")

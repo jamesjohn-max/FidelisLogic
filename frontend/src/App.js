@@ -24,6 +24,8 @@ import { AdminDashboard } from "./pages/AdminDashboard";
 import { BlogEditor } from "./pages/BlogEditor";
 import { AdminDealsDashboard } from "./pages/AdminDealsDashboard";
 import { DealEditor } from "./pages/DealEditor";
+import { AdminFAQDashboard } from "./pages/AdminFAQDashboard";
+import { FAQEditor } from "./pages/FAQEditor";
 import { FloatingDealsButton } from "./components/FloatingDealsButton";
 import { CookieConsent } from "./components/CookieConsent";
 import { Toaster } from "./components/ui/sonner";
@@ -86,6 +88,9 @@ function App() {
             <Route path="/admin/deals" element={<AdminDealsDashboard />} />
             <Route path="/admin/deals/new" element={<DealEditor />} />
             <Route path="/admin/deals/edit/:id" element={<DealEditor />} />
+            <Route path="/admin/faqs" element={<AdminFAQDashboard />} />
+            <Route path="/admin/faqs/new" element={<FAQEditor />} />
+            <Route path="/admin/faqs/edit/:id" element={<FAQEditor />} />
           </Routes>
           <CookieConsent />
           <Toaster />

@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
+import axios from "axios";
 import { SEO } from "../components/SEO";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
@@ -9,11 +11,32 @@ import { PartnershipBadge } from "../components/PartnershipBadge";
 import { BrandLogo } from "../components/BrandLogo";
 import { BrandLeadForm } from "../components/BrandLeadForm";
 import { HeroCarousel } from "../components/HeroCarousel";
+import { FAQSection } from "../components/FAQSection";
+import { FAQSchema } from "../components/FAQSchema";
 import { analytics } from "../lib/analytics";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const BrandDetail = () => {
   const { slug } = useParams();
   const brand = getBrandBySlug(slug);
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    axios
+      .get(`${BACKEND_URL}/api/faqs`, { params: { brand_slug: slug } })
+      .then((res) => {
+        if (!cancelled) setFaqs(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setFaqs([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   if (!brand) {
     return <Navigate to="/brands" replace />;
@@ -347,6 +370,19 @@ export const BrandDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section — dynamic per brand, indexed for SEO */}
+      {faqs.length > 0 && (
+        <>
+          <FAQSchema faqs={faqs} />
+          <FAQSection
+            faqs={faqs}
+            title={`${brand.name} — Frequently Asked Questions`}
+            subtitle={`Answers to the questions we get most often about deploying ${brand.name} in the UAE.`}
+            testIdPrefix={`brand-faq-${brand.slug}`}
+          />
+        </>
+      )}
 
       {/* Full lead form */}
       <BrandLeadForm brand={brand} variant="full" />
