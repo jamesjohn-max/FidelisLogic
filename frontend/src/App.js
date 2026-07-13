@@ -6,6 +6,8 @@ import { Footer } from "./components/Footer";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { Home } from "./pages/Home";
 import { Solutions } from "./pages/Solutions";
+import { Services } from "./pages/Services";
+import { ServiceDetail } from "./pages/ServiceDetail";
 import { MeetingRooms } from "./pages/MeetingRooms";
 import { Headsets } from "./pages/Headsets";
 import { WorkspaceExperience } from "./pages/WorkspaceExperience";
@@ -70,6 +72,8 @@ function App() {
             <Route path="/solutions/headsets" element={<PublicLayout><Headsets /></PublicLayout>} />
             <Route path="/solutions/workspace-experience" element={<PublicLayout><WorkspaceExperience /></PublicLayout>} />
             <Route path="/solutions/business-apps" element={<PublicLayout><BusinessApps /></PublicLayout>} />
+            <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
+            <Route path="/services/:slug" element={<PublicLayout><ServiceDetail /></PublicLayout>} />
             <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
             <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
             <Route path="/blog/:slug" element={<PublicLayout><BlogPost /></PublicLayout>} />
