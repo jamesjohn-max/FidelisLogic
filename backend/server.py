@@ -457,11 +457,17 @@ def _fmt_date(d) -> str:
 # ==================== FAQs ====================
 
 @api_router.get("/faqs", response_model=List[FAQ])
-async def get_faqs(brand_slug: Optional[str] = None, published_only: bool = True):
-    """Public: list FAQs (optionally filtered by brand)."""
+async def get_faqs(
+    brand_slug: Optional[str] = None,
+    service_slug: Optional[str] = None,
+    published_only: bool = True,
+):
+    """Public: list FAQs (optionally filtered by brand or service)."""
     query = {}
     if brand_slug:
         query["brand_slug"] = brand_slug
+    if service_slug:
+        query["service_slug"] = service_slug
     if published_only:
         query["published"] = True
     faqs = await db.faqs.find(query, {"_id": 0}).sort([("order", 1), ("created_at", 1)]).to_list(500)
@@ -471,13 +477,16 @@ async def get_faqs(brand_slug: Optional[str] = None, published_only: bool = True
 @api_router.get("/admin/faqs", response_model=List[FAQ])
 async def list_faqs_admin(
     brand_slug: Optional[str] = None,
+    service_slug: Optional[str] = None,
     current_user: str = Depends(get_current_user)
 ):
-    """Admin: list all FAQs (published + drafts), optionally filtered by brand."""
+    """Admin: list all FAQs (published + drafts), optionally filtered."""
     query = {}
     if brand_slug:
         query["brand_slug"] = brand_slug
-    faqs = await db.faqs.find(query, {"_id": 0}).sort([("brand_slug", 1), ("order", 1), ("created_at", 1)]).to_list(1000)
+    if service_slug:
+        query["service_slug"] = service_slug
+    faqs = await db.faqs.find(query, {"_id": 0}).sort([("brand_slug", 1), ("service_slug", 1), ("order", 1), ("created_at", 1)]).to_list(1000)
     return [FAQ(**f) for f in faqs]
 
 
@@ -492,10 +501,15 @@ async def get_faq(faq_id: str, current_user: str = Depends(get_current_user)):
 
 @api_router.post("/faqs", response_model=FAQ)
 async def create_faq(payload: FAQCreate, current_user: str = Depends(get_current_user)):
-    """Admin: create a new FAQ."""
+    """Admin: create a new FAQ. Requires exactly one of brand_slug or service_slug."""
+    if not payload.brand_slug and not payload.service_slug:
+        raise HTTPException(status_code=400, detail="Either brand_slug or service_slug is required")
+    if payload.brand_slug and payload.service_slug:
+        raise HTTPException(status_code=400, detail="Set only one of brand_slug or service_slug, not both")
     now = datetime.utcnow()
     faq = FAQ(
         brand_slug=payload.brand_slug,
+        service_slug=payload.service_slug,
         question=payload.question,
         answer=payload.answer,
         order=payload.order if payload.order is not None else 0,

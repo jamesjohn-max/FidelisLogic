@@ -35,7 +35,8 @@ class NewsletterSubscriptionCreate(BaseModel):
 
 class FAQ(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    brand_slug: str
+    brand_slug: Optional[str] = None
+    service_slug: Optional[str] = None
     question: str
     answer: str
     order: int = 0
@@ -45,7 +46,8 @@ class FAQ(BaseModel):
 
 
 class FAQCreate(BaseModel):
-    brand_slug: str
+    brand_slug: Optional[str] = None
+    service_slug: Optional[str] = None
     question: str
     answer: str
     order: Optional[int] = 0
@@ -54,6 +56,7 @@ class FAQCreate(BaseModel):
 
 class FAQUpdate(BaseModel):
     brand_slug: Optional[str] = None
+    service_slug: Optional[str] = None
     question: Optional[str] = None
     answer: Optional[str] = None
     order: Optional[int] = None

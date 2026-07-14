@@ -7,6 +7,12 @@ export const services = [
     name: "Consulting Services",
     oneLiner: "Vendor-neutral advisory to shape the right workplace technology solution.",
     icon: "Compass",
+    heroImages: [
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Advisory that starts with your business, not a vendor's product.",
     shortDescription:
       "Independent workplace-technology consulting for UAE organisations — helping you define the right solution before anyone quotes a price.",
@@ -57,6 +63,12 @@ export const services = [
     name: "Deployment & Configuration",
     oneLiner: "End-to-end installation, commissioning, and platform tuning.",
     icon: "Wrench",
+    heroImages: [
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "From procurement to production — one team accountable to go-live.",
     shortDescription:
       "Turn-key deployment of meeting rooms, workspace platforms, and collaboration devices — installed, commissioned, and validated by a single accountable team.",
@@ -107,6 +119,12 @@ export const services = [
     name: "Managed Support & Maintenance",
     oneLiner: "Proactive monitoring, SLA-backed incident response, lifecycle care.",
     icon: "Headphones",
+    heroImages: [
+      "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Keep every room, every device, every meeting running.",
     shortDescription:
       "SLA-backed managed services for meeting rooms, workspace platforms, and enterprise collaboration devices — proactive monitoring, remote remediation, and lifecycle firmware management.",
@@ -157,6 +175,12 @@ export const services = [
     name: "Video Conferencing Rentals",
     oneLiner: "Short-term hire of certified meeting-room and conferencing kit.",
     icon: "Video",
+    heroImages: [
+      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1587560699334-cc4ff634909a?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Enterprise-grade video conferencing — hired by the day, week, or month.",
     shortDescription:
       "Rent certified Microsoft Teams, Zoom, and BYOD video systems for events, boardroom pilots, and temporary offices — delivered, installed, and supported.",
@@ -208,6 +232,12 @@ export const services = [
     name: "Workspace Technology Audits",
     oneLiner: "Independent audit of your estate — surface gaps, risk, and opportunity.",
     icon: "ClipboardCheck",
+    heroImages: [
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Know exactly what you have, what's failing, and what to replace next.",
     shortDescription:
       "A structured audit of your meeting rooms, workspace platforms, and collaboration devices — producing a heat-map of health, risk, and prioritised investment opportunities.",
@@ -258,6 +288,12 @@ export const services = [
     name: "Technology Refresh & Upgrades",
     oneLiner: "Plan and execute end-of-life device and platform migrations.",
     icon: "RefreshCw",
+    heroImages: [
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1587560699334-cc4ff634909a?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Refresh without the disruption — plan, phase, and swap.",
     shortDescription:
       "Structured refresh programmes for meeting rooms, headsets, and workspace platforms — end-of-life devices retired, replacements phased in, users trained on what changes.",
@@ -308,6 +344,12 @@ export const services = [
     name: "Relocation & Office Moves",
     oneLiner: "Decommission, transport, and reinstate technology when you relocate.",
     icon: "Truck",
+    heroImages: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1497366858526-0766cadbe8fa?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Move offices, not the risk of a broken meeting room.",
     shortDescription:
       "Full-lifecycle AV and workspace-technology relocation — decommissioning, secure transport, reinstallation, and full re-commissioning at the new address.",
@@ -358,6 +400,12 @@ export const services = [
     name: "Training & User Adoption",
     oneLiner: "Turn deployed technology into daily habit through structured enablement.",
     icon: "GraduationCap",
+    heroImages: [
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=2400&q=80",
+      "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=2400&q=80"
+    ],
     tagline: "Technology only pays back when people actually use it.",
     shortDescription:
       "Role-based training and change-management programmes that lift adoption of meeting rooms, workspace platforms, and collaboration tools — measured by real usage, not attendance sheets.",

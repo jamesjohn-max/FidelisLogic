@@ -10,6 +10,7 @@ import { ArrowLeft, Loader2, Save } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { getBrandsSorted } from "../data/brands";
+import { services } from "../data/services";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -19,9 +20,12 @@ export const FAQEditor = () => {
   const isEdit = Boolean(id);
 
   const brandOptions = getBrandsSorted();
+  const serviceOptions = services;
 
   const [form, setForm] = useState({
+    parent_type: "brand", // "brand" | "service"
     brand_slug: brandOptions[0]?.slug || "",
+    service_slug: serviceOptions[0]?.slug || "",
     question: "",
     answer: "",
     order: 0,
@@ -48,8 +52,11 @@ export const FAQEditor = () => {
       const res = await axios.get(`${BACKEND_URL}/api/faqs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      const parentType = res.data.service_slug ? "service" : "brand";
       setForm({
-        brand_slug: res.data.brand_slug,
+        parent_type: parentType,
+        brand_slug: res.data.brand_slug || brandOptions[0]?.slug || "",
+        service_slug: res.data.service_slug || serviceOptions[0]?.slug || "",
         question: res.data.question,
         answer: res.data.answer,
         order: res.data.order ?? 0,
@@ -77,12 +84,20 @@ export const FAQEditor = () => {
     try {
       const token = localStorage.getItem("admin_token");
       const payload = {
-        brand_slug: form.brand_slug,
         question: form.question.trim(),
         answer: form.answer.trim(),
         order: Number(form.order) || 0,
         published: form.published,
       };
+      // Exactly one of brand_slug or service_slug — the backend enforces this.
+      if (form.parent_type === "brand") {
+        payload.brand_slug = form.brand_slug;
+        payload.service_slug = null;
+      } else {
+        payload.service_slug = form.service_slug;
+        payload.brand_slug = null;
+      }
+
       if (isEdit) {
         await axios.put(`${BACKEND_URL}/api/faqs/${id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
@@ -129,30 +144,85 @@ export const FAQEditor = () => {
           {isEdit ? "Edit FAQ" : "New FAQ"}
         </h1>
         <p className="text-sm text-gray-600 mb-8">
-          These questions appear on the public brand page and are emitted as FAQPage
-          structured data for Google indexing.
+          These questions appear on the public brand or service page and are emitted as
+          FAQPage structured data for Google indexing.
         </p>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6" data-testid="faq-editor-form">
+          {/* Parent type toggle */}
           <div>
-            <Label htmlFor="brand_slug" className="mb-1.5 block">
-              Brand <span className="text-red-500">*</span>
+            <Label className="mb-2 block">
+              This FAQ is for a <span className="text-red-500">*</span>
             </Label>
-            <select
-              id="brand_slug"
-              value={form.brand_slug}
-              onChange={(e) => handleChange("brand_slug", e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-              data-testid="faq-editor-brand"
-            >
-              {brandOptions.map((b) => (
-                <option key={b.slug} value={b.slug}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
+            <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50" role="tablist">
+              <button
+                type="button"
+                onClick={() => handleChange("parent_type", "brand")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  form.parent_type === "brand"
+                    ? "bg-white text-emerald-700 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                data-testid="faq-editor-type-brand"
+              >
+                Brand
+              </button>
+              <button
+                type="button"
+                onClick={() => handleChange("parent_type", "service")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  form.parent_type === "service"
+                    ? "bg-white text-emerald-700 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+                data-testid="faq-editor-type-service"
+              >
+                Service
+              </button>
+            </div>
           </div>
+
+          {form.parent_type === "brand" ? (
+            <div>
+              <Label htmlFor="brand_slug" className="mb-1.5 block">
+                Brand <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="brand_slug"
+                value={form.brand_slug}
+                onChange={(e) => handleChange("brand_slug", e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+                data-testid="faq-editor-brand"
+              >
+                {brandOptions.map((b) => (
+                  <option key={b.slug} value={b.slug}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div>
+              <Label htmlFor="service_slug" className="mb-1.5 block">
+                Service <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="service_slug"
+                value={form.service_slug}
+                onChange={(e) => handleChange("service_slug", e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+                data-testid="faq-editor-service"
+              >
+                {serviceOptions.map((s) => (
+                  <option key={s.slug} value={s.slug}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <Label htmlFor="question" className="mb-1.5 block">
@@ -162,7 +232,7 @@ export const FAQEditor = () => {
               id="question"
               value={form.question}
               onChange={(e) => handleChange("question", e.target.value)}
-              placeholder="e.g., How long does a typical ROOMZ deployment take?"
+              placeholder="e.g., How long does a typical deployment take?"
               required
               data-testid="faq-editor-question"
             />

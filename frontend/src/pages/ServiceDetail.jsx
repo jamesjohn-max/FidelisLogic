@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
+import axios from "axios";
 import { SEO } from "../components/SEO";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { Button } from "../components/ui/button";
+import { HeroCarousel } from "../components/HeroCarousel";
+import { FAQSection } from "../components/FAQSection";
+import { FAQSchema } from "../components/FAQSchema";
 import { getServiceBySlug, services } from "../data/services";
 import {
   ArrowRight,
@@ -18,6 +23,8 @@ import {
 } from "lucide-react";
 import { analytics } from "../lib/analytics";
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 const iconMap = {
   Compass,
   Wrench,
@@ -32,6 +39,23 @@ const iconMap = {
 export const ServiceDetail = () => {
   const { slug } = useParams();
   const service = getServiceBySlug(slug);
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    axios
+      .get(`${BACKEND_URL}/api/faqs`, { params: { service_slug: slug } })
+      .then((res) => {
+        if (!cancelled) setFaqs(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch(() => {
+        if (!cancelled) setFaqs([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   if (!service) {
     return <Navigate to="/services" replace />;
@@ -63,45 +87,60 @@ export const ServiceDetail = () => {
         className="pt-24"
       />
 
-      {/* Hero */}
-      <section className="pt-6 pb-14 lg:pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-white to-blue-50/60">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-start gap-5 mb-6">
-            <div className="shrink-0 w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 inline-flex items-center justify-center">
-              <Icon size={26} />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-blue-600 uppercase tracking-[0.14em] mb-2">
+      {/* Hero — full-bleed carousel background */}
+      <section className="relative pt-6 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <HeroCarousel
+          images={service.heroImages || []}
+          testId={`service-hero-carousel-${service.slug}`}
+        />
+        {/* Dark gradient overlay for premium feel + text legibility */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/85 via-black/65 to-black/35 lg:from-black/85 lg:via-black/55 lg:to-black/30" />
+        <div className="absolute inset-x-0 bottom-0 z-[1] h-24 bg-gradient-to-b from-transparent to-white/95" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div
+            className="max-w-3xl bg-white/10 border border-white/15 backdrop-blur-sm rounded-2xl shadow-2xl shadow-black/30 p-8 sm:p-10 lg:p-12"
+            data-testid="service-hero-card"
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-xl bg-white/15 border border-white/20 text-white inline-flex items-center justify-center backdrop-blur-sm">
+                <Icon size={22} />
+              </div>
+              <p className="text-xs font-semibold text-fidelis-cyan uppercase tracking-[0.14em]">
                 {service.name}
               </p>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-dark leading-[1.1] tracking-tight" data-testid="service-hero-title">
-                {service.tagline}
-              </h1>
             </div>
-          </div>
-          <p className="text-lg text-gray-600 leading-relaxed max-w-3xl mb-8">
-            {service.longDescription}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              to="/contact"
-              onClick={() =>
-                analytics.consultationCtaClick({
-                  location: "service_hero",
-                  service: service.slug
-                })
-              }
-            >
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white" data-testid="service-hero-cta-primary">
-                Talk to us about {service.name}
-                <ArrowRight className="ml-2" size={18} />
-              </Button>
-            </Link>
-            <Link to="/services">
-              <Button size="lg" variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50">
-                All services
-              </Button>
-            </Link>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)]" data-testid="service-hero-title">
+              {service.tagline}
+            </h1>
+            <p className="text-lg text-gray-100 leading-relaxed mb-8 drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]">
+              {service.longDescription}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                to="/contact"
+                onClick={() =>
+                  analytics.consultationCtaClick({
+                    location: "service_hero",
+                    service: service.slug
+                  })
+                }
+              >
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/40" data-testid="service-hero-cta-primary">
+                  Talk to us about {service.name}
+                  <ArrowRight className="ml-2" size={18} />
+                </Button>
+              </Link>
+              <Link to="/services">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm"
+                >
+                  All services
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -256,6 +295,19 @@ export const ServiceDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section — dynamic per service, indexed for SEO */}
+      {faqs.length > 0 && (
+        <>
+          <FAQSchema faqs={faqs} />
+          <FAQSection
+            faqs={faqs}
+            title={`${service.name} — Frequently Asked Questions`}
+            subtitle={`Answers to the questions we get most often about ${service.name.toLowerCase()} in the UAE.`}
+            testIdPrefix={`service-faq-${service.slug}`}
+          />
+        </>
+      )}
 
       {/* Footer CTA */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-brand-dark text-white">

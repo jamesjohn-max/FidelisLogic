@@ -23,11 +23,13 @@ export const AdminFAQDashboard = () => {
   const navigate = useNavigate();
   const [faqs, setFaqs] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [brandFilter, setBrandFilter] = useState("all");
+  const [parentFilter, setParentFilter] = useState("all"); // all | brand:<slug> | service:<slug>
   const [isLoading, setIsLoading] = useState(true);
 
   const brandOptions = getBrandsSorted();
+  const serviceOptions = services;
   const brandLookup = Object.fromEntries(brandOptions.map((b) => [b.slug, b]));
+  const serviceLookup = Object.fromEntries(serviceOptions.map((s) => [s.slug, s]));
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -74,13 +76,18 @@ export const AdminFAQDashboard = () => {
       !searchQuery ||
       f.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       f.answer.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchBrand = brandFilter === "all" || f.brand_slug === brandFilter;
-    return matchQuery && matchBrand;
+    let matchParent = true;
+    if (parentFilter !== "all") {
+      const [type, slug] = parentFilter.split(":");
+      matchParent = type === "brand" ? f.brand_slug === slug : f.service_slug === slug;
+    }
+    return matchQuery && matchParent;
   });
 
-  // Group by brand for display
+  // Group by parent (brand:<slug> or service:<slug>) for display
   const grouped = filtered.reduce((acc, f) => {
-    (acc[f.brand_slug] = acc[f.brand_slug] || []).push(f);
+    const key = f.service_slug ? `service:${f.service_slug}` : `brand:${f.brand_slug}`;
+    (acc[key] = acc[key] || []).push(f);
     return acc;
   }, {});
 
@@ -132,17 +139,26 @@ export const AdminFAQDashboard = () => {
             />
           </div>
           <select
-            value={brandFilter}
-            onChange={(e) => setBrandFilter(e.target.value)}
+            value={parentFilter}
+            onChange={(e) => setParentFilter(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-            data-testid="admin-faq-brand-filter"
+            data-testid="admin-faq-parent-filter"
           >
-            <option value="all">All brands</option>
-            {brandOptions.map((b) => (
-              <option key={b.slug} value={b.slug}>
-                {b.name}
-              </option>
-            ))}
+            <option value="all">All FAQs</option>
+            <optgroup label="Brands">
+              {brandOptions.map((b) => (
+                <option key={`brand-${b.slug}`} value={`brand:${b.slug}`}>
+                  {b.name}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Services">
+              {serviceOptions.map((s) => (
+                <option key={`service-${s.slug}`} value={`service:${s.slug}`}>
+                  {s.name}
+                </option>
+              ))}
+            </optgroup>
           </select>
         </div>
 
@@ -156,14 +172,14 @@ export const AdminFAQDashboard = () => {
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <HelpCircle className="mx-auto text-gray-400 mb-4" size={48} />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {searchQuery || brandFilter !== "all" ? "No FAQs match" : "No FAQs yet"}
+              {searchQuery || parentFilter !== "all" ? "No FAQs match" : "No FAQs yet"}
             </h3>
             <p className="text-gray-600 mb-6">
-              {searchQuery || brandFilter !== "all"
+              {searchQuery || parentFilter !== "all"
                 ? "Try clearing filters"
                 : "Create your first FAQ to get started"}
             </p>
-            {!searchQuery && brandFilter === "all" && (
+            {!searchQuery && parentFilter === "all" && (
               <Button
                 onClick={() => navigate("/admin/faqs/new")}
                 className="bg-emerald-600 hover:bg-emerald-700"
@@ -175,19 +191,31 @@ export const AdminFAQDashboard = () => {
           </div>
         ) : (
           <div className="space-y-8">
-            {Object.entries(grouped).map(([brandSlug, items]) => {
-              const brand = brandLookup[brandSlug];
+            {Object.entries(grouped).map(([key, items]) => {
+              const [type, slug] = key.split(":");
+              const parent = type === "brand" ? brandLookup[slug] : serviceLookup[slug];
+              const publicHref = type === "brand" ? `/brands/${slug}` : `/services/${slug}`;
+              const typeLabel = type === "brand" ? "Brand" : "Service";
+              const typeChipClass =
+                type === "brand"
+                  ? "bg-blue-50 text-blue-700 border-blue-200"
+                  : "bg-emerald-50 text-emerald-700 border-emerald-200";
               return (
-                <div key={brandSlug} className="bg-white rounded-lg shadow overflow-hidden">
-                  <div className="px-5 py-3 border-b bg-gray-50 flex items-center justify-between">
-                    <h2 className="font-semibold text-gray-900">
-                      {brand ? brand.name : brandSlug}{" "}
-                      <span className="text-gray-500 font-normal text-sm ml-2">
-                        ({items.length})
+                <div key={key} className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="px-5 py-3 border-b bg-gray-50 flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-3">
+                      <span className={`inline-flex items-center text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${typeChipClass}`}>
+                        {typeLabel}
                       </span>
-                    </h2>
+                      <h2 className="font-semibold text-gray-900">
+                        {parent ? parent.name : slug}{" "}
+                        <span className="text-gray-500 font-normal text-sm ml-2">
+                          ({items.length})
+                        </span>
+                      </h2>
+                    </div>
                     <a
-                      href={`/brands/${brandSlug}#faq`}
+                      href={publicHref}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-emerald-600 hover:underline"
