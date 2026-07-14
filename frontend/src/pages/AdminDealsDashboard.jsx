@@ -19,11 +19,9 @@ import {
   ArrowLeft,
   Loader2
 } from "lucide-react";
-import axios from "axios";
 import { toast } from "sonner";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const AdminDealsDashboard = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState([]);
@@ -42,7 +40,7 @@ export const AdminDealsDashboard = () => {
   const fetchDeals = async () => {
     try {
       const token = localStorage.getItem("admin_token");
-      const response = await axios.get(`${BACKEND_URL}/api/deals?published_only=false`, {
+      const response = await api.get(`/deals?published_only=false`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setDeals(response.data);
@@ -59,7 +57,7 @@ export const AdminDealsDashboard = () => {
     
     try {
       const token = localStorage.getItem("admin_token");
-      await axios.delete(`${BACKEND_URL}/api/deals/${id}`, {
+      await api.delete(`/deals/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success("Deal deleted successfully");

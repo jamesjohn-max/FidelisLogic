@@ -1,11 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { analytics } from "../lib/analytics";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 /**
  * Inline lead-gen form rendered on each brand detail page.
  * - variant="compact": narrow card for the hero side panel (3 fields stacked)
@@ -47,7 +45,7 @@ export const BrandLeadForm = ({ brand, variant = "full" }) => {
     };
 
     try {
-      await axios.post(`${BACKEND_URL}/api/contact`, payload);
+      await api.post(`/contact`, payload);
       analytics.brandLeadSubmit({
         brand: brand.slug,
         brand_name: brand.name,

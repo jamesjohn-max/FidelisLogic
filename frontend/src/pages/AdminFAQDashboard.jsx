@@ -13,12 +13,10 @@ import {
   ArrowLeft,
   Loader2,
 } from "lucide-react";
-import axios from "axios";
 import { toast } from "sonner";
 import { getBrandsSorted } from "../data/brands";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const AdminFAQDashboard = () => {
   const navigate = useNavigate();
   const [faqs, setFaqs] = useState([]);
@@ -45,7 +43,7 @@ export const AdminFAQDashboard = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("admin_token");
-      const response = await axios.get(`${BACKEND_URL}/api/admin/faqs`, {
+      const response = await api.get(`/admin/faqs`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFaqs(response.data);
@@ -61,7 +59,7 @@ export const AdminFAQDashboard = () => {
     if (!window.confirm(`Delete FAQ: "${question}"?`)) return;
     try {
       const token = localStorage.getItem("admin_token");
-      await axios.delete(`${BACKEND_URL}/api/faqs/${id}`, {
+      await api.delete(`/faqs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("FAQ deleted");

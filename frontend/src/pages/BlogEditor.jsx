@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { toast } from "sonner";
-import axios from "axios";
+import { api } from "../lib/api";
 import { 
   Save, 
   ArrowLeft, 
@@ -25,8 +25,6 @@ import {
   Loader2,
   Upload
 } from "lucide-react";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const categories = [
   "Meeting Rooms",
@@ -74,7 +72,7 @@ export const BlogEditor = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("admin_token");
-      const response = await axios.get(`${BACKEND_URL}/api/blog/posts?published_only=false`, {
+      const response = await api.get(`/blog/posts?published_only=false`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const post = response.data.find(p => p.id === id);
@@ -148,8 +146,7 @@ export const BlogEditor = () => {
       const uploadData = new FormData();
       uploadData.append("file", file);
 
-      const response = await axios.post(
-        `${BACKEND_URL}/api/blog/upload-image`,
+      const response = await api.post(`/blog/upload-image`,
         uploadData,
         {
           headers: {
@@ -190,15 +187,13 @@ export const BlogEditor = () => {
       };
 
       if (isEditing) {
-        await axios.put(
-          `${BACKEND_URL}/api/blog/posts/${id}`,
+        await api.put(`/blog/posts/${id}`,
           postData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         toast.success("Post updated successfully");
       } else {
-        await axios.post(
-          `${BACKEND_URL}/api/blog/posts`,
+        await api.post(`/blog/posts`,
           postData,
           { headers: { Authorization: `Bearer ${token}` } }
         );

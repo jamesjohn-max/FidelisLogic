@@ -5,10 +5,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { toast } from "sonner";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const AdminLogin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -22,7 +19,7 @@ export const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/auth/login`, formData);
+      const response = await api.post(`/auth/login`, formData);
       
       // Store token
       localStorage.setItem("admin_token", response.data.access_token);

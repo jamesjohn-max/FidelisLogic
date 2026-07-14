@@ -7,8 +7,7 @@ import { ArrowLeft, Calendar, Tag, User, Clock, Loader2 } from "lucide-react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { BACKEND_URL } from "../lib/api";
 export const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);

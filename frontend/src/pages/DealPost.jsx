@@ -5,11 +5,9 @@ import { Badge } from "../components/ui/badge";
 import { SEO } from "../components/SEO";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { ArrowLeft, Calendar, Tag, Clock, ExternalLink, Loader2, AlertCircle } from "lucide-react";
-import axios from "axios";
 import { Helmet } from "react-helmet-async";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const DealPost = () => {
   const { slug } = useParams();
   const [deal, setDeal] = useState(null);
@@ -20,7 +18,7 @@ export const DealPost = () => {
   useEffect(() => {
     const fetchDeal = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/deals`);
+        const response = await api.get(`/deals`);
         const allDeals = response.data;
         const foundDeal = allDeals.find((d) => d.slug === slug);
         

@@ -28,10 +28,7 @@ import {
   partners,
   testimonials
 } from "../data/siteContent";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const Home = () => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [isLoadingPosts, setIsLoadingPosts] = useState(true);
@@ -39,7 +36,7 @@ export const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
+        const response = await api.get(`/blog/posts`);
         const apiPosts = response.data.map(post => ({
           ...post,
           image: post.featured_image || post.image || "https://images.unsplash.com/photo-1497366216548-37526070297c"

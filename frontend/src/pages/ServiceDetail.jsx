@@ -23,8 +23,7 @@ import {
 } from "lucide-react";
 import { analytics } from "../lib/analytics";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { BACKEND_URL } from "../lib/api";
 const iconMap = {
   Compass,
   Wrench,

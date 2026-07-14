@@ -73,8 +73,7 @@ import {
 import { toast } from 'sonner';
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 const MenuButton = ({ onClick, isActive, disabled, children, title }) => (
   <Button
     type="button"
@@ -225,8 +224,7 @@ export const RichTextEditor = ({ content, onChange, placeholder = "Start writing
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await axios.post(
-        `${BACKEND_URL}/api/blog/upload-image`,
+      const response = await api.post(`/blog/upload-image`,
         formData,
         {
           headers: {

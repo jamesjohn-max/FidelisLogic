@@ -7,13 +7,11 @@ import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
-import axios from "axios";
 import { toast } from "sonner";
 import { getBrandsSorted } from "../data/brands";
 import { services } from "../data/services";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const FAQEditor = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -49,7 +47,7 @@ export const FAQEditor = () => {
   const loadFAQ = async () => {
     try {
       const token = localStorage.getItem("admin_token");
-      const res = await axios.get(`${BACKEND_URL}/api/faqs/${id}`, {
+      const res = await api.get(`/faqs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const parentType = res.data.service_slug ? "service" : "brand";
@@ -99,12 +97,12 @@ export const FAQEditor = () => {
       }
 
       if (isEdit) {
-        await axios.put(`${BACKEND_URL}/api/faqs/${id}`, payload, {
+        await api.put(`/faqs/${id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("FAQ updated");
       } else {
-        await axios.post(`${BACKEND_URL}/api/faqs`, payload, {
+        await api.post(`/faqs`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("FAQ created");

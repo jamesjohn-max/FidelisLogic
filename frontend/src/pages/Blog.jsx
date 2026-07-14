@@ -7,10 +7,7 @@ import { StructuredData, breadcrumbSchema } from "../components/StructuredData";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { seoConfig } from "../data/seoConfig";
 import { ArrowRight, Loader2 } from "lucide-react";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [posts, setPosts] = useState([]);
@@ -19,7 +16,7 @@ export const Blog = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/blog/posts`);
+        const response = await api.get(`/blog/posts`);
         const apiPosts = response.data.map(post => ({
           ...post,
           image: post.featured_image || "https://images.unsplash.com/photo-1497366216548-37526070297c"

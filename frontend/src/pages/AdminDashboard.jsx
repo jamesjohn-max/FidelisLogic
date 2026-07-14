@@ -5,7 +5,6 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { toast } from "sonner";
-import axios from "axios";
 import { 
   PlusCircle, 
   Edit, 
@@ -17,8 +16,7 @@ import {
 } from "lucide-react";
 import { Input } from "../components/ui/input";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const AdminDashboard = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -29,7 +27,7 @@ export const AdminDashboard = () => {
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem("admin_token");
-      const response = await axios.get(`${BACKEND_URL}/api/blog/posts?published_only=false`, {
+      const response = await api.get(`/blog/posts?published_only=false`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPosts(response.data);
@@ -52,7 +50,7 @@ export const AdminDashboard = () => {
   const handleDelete = async (postId) => {
     try {
       const token = localStorage.getItem("admin_token");
-      await axios.delete(`${BACKEND_URL}/api/blog/posts/${postId}`, {
+      await api.delete(`/blog/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success("Post deleted successfully");

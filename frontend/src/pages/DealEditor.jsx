@@ -19,11 +19,9 @@ import {
   ExternalLink,
   Image as ImageIcon
 } from "lucide-react";
-import axios from "axios";
 import { toast } from "sonner";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const DealEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -65,7 +63,7 @@ export const DealEditor = () => {
   const fetchDeal = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/deals?published_only=false`);
+      const response = await api.get(`/deals?published_only=false`);
       const deal = response.data.find(d => d.id === id);
       if (deal) {
         // Format dates for input fields
@@ -136,8 +134,7 @@ export const DealEditor = () => {
       const uploadFormData = new FormData();
       uploadFormData.append("file", file);
 
-      const response = await axios.post(
-        `${BACKEND_URL}/api/deals/upload-image`,
+      const response = await api.post(`/deals/upload-image`,
         uploadFormData,
         {
           headers: {
@@ -197,12 +194,12 @@ export const DealEditor = () => {
       };
 
       if (isEditing) {
-        await axios.put(`${BACKEND_URL}/api/deals/${id}`, submitData, {
+        await api.put(`/deals/${id}`, submitData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success("Deal updated successfully");
       } else {
-        await axios.post(`${BACKEND_URL}/api/deals`, submitData, {
+        await api.post(`/deals`, submitData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success("Deal created successfully");

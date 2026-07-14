@@ -15,8 +15,7 @@ import { FAQSection } from "../components/FAQSection";
 import { FAQSchema } from "../components/FAQSchema";
 import { analytics } from "../lib/analytics";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { BACKEND_URL } from "../lib/api";
 export const BrandDetail = () => {
   const { slug } = useParams();
   const brand = getBrandBySlug(slug);

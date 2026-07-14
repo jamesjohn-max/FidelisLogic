@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Tag, X } from "lucide-react";
-import axios from "axios";
 import { analytics } from "../lib/analytics";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 // Floating CTA that surfaces Smart Deals on every public page.
 // Hidden on /admin routes and on /deals itself. Dismissible per-session.
 export const FloatingDealsButton = () => {
@@ -16,7 +14,7 @@ export const FloatingDealsButton = () => {
   useEffect(() => {
     const fetchCount = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/api/deals/active`);
+        const res = await api.get(`/deals/active`);
         setActiveCount(Array.isArray(res.data) ? res.data.length : 0);
       } catch {
         setActiveCount(0);

@@ -18,11 +18,9 @@ import { seoConfig } from "../data/seoConfig";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin, Linkedin, Youtube, Instagram } from "lucide-react";
 import { contactInfo, formTopics } from "../data/siteContent";
-import axios from "axios";
 import { analytics } from "../lib/analytics";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -55,7 +53,7 @@ export const Contact = () => {
 
     try {
       // Save to database first - this is the primary action
-      await axios.post(`${BACKEND_URL}/api/contact`, {
+      await api.post(`/contact`, {
         name: formData.name,
         company: formData.company || null,
         email: formData.email,

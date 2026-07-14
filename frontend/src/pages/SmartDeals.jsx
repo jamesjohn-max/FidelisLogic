@@ -5,10 +5,7 @@ import { Badge } from "../components/ui/badge";
 import { SEO } from "../components/SEO";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { ArrowRight, Loader2, Clock, Tag, ExternalLink } from "lucide-react";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+import { api } from "../lib/api";
 export const SmartDeals = () => {
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [deals, setDeals] = useState([]);
@@ -17,7 +14,7 @@ export const SmartDeals = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/deals`);
+        const response = await api.get(`/deals`);
         setDeals(response.data);
       } catch (error) {
         console.error("Error fetching deals:", error);
