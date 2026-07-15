@@ -13,15 +13,14 @@ import {
 } from "../components/ui/select";
 import { SEO } from "../components/SEO";
 import { StructuredData, breadcrumbSchema, organizationSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { seoConfig } from "../data/seoConfig";
 import { toast } from "sonner";
 import { Mail, Phone, MapPin, Linkedin, Youtube, Instagram } from "lucide-react";
-import { contactInfo, formTopics } from "../data/mock";
-import axios from "axios";
+import { contactInfo, formTopics } from "../data/siteContent";
+import { analytics } from "../lib/analytics";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const WEB3FORMS_KEY = "99d6039b-83fa-461a-9eac-331206d2f378";
-
+import { api } from "../lib/api";
 export const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -32,9 +31,7 @@ export const Contact = () => {
     preferred_date: "",
     message: ""
   });
-  const [newsletterEmail, setNewsletterEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubscribing, setIsSubscribing] = useState(false);
 
   const breadcrumbs = [
     { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
@@ -50,13 +47,13 @@ export const Contact = () => {
     setFormData((prev) => ({ ...prev, topic: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setIsSubmitting(true);
 
     try {
-      // Save to database first
-      await axios.post(`${BACKEND_URL}/api/contact`, {
+      // Save to database first - this is the primary action
+      await api.post(`/contact`, {
         name: formData.name,
         company: formData.company || null,
         email: formData.email,
@@ -66,42 +63,24 @@ export const Contact = () => {
         message: formData.message
       });
 
-      // Send email via Web3Forms (client-side)
-      const emailMessage = `
-New Consultation Request Received
+      // Try to send email via Web3Forms (may fail in preview environment due to CORS)
+      try {
+        const web3FormData = new FormData(event.target);
+        web3FormData.append("access_key", "99d6039b-83fa-461a-9eac-331206d2f378");
+        web3FormData.append("subject", `New Consultation Request from ${formData.name}`);
 
-Contact Details:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Name: ${formData.name}
-${formData.company ? `Company: ${formData.company}` : ''}
-Email: ${formData.email}
-${formData.phone ? `Phone: ${formData.phone}` : ''}
-Topic: ${formData.topic}
-${formData.preferred_date ? `Preferred Date/Time: ${formData.preferred_date}` : ''}
-
-Message:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${formData.message}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-This email was sent from the Fidelis Logic website contact form.
-Reply to: ${formData.email}
-      `.trim();
-
-      await axios.post("https://api.web3forms.com/submit", {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Consultation Request from ${formData.name}`,
-        from_name: formData.name,
-        email: "info@fidelislogic.com",
-        message: emailMessage,
-        replyto: formData.email
-      });
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: web3FormData
+        });
+      } catch (emailError) {
+        // Email notification failed (likely CORS in preview), but form data is saved
+        console.log("Email notification skipped (preview environment)");
+      }
 
       toast.success("Thank you for your inquiry. We'll contact you within 24 hours.");
-      
-      // Reset form
+      analytics.contactFormSubmit({ topic: formData.topic || "general" });
+      event.target.reset();
       setFormData({
         name: "",
         company: "",
@@ -119,39 +98,6 @@ Reply to: ${formData.email}
     }
   };
 
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubscribing(true);
-
-    try {
-      // Save to database
-      const response = await axios.post(`${BACKEND_URL}/api/newsletter`, {
-        email: newsletterEmail
-      });
-
-      // Send email notification via Web3Forms
-      await axios.post("https://api.web3forms.com/submit", {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Newsletter Subscription: ${newsletterEmail}`,
-        email: "info@fidelislogic.com",
-        message: `New Newsletter Subscription\n\nEmail: ${newsletterEmail}\n\nAdd this email to your newsletter distribution list.`
-      });
-
-      if (response.data.status === "info") {
-        toast.info(response.data.message);
-      } else {
-        toast.success(response.data.message || "Successfully subscribed!");
-      }
-      
-      setNewsletterEmail("");
-    } catch (error) {
-      console.error("Newsletter subscription error:", error);
-      toast.error("Failed to subscribe. Please try again.");
-    } finally {
-      setIsSubscribing(false);
-    }
-  };
-
   return (
     <div className="min-h-screen">
       <SEO
@@ -161,14 +107,18 @@ Reply to: ${formData.email}
       />
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <Breadcrumbs items={[{ name: "Contact" }]} className="pt-24" />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-8 pb-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Let's Talk About Your Technology Needs
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
-            Schedule a free consultation to discuss how we can help simplify your modern workplace technology decisions.
+            Schedule a free consultation to discuss how we can help simplify your modern workplace technology decisions. 
+          </p>
+          <p className="text-xl text-green-800 leading-relaxed">
+          Get expert advice — completely free, with zero obligation to proceed.
           </p>
         </div>
       </section>
@@ -182,9 +132,12 @@ Reply to: ${formData.email}
               <Card className="border-0 shadow-2xl">
                 <CardContent className="p-8">
                   <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                    Book a Free Consultation
+                    Book your Free Consultation
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Hidden input for topic to be captured by FormData */}
+                    <input type="hidden" name="topic" value={formData.topic} />
+                    
                     <div>
                       <Label htmlFor="name">Full Name *</Label>
                       <Input
@@ -289,9 +242,10 @@ Reply to: ${formData.email}
                   </form>
                 </CardContent>
               </Card>
-
+            </div>
+            <div className="space-y-8">
               {/* MS Bookings Alternative */}
-              <Card className="border-0 shadow-lg mt-8">
+              {/* <Card className="border-0 shadow-lg mt-8">
                 <CardContent className="p-8">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Or Schedule Directly
@@ -300,17 +254,48 @@ Reply to: ${formData.email}
                     Use Microsoft Bookings to schedule a time that works for you.
                   </p>
                   <div className="bg-gray-50 rounded-lg p-8 text-center border-2 border-dashed border-gray-300">
-                    <p className="text-gray-500 mb-4">Microsoft Bookings Widget</p>
+                     <p className="text-gray-500 mb-4">Microsoft Bookings Widget</p> 
                     <p className="text-sm text-gray-400">
-                      [Embed your MS Bookings iframe here]
+                      <iframe src='https://outlook.office.com/book/WebBooking@fidelislogic.com/?ismsaljsauthenabled' width='100%' height='100%' scrolling='yes'> </iframe>
                     </p>
                   </div>
                 </CardContent>
-              </Card>
-            </div>
+              </Card> */}
+            {/*
+              <Card className="border-0 shadow-lg">
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Other Options
+                  </h3>
+                  <div className="space-y-3">
+                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
+                      Request Site Survey
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
+                      Get Budgetary Quote
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
+                      Download Capability Deck
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card> */}
 
             {/* Contact Information */}
-            <div className="space-y-8">
+            <div>
+              <h2 className="pt-8 text-3xl font-bold text-gray-900 mb-8">
+                  Why It's Free?
+                </h2>
+                    <p className="text-x text-grey-600 leading-relaxed">
+                    We believe in earning your trust first. Our free consultation includes:
+
+                    <p> ✓  Expert assessment of your needs </p>
+                    <p>✓  Tailored recommendations</p>
+                    <p>✓  Transparent pricing overview</p>
+                    <p>✓  No pressure, no obligation</p>
+                    </p>
+              </div>
+              
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-8">
                   Get in Touch
@@ -346,17 +331,11 @@ Reply to: ${formData.email}
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin className="text-blue-600" size={24} />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
-                      <p className="text-gray-600">{contactInfo.location}</p>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
+
+              
 
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
@@ -364,19 +343,19 @@ Reply to: ${formData.email}
                 </h3>
                 <div className="flex space-x-4">
                   <a
-                    href={contactInfo.linkedin}
+                    href={'https://www.linkedin.com/company/fidelis-logic/'} target="_blank"
                     className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
                   >
                     <Linkedin size={24} />
                   </a>
                   <a
-                    href={contactInfo.youtube}
+                    href={'https://www.youtube.com/@fidelislogic'} target ="_blank"
                     className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
                   >
                     <Youtube size={24} />
                   </a>
                   <a
-                    href={contactInfo.instagram}
+                    href={'https://www.instagram.com/fidelislogic/'} target ="_blank"
                     className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"
                   >
                     <Instagram size={24} />
@@ -384,7 +363,7 @@ Reply to: ${formData.email}
                 </div>
               </div>
 
-              <Card className="border-0 shadow-lg bg-blue-50">
+             {/* <Card className="border-0 shadow-lg bg-blue-50">
                 <CardContent className="p-8">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Business Hours
@@ -397,26 +376,9 @@ Reply to: ${formData.email}
                     UAE Standard Time (GMT+4)
                   </p>
                 </CardContent>
-              </Card>
+              </Card> */}
 
-              <Card className="border-0 shadow-lg">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Other Options
-                  </h3>
-                  <div className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
-                      Request Site Survey
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
-                      Get Budgetary Quote
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start border-gray-300 text-gray-700 hover:bg-gray-50">
-                      Download Capability Deck
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              
             </div>
           </div>
         </div>

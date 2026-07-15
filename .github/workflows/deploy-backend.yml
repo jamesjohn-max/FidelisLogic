@@ -1,0 +1,62 @@
+name: Deploy Backend
+
+# Pulls the latest backend code on the server, refreshes Python deps
+# if requirements changed, and restarts the supervisor process.
+#
+# Prerequisites (same SSH secrets as deploy.yml):
+#   SSH_HOST, SSH_USER, SSH_PRIVATE_KEY, SSH_KNOWN_HOSTS
+#
+# The SSH user must have:
+#   - git pull access in /app
+#   - sudo NOPASSWD for:  supervisorctl restart fidelislogic-backend
+#     Add to /etc/sudoers.d/fidelislogic:
+#       ubuntu ALL=(root) NOPASSWD: /usr/bin/supervisorctl restart fidelislogic-backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false     # never cancel a mid-deploy of the API
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Pull, install, restart
+        run: |
+          ssh -i ~/.ssh/id_ed25519 \
+              ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} bash -se <<'REMOTE'
+          set -euo pipefail
+          cd /app
+          BEFORE=$(sha256sum backend/requirements-prod.txt | awk '{print $1}')
+          git fetch --all --prune
+          git reset --hard origin/main
+          AFTER=$(sha256sum backend/requirements-prod.txt  | awk '{print $1}')
+          if [ "$BEFORE" != "$AFTER" ]; then
+              echo ">> requirements changed, reinstalling..."
+              /app/backend/venv/bin/pip install -r backend/requirements-prod.txt
+          fi
+          sudo /usr/bin/supervisorctl restart fidelislogic-backend
+          REMOTE
+
+      - name: Smoke test API
+        run: |
+          sleep 5
+          curl -fsS -o /dev/null -w "HTTP %{http_code}\n" \
+               https://${{ secrets.SSH_HOST }}/api/brands

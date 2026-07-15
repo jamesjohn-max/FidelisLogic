@@ -31,3 +31,33 @@ class ContactFormCreate(BaseModel):
 
 class NewsletterSubscriptionCreate(BaseModel):
     email: EmailStr
+
+
+class FAQ(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    brand_slug: Optional[str] = None
+    service_slug: Optional[str] = None
+    question: str
+    answer: str
+    order: int = 0
+    published: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class FAQCreate(BaseModel):
+    brand_slug: Optional[str] = None
+    service_slug: Optional[str] = None
+    question: str
+    answer: str
+    order: Optional[int] = 0
+    published: Optional[bool] = True
+
+
+class FAQUpdate(BaseModel):
+    brand_slug: Optional[str] = None
+    service_slug: Optional[str] = None
+    question: Optional[str] = None
+    answer: Optional[str] = None
+    order: Optional[int] = None
+    published: Optional[bool] = None

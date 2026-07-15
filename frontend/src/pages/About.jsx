@@ -1,6 +1,8 @@
 import { Card, CardContent } from "../components/ui/card";
 import { SEO } from "../components/SEO";
 import { StructuredData, organizationSchema, breadcrumbSchema } from "../components/StructuredData";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { TrustedBrands } from "../components/TrustedBrands";
 import { seoConfig } from "../data/seoConfig";
 
 export const About = () => {
@@ -18,14 +20,15 @@ export const About = () => {
       />
       <StructuredData data={organizationSchema} />
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
+      <Breadcrumbs items={[{ name: "About" }]} className="pt-24" />
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            About Modern Workplace Solutions
+            About Us
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
-            We reduce complexity in modern workplace technology decisions—helping UAE organizations choose, implement, and optimize the right solutions with confidence.
+            We reduce complexity in modern workplace technology decisions—helping UAE organizations choose, implement, and optimize the right solutions with confidence through their trusted technolog partners.
           </p>
         </div>
       </section>
@@ -36,19 +39,19 @@ export const About = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1642957323739-5632d8a2ff3d"
+                src="\aboutus.png"
                 alt="Team collaboration"
                 className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
               />
             </div>
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900">Our Mission</h2>
+              <h2 className="text-4xl font-bold text-gray-900 text-center">Our Mission</h2>
               <p className="text-lg text-gray-600 leading-relaxed">
-                The modern workplace technology market is overwhelming. Vendors promote overlapping products with confusing feature sets, leaving organizations unsure what to buy and how to integrate it.
+                We help organizations cut through the complexity of workplace technology by providing structured consulting, vendor-neutral guidance, and expert delivery support.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
-                We bridge the gap between business needs and technology solutions. Through structured consulting, vendor-neutral guidance, and expert implementation, we help you make informed decisions and deliver measurable outcomes.
-              </p>
+                The result is confident technology decisions and successful implementation through trusted resellers or system integrators.
+               </p> 
             </div>
           </div>
         </div>
@@ -123,13 +126,13 @@ export const About = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Certifications & Partner Ecosystem
+              Trusted Partner Ecosystem
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We work across leading OEMs and distributors in the UAE. Solutions delivered based on project fit, availability, and support ecosystem.
+              We work with leading OEMs and distributors in the UAE, supporting solutions that are chosen based on customer requirements, project fit, availability, and delivery readiness.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             <Card className="border-0 shadow-lg">
               <CardContent className="p-8 text-center">
                 <h3 className="text-lg font-semibold text-gray-900">Microsoft Ecosystem</h3>
@@ -145,14 +148,84 @@ export const About = () => {
             <Card className="border-0 shadow-lg">
               <CardContent className="p-8 text-center">
                 <h3 className="text-lg font-semibold text-gray-900">AV & Devices</h3>
-                <p className="text-gray-600 mt-2">Poly, Logitech, Jabra, Crestron</p>
+                <p className="text-gray-600 mt-2">Poly, Logitech, Neat, Yealink, Jabra, Lenovo, Crestron etc.</p>
+              </CardContent>
+            </Card>
+             <Card className="border-0 shadow-lg">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-lg font-semibold text-gray-900">Workspace Experience</h3>
+                <p className="text-gray-600 mt-2">ROOMZ, Morbit.</p>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
+      {/* Partner Ecosystem Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white" data-testid="about-partner-ecosystem-section">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-5 gap-12 mb-14">
+            <div className="lg:col-span-2">
+              <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
+                Partner Ecosystem
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark mb-6 leading-tight">
+                A curated ecosystem — not a vendor catalog.
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Fidelis Logic is a UAE-based advisory and delivery partner with a
+                deliberately short list of strategic brand partners. Each one earns its
+                place because it solves a specific problem better than the alternatives.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                That discipline lets us stay honest with customers. If none of our partners
+                is the right fit for your problem, we'll tell you — and help you find the
+                one that is.
+              </p>
+            </div>
+            <div className="lg:col-span-3 grid sm:grid-cols-2 gap-4">
+              {[
+                {
+                  title: "Strategic, not transactional",
+                  body: "We co-invest in relationships with vendors whose roadmaps align with our customers' futures — not whoever has the biggest margin this quarter."
+                },
+                {
+                  title: "Authorized and accountable",
+                  body: "We are authorized deployment partners for the brands we represent, with certifications, direct vendor support escalation, and lifecycle ownership."
+                },
+                {
+                  title: "Vendor-neutral recommendations",
+                  body: "Our advisory layer is not locked to any single brand. Recommendations are driven by your business case, not a quota sheet."
+                },
+                {
+                  title: "Work through your channels",
+                  body: "We integrate with your preferred resellers and system integrators — or deliver directly. Either way, the buck stops with us."
+                }
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="bg-gray-50 border border-gray-200 rounded-xl p-6"
+                  data-testid={`about-ecosystem-pillar-${item.title.toLowerCase().replace(/[^a-z]+/g, '-')}`}
+                >
+                  <h3 className="text-base font-semibold text-brand-dark mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Detailed brand grid */}
+      <TrustedBrands
+        title="Meet the brands behind our deliveries."
+        subtitle="Each partner is chosen for a specific role in the modern workplace stack — from room booking and device management to headsets and video collaboration."
+        variant="detailed"
+        background="gray"
+        testIdPrefix="about-brand-ecosystem"
+      />
+    {/* Hiding it for now  
+       Team Section 
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -162,7 +235,7 @@ export const About = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
+            {[1, 2].map((i) => (
               <Card key={i} className="border-0 shadow-lg">
                 <CardContent className="p-8 text-center">
                   <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-4"></div>
@@ -176,7 +249,7 @@ export const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

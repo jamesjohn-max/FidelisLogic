@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Jabra logo placeholder">
+  <rect width="200" height="200" rx="16" fill="#F1F5F9"/>
+  <rect x="1" y="1" width="198" height="198" rx="15" fill="none" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="100" y="108" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="700" fill="#E30613" letter-spacing="0.5">Jabra</text>
+  <text x="100" y="138" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="500" fill="#94A3B8" letter-spacing="1.5">LOGO PLACEHOLDER</text>
+</svg>

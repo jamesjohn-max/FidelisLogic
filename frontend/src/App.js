@@ -3,8 +3,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { Home } from "./pages/Home";
 import { Solutions } from "./pages/Solutions";
+import { Services } from "./pages/Services";
+import { ServiceDetail } from "./pages/ServiceDetail";
 import { MeetingRooms } from "./pages/MeetingRooms";
 import { Headsets } from "./pages/Headsets";
 import { WorkspaceExperience } from "./pages/WorkspaceExperience";
@@ -12,7 +15,21 @@ import { BusinessApps } from "./pages/BusinessApps";
 import { About } from "./pages/About";
 import { Blog } from "./pages/Blog";
 import { BlogPost } from "./pages/BlogPost";
+import { SmartDeals } from "./pages/SmartDeals";
+import { DealPost } from "./pages/DealPost";
+import { Brands } from "./pages/Brands";
+import { BrandDetail } from "./pages/BrandDetail";
 import { Contact } from "./pages/Contact";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AdminSelection } from "./pages/AdminSelection";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { BlogEditor } from "./pages/BlogEditor";
+import { AdminDealsDashboard } from "./pages/AdminDealsDashboard";
+import { DealEditor } from "./pages/DealEditor";
+import { AdminFAQDashboard } from "./pages/AdminFAQDashboard";
+import { FAQEditor } from "./pages/FAQEditor";
+import { FloatingDealsButton } from "./components/FloatingDealsButton";
+import { CookieConsent } from "./components/CookieConsent";
 import { Toaster } from "./components/ui/sonner";
 
 // Suppress ResizeObserver errors (common React/Radix UI issue, doesn't affect functionality)
@@ -31,25 +48,55 @@ const suppressResizeObserverError = () => {
 
 suppressResizeObserverError();
 
+// Layout wrapper for public pages
+const PublicLayout = ({ children }) => (
+  <>
+    <Header />
+    {children}
+    <FloatingDealsButton />
+    <Footer />
+  </>
+);
+
 function App() {
   return (
     <HelmetProvider>
       <div className="App">
         <BrowserRouter>
-          <Header />
+          <ScrollToTop />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/solutions/meeting-rooms" element={<MeetingRooms />} />
-            <Route path="/solutions/headsets" element={<Headsets />} />
-            <Route path="/solutions/workspace-experience" element={<WorkspaceExperience />} />
-            <Route path="/solutions/business-apps" element={<BusinessApps />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/contact" element={<Contact />} />
+            {/* Public Routes */}
+            <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
+            <Route path="/solutions" element={<PublicLayout><Solutions /></PublicLayout>} />
+            <Route path="/solutions/meeting-rooms" element={<PublicLayout><MeetingRooms /></PublicLayout>} />
+            <Route path="/solutions/headsets" element={<PublicLayout><Headsets /></PublicLayout>} />
+            <Route path="/solutions/workspace-experience" element={<PublicLayout><WorkspaceExperience /></PublicLayout>} />
+            <Route path="/solutions/business-apps" element={<PublicLayout><BusinessApps /></PublicLayout>} />
+            <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
+            <Route path="/services/:slug" element={<PublicLayout><ServiceDetail /></PublicLayout>} />
+            <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+            <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
+            <Route path="/blog/:slug" element={<PublicLayout><BlogPost /></PublicLayout>} />
+            <Route path="/deals" element={<PublicLayout><SmartDeals /></PublicLayout>} />
+            <Route path="/deals/:slug" element={<PublicLayout><DealPost /></PublicLayout>} />
+            <Route path="/brands" element={<PublicLayout><Brands /></PublicLayout>} />
+            <Route path="/brands/:slug" element={<PublicLayout><BrandDetail /></PublicLayout>} />
+            <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+            
+            {/* Admin Routes (no header/footer) */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminSelection />} />
+            <Route path="/admin/blog" element={<AdminDashboard />} />
+            <Route path="/admin/blog/new" element={<BlogEditor />} />
+            <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
+            <Route path="/admin/deals" element={<AdminDealsDashboard />} />
+            <Route path="/admin/deals/new" element={<DealEditor />} />
+            <Route path="/admin/deals/edit/:id" element={<DealEditor />} />
+            <Route path="/admin/faqs" element={<AdminFAQDashboard />} />
+            <Route path="/admin/faqs/new" element={<FAQEditor />} />
+            <Route path="/admin/faqs/edit/:id" element={<FAQEditor />} />
           </Routes>
-          <Footer />
+          <CookieConsent />
           <Toaster />
         </BrowserRouter>
       </div>

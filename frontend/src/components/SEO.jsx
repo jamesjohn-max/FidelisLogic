@@ -63,7 +63,7 @@ export const SEO = ({
       <meta name="googlebot" content="index, follow" />
       <meta name="language" content="English" />
       <meta name="geo.region" content="AE" />
-      <meta name="geo.placename" content="Dubai" />
+      <meta name="geo.placename" content="Sharjah" />
     </Helmet>
   );
 };

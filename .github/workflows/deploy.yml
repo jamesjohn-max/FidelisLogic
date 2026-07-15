@@ -1,0 +1,80 @@
+name: Build & Deploy Frontend
+
+# Builds the React bundle on GitHub-hosted runners (plenty of RAM),
+# then rsyncs the static build to your Ubuntu server via SSH.
+#
+# Prerequisites (one-time setup):
+#   1. Add these Repository Secrets:
+#        SSH_HOST              e.g. fidelislogic.com  (or the server IP)
+#        SSH_USER              e.g. ubuntu
+#        SSH_PRIVATE_KEY       PEM contents of a deploy key with rsync access
+#        SSH_KNOWN_HOSTS       output of `ssh-keyscan -H your.server.ip`
+#        REACT_APP_BACKEND_URL e.g. https://fidelislogic.com
+#   2. On the server, create the deploy key's public counterpart in
+#      /home/ubuntu/.ssh/authorized_keys and ensure /var/www/fidelislogic
+#      is writable by that user (or use `sudo rsync` via a sudoers NOPASSWD).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:      # allow manual trigger from the Actions tab
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+
+      - name: Write production .env
+        working-directory: frontend
+        run: |
+          echo "REACT_APP_BACKEND_URL=${{ secrets.REACT_APP_BACKEND_URL }}" > .env
+
+      - name: Build
+        working-directory: frontend
+        env:
+          CI: 'false'         # CRA treats warnings as errors when CI=true
+          GENERATE_SOURCEMAP: 'false'
+        run: yarn build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Rsync build to server
+        run: |
+          rsync -avz --delete \
+                -e "ssh -i ~/.ssh/id_ed25519" \
+                frontend/build/ \
+                ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/fidelislogic/
+
+      - name: Smoke test
+        run: |
+          sleep 3
+          curl -fsSL -o /dev/null -w "HTTP %{http_code}\n" \
+               https://${{ secrets.SSH_HOST }}/ || echo "smoke test skipped"

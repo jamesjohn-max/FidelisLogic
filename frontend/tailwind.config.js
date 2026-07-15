@@ -55,7 +55,8 @@ module.exports = {
                         },
                         'fidelis-cyan': '#22D3EE',
                         'fidelis-blue': '#2563EB',
-                        'fidelis-dark-blue': '#1E40AF'
+                        'fidelis-dark-blue': '#1E40AF',
+                        'brand-dark': '#0B1220'
                 },
                 keyframes: {
                         'accordion-down': {
@@ -81,5 +82,8 @@ module.exports = {
                 }
         }
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+  ],
 };

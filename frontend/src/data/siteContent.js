@@ -1,44 +1,81 @@
-// Mock data for IT consulting website
+// Static site content (company info, service page details, hero copy)
+// Blog posts are served dynamically from the backend — do not store posts here.
+
+export const stats = [
+  {
+    number: "100+",
+    label: "Projects Delivered"
+  },
+  {
+    number: "98%",
+    label: "Client Satisfaction"
+  },
+  {
+    number: "15+",
+    label: "Years Experience"
+  }
+]; 
 
 export const heroData = {
   title: "Simplifying Modern Workplace Technology Decisions",
-  subtitle: "We bridge the gap between business needs and technology solutions—helping UAE organizations choose, design, and implement the right workplace technology with confidence.",
+  subtitle: "We bridge the gap between business needs and technology solutions, helping organizations choose, design, and implement the right workplace technology with confidence while working through their trusted vendors.",
   ctaPrimary: "Book a Free Consultation",
   ctaSecondary: "Explore Solutions",
-  image: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d"
+  //image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2400&q=80"
+    image: "/HeroImage.png",
+  // Carousel images — REPLACE these placeholders with brand-approved imagery.
+  // Order matters: first image is shown on initial paint.
+  images: [
+    "/hero-images/HeroImage.png",
+    "/hero-images/ROOMZ1.png",
+    "/hero-images/ROOMZ2.jpg",
+    "/hero-images/ROOMZ3.jpg",
+    "/hero-images/ROOMZ4.jpg",
+    "/hero-images/Neat1.jpg",
+    "/hero-images/Neat2.jpg",
+    "/hero-images/Neat3.jpg",
+    "/hero-images/Neat4.png",
+    "/hero-images/Logitech1.png",
+    "/hero-images/Logitech2.png",
+    "/hero-images/Logitech3.png",
+    "/hero-images/Jabra3.jpg",
+    "/hero-images/Jabra4.jpg",
+    "/hero-images/Jabra5.jpg",
+  ]
 };
 
 export const segments = [
   {
     id: "meeting-rooms",
     title: "Meeting Rooms & AV Systems",
-    description: "Design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD meeting spaces with professional audio-visual systems.",
+    description: "We help design and implement Microsoft Teams Rooms, Zoom Rooms, and BYOD Meeting spaces with professional audio-visual systems.",
     icon: "Presentation",
     image: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
+    
     link: "/solutions/meeting-rooms"
   },
   {
     id: "headsets",
     title: "Enterprise Headsets & Collaboration Devices",
-    description: "Standardize communication devices across your organization—from call centers to executive suites.",
+    description: "Standardize communication devices across your organization - from Call Centers to Executive suites.",
     icon: "Headphones",
-    image: "https://images.unsplash.com/photo-1724260793422-7754e5d06fbe",
+    image: "/EnterpriseHeadsets.png",
     link: "/solutions/headsets"
   },
   {
     id: "workspace-experience",
     title: "Room Booking & Workspace Experience",
-    description: "Hot desking, room booking panels, visitor management, and workplace analytics platforms.",
+    description: "Hot desking, Room booking panels, Visitor management, and Workplace analytics platforms.",
     icon: "Calendar",
-    image: "https://images.unsplash.com/photo-1718220216044-006f43e3a9b1",
+    image: "/bookingsystem.png",
     link: "/solutions/workspace-experience"
   },
   {
     id: "business-apps",
-    title: "Business Applications for SMBs",
+    title: "Business Applications for Small and Medium Businesses",
     description: "ERP, HRMS, and CRM implementation with integration, training, and ongoing support.",
     icon: "BarChart3",
-    image: "https://images.unsplash.com/photo-1573497019414-e44d0759d00e",
+    image: "/businessapps.png",
     link: "/solutions/business-apps"
   }
 ];
@@ -57,7 +94,7 @@ export const howWeHelp = [
   {
     step: "03",
     title: "Deliver",
-    description: "We implement solutions using best-fit vendors, manage installation, commissioning, and ensure quality outcomes."
+    description: "We work alongside the customer’s preferred reseller or system integrator so the solution is deployed smoothly and successfully."
   },
   {
     step: "04",
@@ -68,23 +105,23 @@ export const howWeHelp = [
 
 export const whyChooseUs = [
   {
-    title: "Vendor-Neutral Guidance",
-    description: "We recommend solutions based on your needs, not vendor partnerships. Our loyalty is to your outcome.",
+    title: "Business-First, Vendor-Neutral Guidance",
+    description: "We recommend solutions based on your business needs, operational goals, and user requirements, not on a one-size-fits-all product push.",
     icon: "Shield"
   },
   {
-    title: "UAE Delivery Experience",
-    description: "Deep understanding of regional procurement, compliance, vendor ecosystems, and support infrastructure.",
-    icon: "MapPin"
+    title: "Work Through Your Trusted Vendors",
+    description: "We work with your preferred reseller or system integrator, so you keep existing relationships while gaining expert guidance and delivery support.",
+    icon: "Handshake"
   },
   {
-    title: "Lifecycle Support",
-    description: "From assessment through implementation to ongoing support—we stay with you beyond go-live.",
+    title: "End-to-End Delivery Support",
+    description: "From assessment and solution design to deployment and post-go-live support, we help make sure the solution is implemented successfully.",
     icon: "RefreshCw"
   },
   {
-    title: "Measurable Outcomes",
-    description: "Clear KPIs, structured project delivery, and documentation that ensures your investment delivers results.",
+    title: "Outcomes That Matter",
+    description: "Better-fit solutions, smoother deployments, lower risk, and stronger results for both customers and delivery partners.",
     icon: "Target"
   }
 ];
@@ -113,78 +150,94 @@ export const testimonials = [
   }
 ];
 
-export const blogPosts = [
+export const partners = {
+  videoCollaboration: [
+    { name: "Poly", logo: "https://via.placeholder.com/120x60?text=Poly" },
+    { name: "Yealink", logo: "https://via.placeholder.com/120x60?text=Yealink" },
+    { name: "Neat", logo: "https://via.placeholder.com/120x60?text=Neat" },
+    { name: "Logitech", logo: "https://via.placeholder.com/120x60?text=Logitech" }
+  ],
+  audioSolutions: [
+    { name: "Jabra", logo: "https://via.placeholder.com/120x60?text=Jabra" },
+    { name: "Sennheiser", logo: "https://via.placeholder.com/120x60?text=Sennheiser" },
+    { name: "EPOS", logo: "https://via.placeholder.com/120x60?text=EPOS" },
+    { name: "Shure", logo: "https://via.placeholder.com/120x60?text=Shure" },
+    { name: "QSYS", logo: "https://via.placeholder.com/120x60?text=QSYS" }
+  ],
+  displaySharing: [
+    { name: "Barco", logo: "https://via.placeholder.com/120x60?text=Barco" },
+    { name: "Crestron", logo: "https://via.placeholder.com/120x60?text=Crestron" },
+    { name: "Extron", logo: "https://via.placeholder.com/120x60?text=Extron" },
+    { name: "Samsung", logo: "https://via.placeholder.com/120x60?text=Samsung" }
+  ],
+  platforms: [
+    { name: "Microsoft Teams", logo: "https://via.placeholder.com/120x60?text=MS+Teams" },
+    { name: "Zoom", logo: "https://via.placeholder.com/120x60?text=Zoom" },
+    { name: "Webex", logo: "https://via.placeholder.com/120x60?text=Webex" },
+    { name: "Google Meet", logo: "https://via.placeholder.com/120x60?text=Meet" }
+  ]
+};
+
+export const roomTypes = [
   {
-    id: 1,
-    title: "Choosing Between Microsoft Teams Rooms and Zoom Rooms in 2025",
-    excerpt: "A vendor-neutral comparison to help UAE organizations make informed meeting room technology decisions.",
-    category: "Meeting Rooms",
-    date: "2025-01-15",
-    image: "https://images.unsplash.com/photo-1770048532712-4fde5ef7eb90",
-    slug: "teams-rooms-vs-zoom-rooms-2025"
+    title: "Executive Board Rooms",
+    description: "Premium AV for high-stakes meetings",
+    icon: "Crown"
   },
   {
-    id: 2,
-    title: "The Hidden Costs of Poor Workplace Technology Decisions",
-    excerpt: "Why upfront consulting saves money and frustration in the long run.",
-    category: "Modern Work",
-    date: "2025-01-10",
-    image: "https://images.unsplash.com/photo-1630283017802-785b7aff9aac",
-    slug: "hidden-costs-poor-tech-decisions"
+    title: "Huddle Rooms",
+    description: "Compact solutions for quick collaboration",
+    icon: "Users"
   },
   {
-    id: 3,
-    title: "Hot Desking and Room Booking: Complete Guide for UAE Offices",
-    excerpt: "How workspace experience platforms like Flowscape and ROOMZ optimize office utilization.",
-    category: "Workspace Experience",
-    date: "2025-01-05",
-    image: "https://images.unsplash.com/photo-1718220216044-006f43e3a9b1",
-    slug: "hot-desking-room-booking-guide"
+    title: "Training Rooms",
+    description: "Interactive learning environments",
+    icon: "GraduationCap"
   },
   {
-    id: 4,
-    title: "Enterprise Headset Buying Guide: Call Center to Executive Suite",
-    excerpt: "How to choose the right collaboration devices for different user personas and use cases.",
-    category: "Headsets",
-    date: "2024-12-28",
-    image: "https://images.unsplash.com/photo-1769069920308-40130d50ae58",
-    slug: "enterprise-headset-buying-guide"
+    title: "Auditoriums",
+    description: "Large-scale presentation systems",
+    icon: "Theater"
   },
   {
-    id: 5,
-    title: "ERP Implementation for SMBs: What to Expect",
-    excerpt: "A realistic timeline and approach to business application deployments in small and medium businesses.",
-    category: "SMB Apps",
-    date: "2024-12-20",
-    image: "https://images.unsplash.com/photo-1642957323739-5632d8a2ff3d",
-    slug: "erp-implementation-smb-guide"
+    title: "Townhall Spaces",
+    description: "All-hands meeting solutions",
+    icon: "Building"
   },
   {
-    id: 6,
-    title: "Meeting Room Design Best Practices for Microsoft Teams",
-    excerpt: "Acoustic considerations, camera placement, network readiness, and commissioning standards.",
-    category: "Meeting Rooms",
-    date: "2024-12-15",
-    image: "https://images.unsplash.com/photo-1762176263996-a0713a49ee4d",
-    slug: "meeting-room-design-best-practices"
+    title: "Focus Rooms",
+    description: "Private video calling booths",
+    icon: "Video"
   }
 ];
 
-export const partners = [
-  "Microsoft",
-  "Zoom",
-  "Poly",
-  "Logitech",
-  "Jabra",
-  "Crestron",
-  "Flowscape",
-  "ROOMZ"
+export const whyChooseUsAdvantages = [
+  {
+    title: "Turnkey Meeting Room Deployment",
+    description: "From design to installation, we handle complete Meeting Room Deployment for MTR, Zoom Rooms, and hybrid spaces.",
+    icon: "CheckCircle2"
+  },
+  {
+    title: "BYOD & BYOM Ready",
+    description: "Enable Hybrid Working with seamless BYOD and BYOM solutions, supporting any device or platform.",
+    icon: "Smartphone"
+  },
+  {
+    title: "Rapid Response Support",
+    description: "Annual Maintenance Contracts and Support Contracts ensure minimal downtime with priority response times.",
+    icon: "Headphones"
+  },
+  {
+    title: "Vendor-Agnostic Expertise",
+    description: "Certified partners for Poly, Jabra, Yealink, Neat, Barco, Sennheiser, QSYS, and Shure solutions.",
+    icon: "Award"
+  }
 ];
 
 export const contactInfo = {
   email: "info@fidelislogic.com",
   phone: "+971 52 360 7270",
-  location: "Dubai, United Arab Emirates",
+  location: "Sharjah, United Arab Emirates",
   linkedin: "#",
   youtube: "#",
   instagram: "#"
@@ -244,7 +297,7 @@ export const headsetDetails = {
   hero: {
     title: "Enterprise Headsets & Collaboration Devices",
     subtitle: "Standardize communication devices across your organization with expert guidance on comfort, compatibility, and performance.",
-    image: "https://images.unsplash.com/photo-1724260793422-7754e5d06fbe"
+    image: "/EnterpriseHeadsets2.png"
   },
   personas: [
     {
@@ -304,15 +357,24 @@ export const workspaceExperienceDetails = {
       title: "Wayfinding",
       description: "Digital signage and maps to help employees and visitors navigate office spaces.",
       icon: "Map"
+    },
+    {
+      title: "Monitoring & Device Management",
+      description: "Real-time monitoring and analytics to reduce downtime, prevent incidents, and increase productivity.",
+      icon: "Binoculars"
     }
   ],
   platforms: [
-    "Flowscape",
-    "ROOMZ",
-    "Joan",
-    "Condeco",
-    "Envoy",
-    "Robin"
+   {
+   name: "ROOMZ",
+    href: "https://roomz.io",
+    logo: "/platform-images/roomz.png"
+   },
+   {
+    name: "morbit",
+    href: "https://www.morbit.co.uk",
+    logo: "/platform-images/morbit.png"
+   }
   ]
 };
 

@@ -1,274 +1,249 @@
-# Modern Workplace Solutions - IT Consulting Website
+# Fidelis Logic - IT Consulting Website
 
 ## Original Problem Statement
-Create a professional, clean, premium IT consulting website for a UAE-based consultancy specializing in Modern Workplace Solutions. Apple.com-inspired design with minimal aesthetic, high whitespace, strong typography, crisp sections, subtle animations, and clear CTAs. The design must be future-editable with adjustable brand colors, typography, and imagery.
+Build a modern, enterprise-grade IT consulting website, "Fidelis Logic", targeting Enterprise IT Directors and CXOs with:
+- Professional website with Home, About, Blog, Contact, and service pages
+- Email submission for contact forms
+- Microsoft Bookings integration for scheduling consultations
+- Blog section with full admin panel for dynamic content management (text, images, videos)
+- SEO-enabled and AI search compliant, including a favicon
+- Confident, consultative tone with design elements from reference website
 
 ## User Personas
-1. **IT Directors/Managers** - Decision-makers looking for reliable workplace technology consulting
-2. **Operations Managers** - Seeking solutions for meeting rooms, collaboration devices, workspace optimization
-3. **SMB Owners/CEOs** - Need business applications (ERP/HRMS/CRM) implementation and support
-4. **Procurement Teams** - Looking for vendor-neutral guidance on technology investments
-
-## Core Requirements (Static)
-- Multi-page structure: Home, Solutions, 4 segment pages, About, Blog, Contact
-- Apple-inspired minimal design with high whitespace
-- Professional blue (#2563EB) as primary brand color
-- Professional images for IT consulting context
-- MS Bookings integration placeholder
-- Booking flow with consultation request form
-- Email notification functionality (to be implemented)
-- Responsive design for all devices
-- Clear CTAs throughout the site
-- Newsletter subscription functionality
-
-## What's Been Implemented (December 2025)
-
-### Phase 1: Frontend with Mock Data ✓
-**Date:** December 4, 2025
-
-#### Pages Created:
-1. **Home Page** (`/`)
-   - Hero section with value proposition
-   - What We Do section with 4 segment cards
-   - How We Help process (Assess → Design → Deliver → Support)
-   - Why Choose Us section
-   - Client testimonials
-   - Featured blog posts
-   - CTA sections
-
-2. **Solutions Overview** (`/solutions`)
-   - Grid layout for all segments
-   - Problem vs Approach comparison
-   - Clear navigation to segment pages
-
-3. **Meeting Rooms & AV** (`/solutions/meeting-rooms`)
-   - Use cases: Huddle, Meeting, Boardroom, Training
-   - Capabilities list
-   - Platform expertise (MTR, Zoom Rooms, BYOD)
-
-4. **Enterprise Headsets** (`/solutions/headsets`)
-   - User personas: Call Center, Hybrid Workers, Executives
-   - What We Solve section
-   - Implementation approach
-
-5. **Workspace Experience** (`/solutions/workspace-experience`)
-   - Room booking, hot desking, visitor management
-   - Platform examples (Flowscape, ROOMZ, etc.)
-   - Business benefits
-
-6. **Business Applications** (`/solutions/business-apps`)
-   - SMB pain points
-   - ERP, HRMS, CRM categories
-   - Implementation methodology
-
-7. **About Page** (`/about`)
-   - Mission and story
-   - Core values
-   - Certifications and partner ecosystem
-   - Team section (placeholder)
-
-8. **Blog** (`/blog`)
-   - Category filtering
-   - 6 placeholder blog posts
-   - Newsletter signup
-
-9. **Blog Post Template** (`/blog/:slug`)
-   - Individual article layout
-   - Related posts section
-   - CTA box
-
-10. **Contact Page** (`/contact`)
-    - Consultation booking form
-    - MS Bookings embed placeholder
-    - Contact information
-    - Business hours
-    - Secondary CTAs
-
-#### Components:
-- Header: Sticky navigation with mobile menu
-- Footer: Quick links, newsletter signup, contact info, social media
-- All shadcn UI components integrated
-
-#### Mock Data:
-- Hero content
-- 4 business segments
-- Process steps (How We Help)
-- Value propositions (Why Choose Us)
-- Testimonials (3 clients)
-- Blog posts (6 articles)
-- Contact information
-- Form topics
-
-#### Professional Images:
-- Selected 15 high-quality images from Unsplash
-- Modern meeting rooms, collaboration devices, office workspace
-- Enterprise-grade professional aesthetic
-
-## Prioritized Backlog
-
-### P0 Features (Next Phase - Backend)
-- [ ] Backend API implementation
-  - [ ] MongoDB models for contacts, consultations, newsletter subscriptions
-  - [ ] POST /api/contact - contact form submission
-  - [ ] POST /api/consultation - booking form submission
-  - [ ] POST /api/newsletter - newsletter subscription
-  - [ ] Email notification service integration
-  - [ ] Form validation and error handling
-
-### P1 Features
-- [ ] Blog CMS integration (backend)
-  - [ ] Blog post CRUD operations
-  - [ ] Category management
-  - [ ] Search functionality
-- [ ] MS Bookings iframe integration (user to provide embed code)
-- [ ] Download capability deck functionality
-- [ ] Enhanced animations and micro-interactions
-- [ ] Form submission confirmation emails to users
-
-### P2 Features (Future Enhancements)
-- [ ] Admin dashboard for managing inquiries
-- [ ] Calendar integration for consultation scheduling
-- [ ] Live chat support
-- [ ] Case studies section
-- [ ] Video testimonials
-- [ ] Resource library (whitepapers, guides)
-- [ ] Multi-language support (Arabic/English)
-- [ ] SEO optimization (meta tags, structured data)
-- [ ] Analytics integration (Google Analytics)
-
-## Next Tasks
-1. Gather user feedback on frontend design and UX
-2. Prepare for backend development:
-   - Set up MongoDB models
-   - Create API endpoints for forms
-   - Implement email notification service
-   - Integrate frontend with backend APIs
-3. Replace mock data with dynamic backend data
-4. Testing and QA
+1. **IT Directors/Managers** - Decision-makers for workplace technology consulting
+2. **Operations Managers** - Solutions for meeting rooms, collaboration, workspace optimization
+3. **SMB Owners/CEOs** - Business applications (ERP/HRMS/CRM) implementation
+4. **Procurement Teams** - Vendor-neutral guidance on technology investments
 
 ## Technical Stack
-- **Frontend:** React 19, React Router v7, Tailwind CSS, shadcn UI
-- **Backend:** FastAPI, Python (to be implemented)
-- **Database:** MongoDB (to be configured)
-- **Hosting:** To be determined
+- **Frontend:** React 19, React Router v7, Tailwind CSS, shadcn/ui, TipTap (rich text editor)
+- **Backend:** FastAPI (Python), Motor (async MongoDB driver)
+- **Database:** MongoDB
+- **Authentication:** JWT for admin panel
 
-## Brand Guidelines
-- **Primary Color:** Professional Blue (#2563EB)
-- **Typography:** System fonts, clean sans-serif
-- **Design Philosophy:** Apple-inspired minimalism, high whitespace, premium feel
-- **Tone:** Confident, consultative, enterprise-grade, not salesy
+### Phase 5: Smart Deals + CMS Split (Completed - December 2025)
+- Smart Deals CMS branch (Blogs vs Deals admin split)
+- Deals CRUD with start/end date auto-expiry logic
+- Public Deals listing + detail pages
+- Enhanced TipTap editor (colors, alignment, tables, task lists, video/image embed)
 
-## SEO & AI Search Compliance (December 4, 2025)
+### Phase 6: SEO & Backlog Cleanup (Completed - December 19, 2025)
+**Blog Content Migration**
+- Seeded 6 legacy blog posts from former `mock.js` into MongoDB (idempotent script at `/app/backend/scripts/seed_legacy_blog_posts.py`)
+- Renamed `mock.js` → `siteContent.js` (content clarity, removed `blogPosts` export)
+- Deleted `mock.js`; updated all 9 import sites
 
-### Implemented Features ✓
+**Dynamic Sitemap**
+- New `GET /api/sitemap.xml` returning `application/xml` with static pages + all published blog posts + active non-expired deals
+- Added `SITE_BASE_URL` env var in `backend/.env` (default `https://www.fidelislogic.com`)
+- Removed static `public/sitemap.xml`; updated `robots.txt` to reference `/api/sitemap.xml`
 
-#### Meta Tags & Social Media
-- React Helmet Async integration for dynamic meta tags
-- Unique title, description, and keywords for each page
-- Open Graph tags for Facebook/LinkedIn sharing
-- Twitter Card tags for Twitter sharing
-- Canonical URLs to prevent duplicate content
-- Proper language and geo tags (en_AE, Dubai)
+**FAQ Schema + Visible FAQ Sections**
+- New `FAQSection.jsx` accordion component (reusable)
+- Expanded FAQ content (5–6 Q&A) for MeetingRooms, Headsets, WorkspaceExperience, BusinessApps
+- Each service page now renders visible `<FAQSection>` + JSON-LD `<FAQSchema>` (FAQPage structured data)
 
-#### Structured Data (JSON-LD)
-- Organization schema with contact details
-- Service schemas for each solution segment
-- Blog post schema for articles
-- Breadcrumb schema for navigation
-- FAQ schema support (ready to implement)
+**Breadcrumb Navigation**
+- New `Breadcrumbs.jsx` component with visible UI + `BreadcrumbList` JSON-LD
+- Added to: Solutions, Meeting Rooms, Headsets, Workspace, Business Apps, About, Blog, BlogPost, Smart Deals, DealPost, Contact
 
-#### Search Engine Files
-- sitemap.xml with all pages and blog posts
-- robots.txt with AI search engine allowances:
-  - GPTBot (ChatGPT)
-  - Claude-Web (Anthropic)
-  - PerplexityBot
-  - CCBot (Common Crawl)
-  - Applebot, Bingbot, Googlebot
+### Phase 7: Brand Ecosystem + Floating Smart Deals + GA4 (Completed - February 5, 2026)
+**Brand Ecosystem (Information Architecture redesign)**
+- New top-nav entry: "Brands" (between Solutions and About)
+- New `/brands` hub page (`Brands.jsx`) with hero, Featured Partners (ROOMZ, Morbit), full brand grid, "Advisor not reseller" positioning, footer CTA
+- New `/brands/:slug` detail pages (`BrandDetail.jsx`) for ROOMZ, Morbit, Jabra, Poly, Neat, Yealink, Logitech — each with hero, At-a-Glance panel, strengths grid, products, use cases, Fidelis delivery wrap, related brands, lead-gen CTA
+- Brand data model in `/app/frontend/src/data/brands.js` (single source of truth)
+- `TrustedBrands.jsx` reusable section (compact + detailed variants); rendered on Home (compact) and About (detailed Partner Ecosystem)
+- `SolutionBrands.jsx` inline section on solution pages — Workspace Experience → ROOMZ/Morbit; Meeting Rooms → Poly/Neat/Logitech/Yealink; Headsets → Jabra/Poly/Logitech
+- Sitemap (`/api/sitemap.xml`) updated with `/brands` (priority 0.9) and all 7 brand detail URLs (0.8 for featured, 0.7 for others)
 
-#### SEO Best Practices
-- Semantic HTML structure
-- Alt text on all images
-- Proper heading hierarchy (h1, h2, h3)
-- Clean URL structure
-- Mobile-responsive design
-- Fast page load with preconnect hints
-- Accessibility focus states
+**Partnership Type Badges**
+- New reusable `PartnershipBadge.jsx` component with two visual tiers:
+  - **Distribution Partner** (ROOMZ): solid amber-600 fill, white text, award icon, ring-1 amber-700/20 shadow — communicates top-tier commercial commitment
+  - **Channel Partner** (Morbit, Jabra, Poly, Neat, Yealink, Logitech): clean white pill, slate border, slate-700 text, small amber-500 leading dot — refined authorized tier
+- Badges surfaced everywhere a brand is shown: Brands hub (featured + grid cards), brand detail (hero + At-a-glance + related brands), TrustedBrands compact/detailed, SolutionBrands cards
 
-#### AI Search Compliance
-- Allows all major AI search engines
-- Clean, structured content for AI parsing
-- Comprehensive metadata for context
-- Schema.org markup for machine readability
+**Floating Smart Deals Button**
+- "Smart Deals" removed from main nav; now `FloatingDealsButton.jsx` FAB in bottom-right of every public page
+- Hidden on `/admin/*` and `/deals` routes; dismissible per-session via sessionStorage
+- New `GET /api/deals/active` endpoint (returns published, non-expired deals as `[]` when empty — fixes prior 404)
+- FAB renders independent of deal count (count only drives the badge bubble)
 
-### SEO Configuration by Page
-Each page includes:
-- Custom title with brand name
-- Unique meta description (150-160 chars)
-- Relevant keywords for UAE market
-- Page-specific OG images
-- Breadcrumb navigation
-- Service-specific schema
+**Google Analytics (GA4)**
+- Google tag `G-EEXXM8VHSC` installed in `frontend/public/index.html` immediately after `<head>` element
+- Single tag, served once on the SPA shell — applies to every route (Home, /brands, /brands/:slug, etc.)
+- Verified: `window.dataLayer` initialized, `window.gtag` function active, persists across SPA navigation
 
+**Brand Logo Placeholders (Phase 7.3 — Feb 8, 2026)**
+- New `components/BrandLogo.jsx` centralised renderer with graceful wordmark fallback (handles missing files / load errors without breaking the UI)
+- `logoImage` field added to each brand in `brands.js` pointing to `/brand-logos/<slug>.svg`
+- Generic SVG placeholders created at `/app/frontend/public/brand-logos/{roomz,morbit,jabra,poly,neat,yealink,logitech}.svg` — clearly labelled "LOGO PLACEHOLDER" using generic system fonts; user will replace with supplier-approved logos
+- All wordmark text usages replaced site-wide: Brands hub (featured + grid), BrandDetail (hero + related), TrustedBrands (compact + detailed), SolutionBrands cards
+- To swap: drop replacement file at the same path/filename, or change `logoImage` to `.png` if needed
 
-## Phase 2: Backend & Email Integration (December 4, 2025)
+**Cookie Consent + Conditional GA4 Loading (Phase 7.2 — Feb 7, 2026)**
+- New `lib/cookieConsent.js` helper + `components/CookieConsent.jsx` banner
+- GA4 (`gtag.js`) NO LONGER auto-loads from `index.html`. Only a tiny `dataLayer` + `gtag` stub is initialised at boot so analytics calls don't error pre-consent
+- Banner appears on first visit (bottom-left card with Accept / Decline)
+- Accept → `gtag.js` script dynamically injected, choice persisted as `granted` in localStorage
+- Decline → choice persisted as `denied`, GA script never loads
+- On subsequent visits, prior choice is honoured silently (no re-prompt)
+- Verified end-to-end: pre-consent state has no GA script in DOM; post-accept GA loads and persists across reloads; localStorage records `granted` / `denied`
 
-### Backend Implementation ✓
-- MongoDB models for contacts and newsletter subscriptions
-- FastAPI endpoints:
-  - POST /api/contact - Handle consultation requests
-  - POST /api/newsletter - Handle newsletter subscriptions
-  - GET /api/contacts - Retrieve submissions (admin)
-- Background task processing for email delivery
-- Error handling and logging
+**GA4 Conversion Event Tracking (Phase 7.1 — Feb 7, 2026)**
+- New `/app/frontend/src/lib/analytics.js` thin gtag wrapper (safely no-ops if blocked or pre-consent)
+- Events tracked across high-intent CTAs:
+  - `consultation_cta_click` — Header (desktop + mobile), Home hero, Home footer CTA, Brand-detail hero CTA. Params: `location`, `source_path`, `brand` (when applicable)
+  - `partner_briefing_click` — `/brands` hub hero + footer CTAs. Params: `location`
+  - `brand_lead_start` — fires on first keystroke in any BrandLeadForm. Params: `brand`, `variant` (compact/full)
+  - `brand_lead_submit` — fires on successful brand lead submission. Params: `brand`, `brand_name`, `variant`, `partnership_type`
+  - `brand_lead_submit_error` — fires on submission failure. Params: `brand`, `variant`, `error`
+  - `contact_form_submit` — fires on `/contact` page form success. Params: `topic`
+  - `floating_deals_click` — fires on Smart Deals FAB click. Params: `active_count`, `source_path`
+  - `solution_brand_click` — fires on solution-page brand card click. Params: `brand`, `brand_name`, `solution`
+- Verified live in browser via `window.gtag` wrapping — events fire with correct names and params
+- New `/app/frontend/src/lib/analytics.js` thin gtag wrapper (safely no-ops if blocked)
+- Events tracked across high-intent CTAs:
+  - `consultation_cta_click` — Header (desktop + mobile), Home hero, Home footer CTA, Brand-detail hero CTA. Params: `location`, `source_path`, `brand` (when applicable)
+  - `partner_briefing_click` — `/brands` hub hero + footer CTAs. Params: `location`
+  - `brand_lead_start` — fires on first keystroke in any BrandLeadForm. Params: `brand`, `variant` (compact/full)
+  - `brand_lead_submit` — fires on successful brand lead submission. Params: `brand`, `brand_name`, `variant`, `partnership_type`
+  - `brand_lead_submit_error` — fires on submission failure. Params: `brand`, `variant`, `error`
+  - `contact_form_submit` — fires on `/contact` page form success. Params: `topic`
+  - `floating_deals_click` — fires on Smart Deals FAB click. Params: `active_count`, `source_path`
+  - `solution_brand_click` — fires on solution-page brand card click. Params: `brand`, `brand_name`, `solution`
+- Verified live in browser via `window.gtag` wrapping — events fire with correct names and params
 
-### SendGrid Email Service ✓
-- Email service class with HTML templates
-- Consultation request emails with Fidelis Logic branding
-- Newsletter subscription notifications
-- Graceful fallback when API key not configured
-- Setup instructions in /app/SETUP_INSTRUCTIONS.md
+**SEO Robustness**
+- `meta name="robots" content="index, follow"` emitted via SEO component on every page
+- `robots.txt` permits Googlebot, Bingbot, Applebot, GPTBot, ChatGPT-User, anthropic-ai, Claude-Web, PerplexityBot, CCBot
+- All existing live URLs preserved; no redirects required (only new routes added)
 
-### Frontend Updates ✓
-- Contact form integrated with backend API
-- Newsletter subscription in footer integrated with backend
-- Toast notifications for user feedback
-- Loading states during form submission
-- Error handling with user-friendly messages
+## What's Been Implemented
 
-### Branding Complete ✓
-- Fidelis Logic logos (color, black, white) in header/footer
-- Updated all company references throughout
-- Contact info: info@fidelislogic.com, +971 52 360 7270
-- Brand colors: Fidelis Cyan (#22D3EE), Fidelis Blue (#2563EB)
-- Brand guidelines document created
+### Phase 1: Core Website (Completed)
+- 10-page professional website with Apple-inspired design
+- Fidelis Logic branding with custom logos
+- Mobile responsive design
+- SEO optimization with structured data (Organization, Service, Blog, FAQ schemas)
+- sitemap.xml and robots.txt for search engines
 
-### SEO & AI Search Enhancements ✓
-- FAQ Schema added to pages (consultingFAQs, meetingRoomsFAQs, etc.)
-- Structured data for improved search visibility
-- Rich snippets support for Google search
+### Phase 2: Backend & Contact Form (Completed)
+- MongoDB integration for data persistence
+- Contact form with database storage
+- Newsletter subscription functionality
+- Email service setup (Web3Forms - partially working)
 
-### Visual Enhancements ✓
-- Animated gradient hero section with Fidelis brand colors
-- Three animated blob gradients with different delays
-- Smooth animations and transitions
-- Premium, Apple-inspired aesthetic
+### Phase 3: Blog Admin Panel (Completed - December 2025)
+**Admin Dashboard:**
+- Secure JWT authentication (login at `/admin/login`)
+- Full CRUD operations for blog posts
+- Statistics (total posts, published, drafts)
+- Search functionality
+- Post management (edit, delete, preview)
 
-## Current Status
-**Production Ready** - All core features implemented and tested:
-- ✓ 10-page professional website
-- ✓ Fidelis Logic branding complete
-- ✓ Contact forms with backend integration
-- ✓ Email notifications (SendGrid)
-- ✓ Newsletter subscriptions
-- ✓ SEO optimized with FAQ schemas
-- ✓ Animated gradient hero
-- ✓ Mobile responsive
-- ✓ All APIs functional
+**Blog Editor:**
+- TipTap rich text editor with formatting toolbar
+- Featured image upload (converted to Base64 for persistent storage)
+- URL input for external images
+- SEO fields (title, description, keywords)
+- Categories and tags
+- Draft/Published toggle
+- Auto-generated URL slugs
 
-## Next Steps for Deployment
-1. Add SendGrid API key to /app/backend/.env
-2. Verify sender email in SendGrid dashboard
-3. Update domain in sitemap.xml
-4. Test email deliverability
-5. Set up monitoring and analytics
+**Public Blog Pages:**
+- Dynamic content from API (not static files)
+- Category filtering
+- Blog post detail with structured data
+- Related posts
+- Consultation CTA
+
+### Phase 4: Production Bug Fixes (December 12, 2025)
+**Fixed: Blog Image Upload Persistence (P0)**
+- Issue: Images saved to filesystem were lost in ephemeral container deployments
+- Solution: Refactored `/api/blog/upload-image` to return Base64 data URLs
+- Base64 images stored directly in MongoDB `featured_image` field
+- Images now persist across deployments
+- Testing: 100% pass rate (backend + frontend)
+
+## Key API Endpoints
+| Endpoint | Method | Description | Auth |
+|----------|--------|-------------|------|
+| `/api/auth/login` | POST | Admin login | No |
+| `/api/blog/posts` | GET | Get published posts | No |
+| `/api/blog/posts?published_only=false` | GET | Get all posts (incl drafts) | Yes |
+| `/api/blog/posts` | POST | Create blog post | Yes |
+| `/api/blog/posts/{post_id}` | PUT | Update blog post | Yes |
+| `/api/blog/posts/{post_id}` | DELETE | Delete blog post | Yes |
+| `/api/blog/upload-image` | POST | Upload image (returns Base64) | Yes |
+| `/api/contact` | POST | Submit contact form | No |
+| `/api/newsletter` | POST | Newsletter subscription | No |
+
+## Database Schema
+
+### blogs collection
+```json
+{
+  "id": "uuid",
+  "title": "string",
+  "slug": "string",
+  "excerpt": "string",
+  "content": "HTML string",
+  "category": "string",
+  "author": "string",
+  "featured_image": "Base64 data URL or external URL",
+  "date": "datetime",
+  "published": "boolean",
+  "seo_title": "string",
+  "seo_description": "string",
+  "seo_keywords": "string",
+  "views": "integer",
+  "tags": ["array of strings"],
+  "created_at": "datetime",
+  "updated_at": "datetime"
+}
+```
+
+### users collection
+```json
+{
+  "username": "string",
+  "hashed_password": "bcrypt hash",
+  "created_at": "datetime"
+}
+```
+
+## Pending Issues
+
+_(None active.)_
+
+## Upcoming Tasks (Priority Order)
+_No P0/P1 tasks queued. Possible future enhancements:_
+- Replace placeholder brand copy with final supplier-approved content
+- Add per-brand inline lead-gen forms (currently a CTA → /contact)
+- FAQ/schema expansion on remaining pages (About, Contact)
+- Image optimization pipeline for Base64 media
+- GA4 event tracking on key CTAs (consultation, brand briefing, FAB clicks)
+
+## Key API Endpoints (added)
+| Endpoint | Method | Description | Auth |
+|----------|--------|-------------|------|
+| `/api/deals/active` | GET | Published, non-expired deals (used by FAB) | No |
+| `/api/sitemap.xml` | GET | Dynamic sitemap incl. /brands and all brand pages | No |
+
+## Admin Credentials
+- **URL:** `/admin/login`
+- **Username:** `admin`
+- **Password:** `vojdov-cypcoJ-nekmy8`
+
+## Key Files Reference
+- `/app/backend/server.py` - Main API routes
+- `/app/backend/blog_models.py` - Pydantic models
+- `/app/backend/auth.py` - JWT authentication
+- `/app/frontend/src/pages/BlogEditor.jsx` - Blog editor with image upload
+- `/app/frontend/src/pages/AdminDashboard.jsx` - Admin post management
+- `/app/frontend/src/components/RichTextEditor.jsx` - TipTap editor
+
+## Test Reports
+- `/app/test_reports/iteration_1.json` - Admin panel tests
+- `/app/test_reports/iteration_2.json` - Base64 image upload tests (100% pass)

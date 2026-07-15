@@ -1,17 +1,26 @@
-from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Load environment variables FIRST before any other imports that need them
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
+
+from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks, Depends, UploadFile, File, Form, Request
+from fastapi.responses import Response
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
-from pathlib import Path
-from typing import List
+from typing import List, Optional
+from datetime import datetime
+import base64
 
-from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate
+from models import ContactForm, ContactFormCreate, NewsletterSubscription, NewsletterSubscriptionCreate, FAQ, FAQCreate, FAQUpdate
+from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, LoginRequest
+from deal_models import Deal, DealCreate, DealUpdate
+from auth import verify_password, get_password_hash, create_access_token, decode_access_token
 from email_service import email_service
-
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -24,6 +33,9 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Security
+security = HTTPBearer()
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -32,7 +44,163 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# Add your routes to the router instead of directly to app
+# Authentication middleware
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    payload = decode_access_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    username = payload.get("sub")
+    if username is None:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    return username
+
+
+# Authentication endpoints
+@api_router.post("/auth/login", response_model=Token)
+async def login(login_data: LoginRequest):
+    """Admin login"""
+    user = await db.users.find_one({"username": login_data.username})
+    if not user or not verify_password(login_data.password, user["hashed_password"]):
+        raise HTTPException(status_code=401, detail="Incorrect username or password")
+    
+    access_token = create_access_token(data={"sub": login_data.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@api_router.post("/auth/create-admin")
+async def create_admin(username: str, password: str):
+    """Create admin user (use once to set up)"""
+    # Check if any admin exists
+    existing_user = await db.users.find_one({"username": username})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User already exists")
+    
+    hashed_password = get_password_hash(password)
+    user = User(username=username, hashed_password=hashed_password)
+    await db.users.insert_one(user.dict())
+    
+    return {"message": "Admin user created successfully"}
+
+
+# Blog endpoints
+@api_router.get("/blog/posts", response_model=List[BlogPost])
+async def get_all_posts(published_only: bool = True):
+    """Get all blog posts"""
+    query = {"published": True} if published_only else {}
+    posts = await db.blog_posts.find(query).sort("date", -1).to_list(100)
+    return [BlogPost(**post) for post in posts]
+
+
+@api_router.get("/blog/posts/{slug}", response_model=BlogPost)
+async def get_post_by_slug(slug: str):
+    """Get a single blog post by slug"""
+    post = await db.blog_posts.find_one({"slug": slug})
+    if not post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    # Increment views
+    await db.blog_posts.update_one(
+        {"slug": slug},
+        {"$inc": {"views": 1}}
+    )
+    
+    return BlogPost(**post)
+
+
+@api_router.post("/blog/posts", response_model=BlogPost)
+async def create_post(post_data: BlogPostCreate, current_user: str = Depends(get_current_user)):
+    """Create a new blog post (protected)"""
+    # Check if slug already exists
+    existing = await db.blog_posts.find_one({"slug": post_data.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="A post with this slug already exists")
+    
+    post = BlogPost(**post_data.dict())
+    await db.blog_posts.insert_one(post.dict())
+    logger.info(f"Blog post created: {post.title} by {current_user}")
+    
+    return post
+
+
+@api_router.put("/blog/posts/{post_id}", response_model=BlogPost)
+async def update_post(post_id: str, post_data: BlogPostUpdate, current_user: str = Depends(get_current_user)):
+    """Update a blog post (protected)"""
+    existing = await db.blog_posts.find_one({"id": post_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    update_data = {k: v for k, v in post_data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    
+    await db.blog_posts.update_one({"id": post_id}, {"$set": update_data})
+    
+    updated_post = await db.blog_posts.find_one({"id": post_id})
+    logger.info(f"Blog post updated: {post_id} by {current_user}")
+    
+    return BlogPost(**updated_post)
+
+
+@api_router.delete("/blog/posts/{post_id}")
+async def delete_post(post_id: str, current_user: str = Depends(get_current_user)):
+    """Delete a blog post (protected)"""
+    result = await db.blog_posts.delete_one({"id": post_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    
+    logger.info(f"Blog post deleted: {post_id} by {current_user}")
+    return {"message": "Blog post deleted successfully"}
+
+
+# Maximum file size: 5MB
+MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB in bytes
+ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+MIME_TYPES = {
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp'
+}
+
+@api_router.post("/blog/upload-image")
+async def upload_image(file: UploadFile = File(...), current_user: str = Depends(get_current_user)):
+    """Upload an image for blog post (max 5MB, jpg/png/gif/webp only)
+    
+    Returns a Base64 data URL for persistent storage in the database.
+    This approach works in containerized/ephemeral environments where
+    filesystem storage is not persistent.
+    """
+    # Check file extension
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    # Check file size by reading content
+    contents = await file.read()
+    file_size = len(contents)
+    
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size is 5MB. Your file: {file_size / (1024*1024):.2f}MB"
+        )
+    
+    # Convert to Base64 data URL
+    mime_type = MIME_TYPES.get(file_ext, 'image/jpeg')
+    base64_data = base64.b64encode(contents).decode('utf-8')
+    data_url = f"data:{mime_type};base64,{base64_data}"
+    
+    logger.info(f"Image uploaded by {current_user}: {file.filename} ({file_size / 1024:.1f}KB)")
+    
+    # Return Base64 data URL (works directly in <img src>)
+    return {"url": data_url}
+
+
+# Original endpoints
 @api_router.get("/")
 async def root():
     return {"message": "Fidelis Logic API"}
@@ -118,6 +286,327 @@ async def get_contacts():
 @api_router.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "fidelis-logic-api"}
+
+
+# ==================== DEALS ENDPOINTS ====================
+
+@api_router.get("/deals", response_model=List[Deal])
+async def get_all_deals(published_only: bool = True):
+    """Get all deals"""
+    query = {"published": True} if published_only else {}
+    deals = await db.deals.find(query).sort("created_at", -1).to_list(100)
+    return [Deal(**deal) for deal in deals]
+
+
+@api_router.get("/deals/active", response_model=List[Deal])
+async def get_active_deals():
+    """Return published, non-expired deals (used by the floating Smart Deals button)."""
+    now = datetime.utcnow()
+    query = {
+        "published": True,
+        "$or": [
+            {"end_date": {"$exists": False}},
+            {"end_date": None},
+            {"end_date": {"$gte": now}},
+        ],
+    }
+    deals = await db.deals.find(query).sort("created_at", -1).to_list(100)
+    return [Deal(**deal) for deal in deals]
+
+
+@api_router.get("/deals/{slug}", response_model=Deal)
+async def get_deal_by_slug(slug: str):
+    """Get a single deal by slug"""
+    deal = await db.deals.find_one({"slug": slug})
+    if not deal:
+        raise HTTPException(status_code=404, detail="Deal not found")
+    
+    # Increment views
+    await db.deals.update_one(
+        {"slug": slug},
+        {"$inc": {"views": 1}}
+    )
+    
+    return Deal(**deal)
+
+
+@api_router.post("/deals", response_model=Deal)
+async def create_deal(deal_data: DealCreate, current_user: str = Depends(get_current_user)):
+    """Create a new deal (protected)"""
+    # Check if slug already exists
+    existing = await db.deals.find_one({"slug": deal_data.slug})
+    if existing:
+        raise HTTPException(status_code=400, detail="A deal with this slug already exists")
+    
+    deal = Deal(**deal_data.dict())
+    await db.deals.insert_one(deal.dict())
+    logger.info(f"Deal created: {deal.title} by {current_user}")
+    
+    return deal
+
+
+@api_router.put("/deals/{deal_id}", response_model=Deal)
+async def update_deal(deal_id: str, deal_data: DealUpdate, current_user: str = Depends(get_current_user)):
+    """Update a deal (protected)"""
+    existing = await db.deals.find_one({"id": deal_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Deal not found")
+    
+    update_data = {k: v for k, v in deal_data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    
+    await db.deals.update_one({"id": deal_id}, {"$set": update_data})
+    
+    updated_deal = await db.deals.find_one({"id": deal_id})
+    logger.info(f"Deal updated: {deal_id} by {current_user}")
+    
+    return Deal(**updated_deal)
+
+
+@api_router.delete("/deals/{deal_id}")
+async def delete_deal(deal_id: str, current_user: str = Depends(get_current_user)):
+    """Delete a deal (protected)"""
+    result = await db.deals.delete_one({"id": deal_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Deal not found")
+    
+    logger.info(f"Deal deleted: {deal_id} by {current_user}")
+    return {"message": "Deal deleted successfully"}
+
+
+@api_router.post("/deals/upload-image")
+async def upload_deal_image(file: UploadFile = File(...), current_user: str = Depends(get_current_user)):
+    """Upload an image for a deal (max 5MB, jpg/png/gif/webp only)"""
+    # Check file extension
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    # Check file size by reading content
+    contents = await file.read()
+    file_size = len(contents)
+    
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File too large. Maximum size is 5MB. Your file: {file_size / (1024*1024):.2f}MB"
+        )
+    
+    # Convert to Base64 data URL
+    mime_type = MIME_TYPES.get(file_ext, 'image/jpeg')
+    base64_data = base64.b64encode(contents).decode('utf-8')
+    data_url = f"data:{mime_type};base64,{base64_data}"
+    
+    logger.info(f"Deal image uploaded by {current_user}: {file.filename} ({file_size / 1024:.1f}KB)")
+    
+    return {"url": data_url}
+
+
+# ==================== SITEMAP ====================
+
+SITEMAP_STATIC_PAGES = [
+    ("/", "1.0", "weekly"),
+    ("/solutions", "0.9", "weekly"),
+    ("/solutions/meeting-rooms", "0.8", "monthly"),
+    ("/solutions/headsets", "0.8", "monthly"),
+    ("/solutions/workspace-experience", "0.8", "monthly"),
+    ("/solutions/business-apps", "0.8", "monthly"),
+    ("/brands", "0.9", "monthly"),
+    ("/brands/roomz", "0.8", "monthly"),
+    ("/brands/morbit", "0.8", "monthly"),
+    ("/brands/jabra", "0.7", "monthly"),
+    ("/brands/poly", "0.7", "monthly"),
+    ("/brands/neat", "0.7", "monthly"),
+    ("/brands/yealink", "0.7", "monthly"),
+    ("/brands/logitech", "0.7", "monthly"),
+    ("/services", "0.9", "monthly"),
+    ("/services/consulting", "0.8", "monthly"),
+    ("/services/deployment-configuration", "0.8", "monthly"),
+    ("/services/managed-support", "0.8", "monthly"),
+    ("/services/video-conferencing-rentals", "0.8", "monthly"),
+    ("/services/workspace-audits", "0.8", "monthly"),
+    ("/services/technology-refresh", "0.8", "monthly"),
+    ("/services/relocation-office-moves", "0.8", "monthly"),
+    ("/services/training-adoption", "0.8", "monthly"),
+    ("/about", "0.7", "monthly"),
+    ("/blog", "0.8", "weekly"),
+    ("/deals", "0.8", "weekly"),
+    ("/contact", "0.9", "monthly"),
+]
+
+
+def _resolve_base_url(request: Request) -> str:
+    base = os.environ.get("SITE_BASE_URL", "").strip().rstrip("/")
+    if base:
+        return base
+    # Fallback to request host so preview environments still produce valid URLs
+    return str(request.base_url).rstrip("/")
+
+
+def _fmt_date(d) -> str:
+    if isinstance(d, datetime):
+        return d.strftime("%Y-%m-%d")
+    if isinstance(d, str) and d:
+        return d[:10]
+    return datetime.utcnow().strftime("%Y-%m-%d")
+
+
+# ==================== FAQs ====================
+
+@api_router.get("/faqs", response_model=List[FAQ])
+async def get_faqs(
+    brand_slug: Optional[str] = None,
+    service_slug: Optional[str] = None,
+    published_only: bool = True,
+):
+    """Public: list FAQs (optionally filtered by brand or service)."""
+    query = {}
+    if brand_slug:
+        query["brand_slug"] = brand_slug
+    if service_slug:
+        query["service_slug"] = service_slug
+    if published_only:
+        query["published"] = True
+    faqs = await db.faqs.find(query, {"_id": 0}).sort([("order", 1), ("created_at", 1)]).to_list(500)
+    return [FAQ(**f) for f in faqs]
+
+
+@api_router.get("/admin/faqs", response_model=List[FAQ])
+async def list_faqs_admin(
+    brand_slug: Optional[str] = None,
+    service_slug: Optional[str] = None,
+    current_user: str = Depends(get_current_user)
+):
+    """Admin: list all FAQs (published + drafts), optionally filtered."""
+    query = {}
+    if brand_slug:
+        query["brand_slug"] = brand_slug
+    if service_slug:
+        query["service_slug"] = service_slug
+    faqs = await db.faqs.find(query, {"_id": 0}).sort([("brand_slug", 1), ("service_slug", 1), ("order", 1), ("created_at", 1)]).to_list(1000)
+    return [FAQ(**f) for f in faqs]
+
+
+@api_router.get("/faqs/{faq_id}", response_model=FAQ)
+async def get_faq(faq_id: str, current_user: str = Depends(get_current_user)):
+    """Admin: fetch a single FAQ for editing."""
+    faq = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    if not faq:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    return FAQ(**faq)
+
+
+@api_router.post("/faqs", response_model=FAQ)
+async def create_faq(payload: FAQCreate, current_user: str = Depends(get_current_user)):
+    """Admin: create a new FAQ. Requires exactly one of brand_slug or service_slug."""
+    if not payload.brand_slug and not payload.service_slug:
+        raise HTTPException(status_code=400, detail="Either brand_slug or service_slug is required")
+    if payload.brand_slug and payload.service_slug:
+        raise HTTPException(status_code=400, detail="Set only one of brand_slug or service_slug, not both")
+    now = datetime.utcnow()
+    faq = FAQ(
+        brand_slug=payload.brand_slug,
+        service_slug=payload.service_slug,
+        question=payload.question,
+        answer=payload.answer,
+        order=payload.order if payload.order is not None else 0,
+        published=payload.published if payload.published is not None else True,
+        created_at=now,
+        updated_at=now,
+    )
+    await db.faqs.insert_one(faq.dict())
+    return faq
+
+
+@api_router.put("/faqs/{faq_id}", response_model=FAQ)
+async def update_faq(faq_id: str, payload: FAQUpdate, current_user: str = Depends(get_current_user)):
+    """Admin: update an existing FAQ."""
+    existing = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    update_data = {k: v for k, v in payload.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    await db.faqs.update_one({"id": faq_id}, {"$set": update_data})
+    updated = await db.faqs.find_one({"id": faq_id}, {"_id": 0})
+    return FAQ(**updated)
+
+
+@api_router.delete("/faqs/{faq_id}")
+async def delete_faq(faq_id: str, current_user: str = Depends(get_current_user)):
+    """Admin: delete a FAQ."""
+    result = await db.faqs.delete_one({"id": faq_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="FAQ not found")
+    return {"status": "success", "message": "FAQ deleted"}
+
+
+
+
+@api_router.get("/sitemap.xml")
+async def sitemap(request: Request):
+    """Dynamic sitemap including static pages, published blog posts, and active deals."""
+    base = _resolve_base_url(request)
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+
+    url_entries: List[str] = []
+
+    # Static pages
+    for path, priority, changefreq in SITEMAP_STATIC_PAGES:
+        url_entries.append(
+            f"  <url>\n"
+            f"    <loc>{base}{path}</loc>\n"
+            f"    <lastmod>{today}</lastmod>\n"
+            f"    <changefreq>{changefreq}</changefreq>\n"
+            f"    <priority>{priority}</priority>\n"
+            f"  </url>"
+        )
+
+    # Published blog posts
+    blog_cursor = db.blog_posts.find({"published": True}, {"_id": 0, "slug": 1, "updated_at": 1, "date": 1})
+    async for post in blog_cursor:
+        slug = post.get("slug")
+        if not slug:
+            continue
+        lastmod = _fmt_date(post.get("updated_at") or post.get("date"))
+        url_entries.append(
+            f"  <url>\n"
+            f"    <loc>{base}/blog/{slug}</loc>\n"
+            f"    <lastmod>{lastmod}</lastmod>\n"
+            f"    <changefreq>monthly</changefreq>\n"
+            f"    <priority>0.6</priority>\n"
+            f"  </url>"
+        )
+
+    # Active (non-expired) deals
+    now = datetime.utcnow()
+    deals_cursor = db.deals.find({"published": True}, {"_id": 0, "slug": 1, "updated_at": 1, "end_date": 1})
+    async for deal in deals_cursor:
+        slug = deal.get("slug")
+        if not slug:
+            continue
+        end_date = deal.get("end_date")
+        if isinstance(end_date, datetime) and end_date < now:
+            continue  # skip expired
+        lastmod = _fmt_date(deal.get("updated_at"))
+        url_entries.append(
+            f"  <url>\n"
+            f"    <loc>{base}/deals/{slug}</loc>\n"
+            f"    <lastmod>{lastmod}</lastmod>\n"
+            f"    <changefreq>daily</changefreq>\n"
+            f"    <priority>0.7</priority>\n"
+            f"  </url>"
+        )
+
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "\n".join(url_entries)
+        + "\n</urlset>\n"
+    )
+    return Response(content=xml, media_type="application/xml")
 
 
 # Include the router in the main app
