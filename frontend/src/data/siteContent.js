@@ -72,8 +72,8 @@ export const segments = [
   },
   {
     id: "business-apps",
-    title: "Business Applications for Small and Medium Businesses",
-    description: "ERP, HRMS, and CRM implementation with integration, training, and ongoing support.",
+    title: "Business Applications for Small Businesses",
+    description: "Low-cost ERP, HRMS, CRM, and AI integration with quick setup, monthly plans, and ongoing support.",
     icon: "BarChart3",
     image: "/businessapps.png",
     link: "/solutions/business-apps"
@@ -144,7 +144,7 @@ export const testimonials = [
   {
     name: "Lisa Chen",
     role: "CEO",
-    company: "SMB Technology Startup",
+    company: "Small Business Technology Company",
     content: "Their business applications consulting transformed our operations. From ERP selection to training, they delivered a solution that actually works for our team.",
     rating: 5
   }
@@ -380,9 +380,9 @@ export const workspaceExperienceDetails = {
 
 export const businessAppsDetails = {
   hero: {
-    title: "Business Applications for SMBs",
-    subtitle: "ERP, HRMS, and CRM implementation with discovery, integration, training, and managed support.",
-    image: "https://images.unsplash.com/photo-1573497019414-e44d0759d00e"
+    title: "Low-Cost ERP, HRMS & CRM for Small Businesses",
+    subtitle: "Launch a practical business application platform with near-zero license cost, cloud or on-prem deployment, AI-assisted ERP updates, and Fidelis Logic support for configuration, training, and monthly optimization.",
+    image: "/business-apps-ai-hero.png"
   },
   painPoints: [
     {
@@ -407,11 +407,12 @@ export const businessAppsDetails = {
     }
   ],
   offer: [
-    "Discovery & Requirements Workshops",
-    "Solution Selection & Vendor Evaluation",
-    "Implementation & Configuration",
-    "System Integration (API, Data Migration)",
-    "User Training & Change Management",
-    "Managed Support & Continuous Optimization"
+    "Near-zero license cost ERP, HRMS, and CRM platform options",
+    "Starter plans from USD 10 per month for small businesses",
+    "Cloud-hosted and on-premise deployment models",
+    "AI platform integrations to help maintain ERP entries with entry-level or lean staffing",
+    "Configuration support for accounting, HR, sales, inventory, and service workflows",
+    "Monthly payment plans for implementation, hosting, and support",
+    "User training, data migration, reporting, and continuous optimization"
   ]
 };

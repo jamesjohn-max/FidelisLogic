@@ -98,7 +98,7 @@ export const ServiceDetail = () => {
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div
-            className="max-w-3xl bg-white/10 border border-white/15 backdrop-blur-sm rounded-2xl shadow-2xl shadow-black/30 p-8 sm:p-10 lg:p-12"
+            className="max-w-3xl"
             data-testid="service-hero-card"
           >
             <div className="flex items-center gap-3 mb-5">

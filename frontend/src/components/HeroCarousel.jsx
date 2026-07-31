@@ -83,7 +83,8 @@ export const HeroCarousel = ({
   return (
     <>
       <div
-        className={`absolute inset-0 z-0 ${className}`}
+        // className={`absolute inset-0 z-0 ${className}`}
+        className={`absolute z-0 ${className || "inset-0"}`}
         aria-hidden="true"
         data-testid={testId}
       >

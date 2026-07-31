@@ -25,9 +25,9 @@ export const seoConfig = {
     keywords: "room booking system UAE, hot desking Dubai, workspace experience, Flowscape UAE, ROOMZ, visitor management, workplace analytics"
   },
   businessApps: {
-    title: "Business Applications for SMBs | ERP, HRMS, CRM Implementation UAE - Fidelis Logic",
-    description: "ERP, HRMS, and CRM implementation for UAE SMBs. Discovery, integration, training, and managed support for business-critical applications.",
-    keywords: "ERP implementation UAE, HRMS Dubai, CRM solutions, SMB applications, business software UAE, accounting software"
+    title: "Low Cost ERP Solution, HRMS, CRM & AI ERP Integration UAE | Fidelis Logic",
+    description: "Low cost ERP solution, affordable HRMS, CRM, and AI ERP integration for small businesses in the UAE. Near-zero license cost platform options, cloud or on-prem deployment, configuration support, AI-assisted ERP updates, and monthly plans from USD 10/month.",
+    keywords: "low cost ERP solution, low cost ERP solution UAE, affordable ERP Dubai, AI ERP integration UAE, ERP AI automation, ERP for small business UAE, HRMS for small business UAE, CRM for small business Dubai, open source ERP UAE, AI business applications UAE, cloud ERP UAE, on premise ERP UAE, small business ERP Dubai"
   },
   about: {
     title: "About Fidelis Logic | Leading IT Consulting Firm in UAE",

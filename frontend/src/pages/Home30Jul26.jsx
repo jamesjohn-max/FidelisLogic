@@ -68,31 +68,45 @@ export const Home = () => {
       <StructuredData data={breadcrumbSchema(breadcrumbs)} />
       <FAQSchema faqs={consultingFAQs} />
       {/* Hero Section — full-bleed image background with overlay */}
-      <section className="relative min-h-[500px] lg:min-h-[540px] flex items-center pt-24 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative min-h-[500px] lg:min-h-[540px] flex items-center pt-24 pb-12 px-4 sm:px-6 lg:px-8 overflow-hidden bg-brand-dark">
         {/* Background carousel */}
-        <HeroCarousel images={heroData.images} testId="home-hero-carousel" />
+        {/* <HeroCarousel images={heroData.images} testId="home-hero-carousel" /> */}
+        <HeroCarousel
+          images={heroData.images}
+          className="inset-0 lg:inset-y-0 lg:left-[0%] lg:right-0"
+          testId="home-hero-carousel"
+        />
         {/* Multi-stop gradient overlay for premium feel + text legibility */}
-        {/*<div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/80 to-brand-dark/40 lg:from-brand-dark/95 lg:via-brand-dark/65 lg:to-brand-dark/10" /> */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/80 via-black/52 to-black/10 lg:from-black/82 lg:via-black/44 lg:to-black/0" />
+       {/* <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/95 via-brand-dark/80 to-brand-dark/40 lg:from-brand-dark/95 lg:via-brand-dark/65 lg:to-brand-dark/10" /> */}
+         <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/10 via-black/40 via-black/30 via-black/20 to-black/5 lg:from-black/82 lg:via-black/42 lg:to-black/0" /> 
+         
+         
+
         {/* Subtle bottom fade so it doesn't compete with the stats section */}
-        <div className="absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-b from-transparent to-white/70" />
+        {/* <div className="absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-b from-transparent to-white/95" /> */}
+        {/* <div className="absolute inset-x-0 bottom-0 z-[1] h-24 bg-gradient-to-b from-transparent to-white/50" /> */}
 
         <div className="max-w-7xl mx-auto relative z-10 w-full">
-          <div className="max-w-2xl space-y-7" data-testid="home-hero-content">
+          <div className="max-w-2xl space-y-7" data-testid="home-hero-content"> 
+
+         
+            {/* <div className="max-w-2xl space-y-7 bg-slate-950/40 backdrop-blur-xl rounded-3xl p-8 sm:p-10 border border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.45)]" data-testid="home-hero-content">*/}
             
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-[0.12em] backdrop-blur-sm drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/20 border border-white/20 text-white/90 text-xs font-semibold uppercase tracking-[0.12em] backdrop-blur-sm drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]">
               <span className="w-1.5 h-1.5 rounded-full bg-fidelis-cyan" aria-hidden="true" />
               UAE Workplace Technology Advisory
             </span>
-            
+
            {/* <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight" data-testid="home-hero-title"> */}
-           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.08] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.9)]" data-testid="home-hero-title">
+           <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.08] tracking-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)]" data-testid="home-hero-title">
               {heroData.title}
             </h1>
+
             {/* <p className="text-lg sm:text-xl text-gray-200 leading-relaxed max-w-xl"> */}
-              <p className="text-lg sm:text-xl text-gray-100 leading-relaxed max-w-xl drop-shadow-[0_4px_18px_rgba(0,0,0,0.85)]">
+              <p className="text-lg sm:text-xl text-gray-100 leading-relaxed max-w-xl drop-shadow-[0_3px_14px_rgba(0,0,0,0.7)]">
               {heroData.subtitle}
             </p>
+            
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
               <Link
                 to="/contact"

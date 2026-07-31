@@ -49,7 +49,7 @@ export const Header = () => {
   const navLinkClass = (active) =>
     `px-7 py-2 text-sm font-medium rounded-lg transition-colors ${
       active
-        ? "text-blue-700 bg-blue-50"
+        ? "text-blue-700"
         : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
     }`;
 
@@ -158,7 +158,7 @@ export const Header = () => {
                 })
               }
             >
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700">
                 Book Free Consultation
               </Button>
             </Link>
@@ -258,7 +258,7 @@ export const Header = () => {
                   });
                 }}
               >
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-4">
+                <Button variant="outline" className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 hover:text-blue-700 mt-4">
                   Book Free Consultation
                 </Button>
               </Link>

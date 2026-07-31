@@ -143,8 +143,24 @@ export const workspaceFAQs = [
 // Business Applications FAQs
 export const businessAppsFAQs = [
   {
-    question: "How long does ERP implementation take for SMBs?",
-    answer: "Typical SMB ERP implementations range from 2-6 months depending on complexity, customization requirements, and data migration scope. A realistic phased plan includes 3 weeks of discovery, 5 weeks of configuration, 4 weeks of user acceptance testing and training, then go-live with hypercare."
+    question: "Can small businesses get ERP, HRMS, and CRM without high license costs?",
+    answer: "Yes. Fidelis Logic helps small businesses deploy low-license-cost business application platforms where the core software cost can be near zero. Customers pay for the practical services they need: configuration, hosting, migration, training, reporting, and ongoing support."
+  },
+  {
+    question: "How low can the monthly cost be?",
+    answer: "For a focused small-business scope, starter plans can begin from USD 10 per month depending on hosting, modules, support level, and implementation needs. We confirm the exact monthly plan after discovery so the cost matches the modules you actually use."
+  },
+  {
+    question: "Do you offer cloud and on-premise ERP deployment?",
+    answer: "Yes. We support cloud-hosted ERP, HRMS, and CRM for quick launch, plus on-premise deployment for businesses that need local control, custom infrastructure, or specific compliance requirements."
+  },
+  {
+    question: "Can AI help manage ERP entries for a small business?",
+    answer: "Yes. Fidelis Logic can integrate ERP platforms with paid and free AI tools so business owners can draft transactions, update customer and supplier records, classify expenses, prepare reports, and review routine ERP work with fewer administrative staff. We design guardrails so AI-assisted updates can be reviewed, approved, and audited before they affect business records."
+  },
+  {
+    question: "How quickly can a small-business ERP implementation go live?",
+    answer: "A focused small-business ERP, HRMS, or CRM first phase can be implemented in less than a week when the scope is kept lean: core setup, users, roles, essential forms, basic reports, and handover. Larger migrations, integrations, or custom workflows are planned as follow-on phases."
   },
   {
     question: "Do you provide training for business applications?",
@@ -152,7 +168,7 @@ export const businessAppsFAQs = [
   },
   {
     question: "Which ERP, HRMS, and CRM platforms do you support?",
-    answer: "We take a vendor-neutral approach. We help evaluate and implement platforms such as Microsoft Dynamics 365, Odoo, SAP Business One, Zoho, Salesforce, HubSpot, and regional HRMS solutions — recommending the best fit for your size, budget, and existing tech stack."
+    answer: "We take a vendor-neutral approach and prioritize platforms that fit small-business budgets. Depending on requirements, this can include open-source, low-cost, cloud-hosted, or on-premise platforms without locking you into a specific vendor."
   },
   {
     question: "How do you handle data migration from our legacy systems?",
@@ -161,5 +177,32 @@ export const businessAppsFAQs = [
   {
     question: "What happens after go-live?",
     answer: "We provide hypercare for the first 30-60 days with rapid issue resolution, then transition to managed support for continuous optimization — adding modules, refining workflows, and scaling as your business grows."
+  }
+];
+
+export const businessAppsSeoFAQs = [
+  {
+    question: "What is the best low cost ERP solution for a small business in the UAE?",
+    answer: "The best low cost ERP solution for a small business is usually a focused platform that starts with accounting, sales, purchasing, inventory, basic reporting, and user roles before adding advanced workflows. Fidelis Logic helps small businesses in the UAE choose, configure, and support a low cost ERP solution with monthly plans from USD 10/month."
+  },
+  {
+    question: "Can I get an affordable ERP system without expensive software licenses?",
+    answer: "Yes. A small business can use an affordable ERP system with near-zero software license cost when the right low-cost or open-source platform is selected. Fidelis Logic supports configuration, hosting, migration, training, and monthly support so the budget goes toward practical business setup instead of heavy license fees."
+  },
+  {
+    question: "Do you provide low cost ERP implementation for small businesses?",
+    answer: "Yes. Fidelis Logic provides low cost ERP implementation for small businesses that need finance, purchasing, inventory, sales, HRMS, CRM, and reporting in one connected system. A lean first phase can go live in less than a week when the scope is focused."
+  },
+  {
+    question: "Can AI reduce the staff needed to manage ERP entries?",
+    answer: "Yes. AI integration can help small-business owners draft ERP entries, classify expenses, update customer and supplier records, prepare reports, and review routine tasks with entry-level or lean staffing. Fidelis Logic designs approval controls so AI-assisted ERP updates remain reviewed and auditable."
+  },
+  {
+    question: "Is cloud ERP or on-premise ERP better for a small business?",
+    answer: "Cloud ERP is usually better when a small business wants quick setup, lower maintenance, and predictable monthly cost. On-premise ERP can be better when the business needs local control, custom infrastructure, or specific data policies. Fidelis Logic offers both cloud ERP and on-premise ERP support."
+  },
+  {
+    question: "How can Fidelis Logic help me?",
+    answer: "Fidelis Logic can help you with a low cost ERP solution UAE, affordable ERP for small business, ERP implementation in less than a week, AI ERP integration UAE, low cost HRMS, low cost CRM, cloud ERP for small business, and on-premise ERP support. Low cost does not mean compromise on quality or standards. It just means we help you cut down the costs of setting up and maintaining must-have business applications for your business so you can focus on the money-making part of the business."
   }
 ];
