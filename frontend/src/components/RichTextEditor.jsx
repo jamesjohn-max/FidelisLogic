@@ -71,7 +71,6 @@ import {
   DropdownMenuLabel,
 } from './ui/dropdown-menu';
 import { toast } from 'sonner';
-import axios from 'axios';
 
 import { api } from "../lib/api";
 const MenuButton = ({ onClick, isActive, disabled, children, title }) => (

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { getBrandsSorted } from "../data/brands";
+import { services } from "../data/services";
 
 import { api } from "../lib/api";
 export const AdminFAQDashboard = () => {

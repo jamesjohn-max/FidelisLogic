@@ -1,0 +1,54 @@
+{
+  "summary": "Frontend regression sweep post centralised lib/api.js refactor + P0 fix to AdminFAQDashboard. The AdminFAQDashboard P0 fix is CONFIRMED working (/admin/faqs renders, Brands + Services optgroups both present, 16 filter options). All 8 real service detail pages under /services/:slug render correctly with unique H1s. Brands hub, brand detail, blog, contact, home, header mega-menu, cookie banner, admin login, /admin/blog, /admin/deals all render without JS errors. HOWEVER, a NEW P0 crash was discovered on /solutions/business-apps: 'ReferenceError: valueCards is not defined' — the BusinessApps.jsx component references valueCards, aiFeatures, painPoints, and deploymentOptions but none of those arrays are declared or imported anywhere in the file. The entire /solutions/business-apps page is currently broken. Note: the review request mentioned /services/business-apps but the actual route for BusinessApps.jsx is /solutions/business-apps — /services/business-apps is not a valid service slug and silently redirects to /services hub.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "BusinessApps.jsx (/solutions/business-apps)", "issue": "P0 CRASH — ReferenceError: valueCards is not defined at BusinessApps line ~160. Also references undefined identifiers aiFeatures (line 196), painPoints (line 221), and deploymentOptions (line 326). None of these arrays are declared as consts or imported. Entire page white-screens with Uncaught runtime error overlay. Same class of bug that was just fixed in AdminFAQDashboard (missing services import) — appears the mechanical refactor stripped these local const declarations.", "selector": "route /solutions/business-apps", "priority": "CRITICAL"},
+      {"component": "Contact.jsx", "issue": "Hydration warning: <p> nested inside <p> at Contact line ~289/292. Not a crash but causes React hydration error in console.", "selector": "/contact", "priority": "LOW"},
+      {"component": "Multiple images (SEO/hero)", "issue": "Repeated console warning: 'Invalid DOM property fetchpriority. Did you mean fetchPriority?' — camelCase required by React.", "selector": "img[fetchpriority]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Contact form submission", "issue": "Submitting the contact form did NOT emit a POST to /api/contact (network capture empty). Contact appears to use Web3Forms (REACT_APP_WEB3FORMS_KEY in .env is set to a placeholder value 'fidelislogic-cms---'). Worth verifying whether the intended backend is /api/contact or Web3Forms and that the key is real, otherwise submissions will silently fail in production.", "affected_selectors": ["form button[type='submit']"]}
+    ],
+    "design_issues": []
+  },
+  "verified_features": {
+    "AdminFAQDashboard_P0_fix": "PASS — /admin/faqs renders (h1='Brand FAQs'), no errors, parent-filter dropdown shows 16 options across two optgroups: Brands (7) and Services (8). Fix confirmed working.",
+    "RichTextEditor_dead_import_removal": "No regressions observed on any admin pages that would use the editor.",
+    "public_home": "PASS — loads, hero carousel with 15 slide indicators, cookie banner visible on fresh visit.",
+    "brands_hub_and_detail": "PASS — /brands lists cards, /brands/roomz shows lead-gen form + FAQ section, no page errors.",
+    "services_hub_and_all_8_details": "PASS — /services and each of the 8 real slugs (consulting, deployment-configuration, managed-support, video-conferencing-rentals, workspace-audits, technology-refresh, relocation-office-moves, training-adoption) render with unique per-service H1s.",
+    "header_services_mega_menu": "PASS — hover on 'Services' reveals all 8 /services/:slug links.",
+    "blog": "PASS — /blog loads and lists published posts.",
+    "contact_form_present": "PASS — 7 input fields present.",
+    "admin_login": "PASS — credentials admin/vojdov-cypcoJ-nekmy8 authenticate and land on /admin (not /admin/dashboard).",
+    "admin_dashboards": "PASS — /admin/blog (h1='Blog Posts'), /admin/deals (h1='Smart Deals'), /admin/faqs (h1='Brand FAQs') all render.",
+    "cookie_consent_banner": "PASS — banner appears on fresh visit with Accept/Decline buttons wired to cookieConsent lib.",
+    "centralised_api_client": "PASS — no leftover BACKEND_URL duplicates causing runtime errors observed; /admin/* API calls succeed."
+  },
+  "test_report_links": [],
+  "action_items": [
+    "P0 — Restore the missing local const declarations in /app/frontend/src/pages/BusinessApps.jsx. At minimum: `const valueCards = [...]`, `const aiFeatures = [...]`, `const painPoints = [...]`, `const deploymentOptions = [...]`. These arrays are referenced at lines 160, 196, 221, and 326 but never declared. Likely wiped during the recent mechanical regex refactor. The whole /solutions/business-apps route is a hard crash until fixed.",
+    "P1 — Fix nested <p> inside <p> in Contact.jsx (around lines 289–292) to eliminate the React hydration error.",
+    "P2 — Rename `fetchpriority` prop on <img> elements to camelCase `fetchPriority` to silence React warnings.",
+    "P2 — Verify Contact form path: either implement POST /api/contact OR set a real REACT_APP_WEB3FORMS_KEY (current value 'fidelislogic-cms---' looks like a placeholder). Currently no request is emitted on submit.",
+    "P3 — Review request expected /admin/dashboard as landing route; actual admin home is /admin — either add a /admin/dashboard alias or update the docs."
+  ],
+  "critical_code_review_comments": [
+    "The centralised api.js refactor appears to have been done with regex and stripped code inadvertently. Two P0 ReferenceError bugs in a single sweep (AdminFAQDashboard's `services` and BusinessApps' `valueCards/aiFeatures/painPoints/deploymentOptions`) suggest more silent removals could exist. Recommend a repo-wide grep for identifiers used in JSX but never declared/imported (e.g. an ESLint no-undef pass over /app/frontend/src) before shipping.",
+    "ServiceDetail.jsx (line 3) still does `import axios from 'axios'` and uses axios directly instead of the shared `api` instance from lib/api.js — inconsistent with the refactor's stated goal. It works because BACKEND_URL is re-exported, but the whole point of the central client is to route through it.",
+    "BusinessApps.jsx canonicalUrl is hardcoded to https://www.fidelislogic.com/... — fine for SEO but should ideally derive from env.",
+    "cookieConsent + GA gtag injection wiring looks correct in code; couldn't fully assert window.gtag transition post-click due to test env quirks but structure is sound."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (frontend-only per request)", "frontend": "~92% — 1 CRITICAL (BusinessApps crash), 1 LOW (Contact hydration), 2 P2 warnings"},
+  "test_credentials": "Used admin / vojdov-cypcoJ-nekmy8 from /app/memory/test_credentials.md — worked.",
+  "seed_data_creation": "none",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "The P0 AdminFAQDashboard fix is verified working. The blocker to close out this iteration is /solutions/business-apps which crashes with ReferenceError on 4 undeclared identifiers (valueCards, aiFeatures, painPoints, deploymentOptions) in BusinessApps.jsx. Once main agent restores those consts, re-test /solutions/business-apps and verify the 'Cloud, On-Prem, or Hybrid' deployment section with 3 option cards each having bullets renders. Also spot-check that no other page has similar missing-identifier crashes (a repo-wide `grep -n \"\\.map(\\|IconComponent = \" src/pages` + eslint no-undef sweep is recommended).",
+  "rca_of_the_issue": "BusinessApps /solutions/business-apps crash RCA: BusinessApps.jsx references JavaScript identifiers `valueCards`, `aiFeatures`, `painPoints`, `deploymentOptions` inside JSX .map() calls at lines 160, 196, 221, and 326 respectively. None of these identifiers are declared as consts in the component body, none are imported from any module, and none exist in /app/frontend/src/data/siteContent.js either. The result is a runtime ReferenceError when React tries to render the Value Proposition section (first use is on line 160). Root cause: the recent mechanical regex refactor to route all axios calls through lib/api.js appears to have deleted large const array blocks in this file (same pattern as the recently-fixed AdminFAQDashboard.jsx which was missing `import { services }`). Fix: reconstruct the 4 arrays from git history or /app/memory/, or import them from a new data file."
+}
