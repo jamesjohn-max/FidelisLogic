@@ -288,12 +288,13 @@ export const Contact = () => {
                 </h2>
                     <p className="text-x text-grey-600 leading-relaxed">
                     We believe in earning your trust first. Our free consultation includes:
-
-                    <p> ✓  Expert assessment of your needs </p>
-                    <p>✓  Tailored recommendations</p>
-                    <p>✓  Transparent pricing overview</p>
-                    <p>✓  No pressure, no obligation</p>
                     </p>
+                    <ul className="mt-3 space-y-1 text-grey-600">
+                      <li>✓  Expert assessment of your needs</li>
+                      <li>✓  Tailored recommendations</li>
+                      <li>✓  Transparent pricing overview</li>
+                      <li>✓  No pressure, no obligation</li>
+                    </ul>
               </div>
               
               <div>

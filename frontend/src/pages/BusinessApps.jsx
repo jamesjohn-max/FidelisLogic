@@ -8,6 +8,7 @@ import { FAQSection } from "../components/FAQSection";
 import { FAQSchema, businessAppsFAQs, businessAppsSeoFAQs } from "../components/FAQSchema";
 import { seoConfig } from "../data/seoConfig";
 import { businessAppsDetails } from "../data/siteContent";
+import * as LucideIcons from "lucide-react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -23,8 +24,90 @@ import {
   TrendingDown
 } from "lucide-react";
 
+const valueCards = [
+  {
+    icon: Database,
+    title: "One Connected Platform",
+    description: "Consolidate finance, HR, sales, and operations into a single low-cost system that grows with your team."
+  },
+  {
+    icon: BrainCircuit,
+    title: "AI-Assisted Data Entry",
+    description: "Free and paid AI tools help your team keep ERP records accurate without a dedicated admin function."
+  },
+  {
+    icon: TrendingDown,
+    title: "Predictable Monthly Cost",
+    description: "Starter plans from USD 10/month and phased implementation so cash flow is never a surprise."
+  },
+  {
+    icon: Cloud,
+    title: "Deploy Your Way",
+    description: "Cloud, on-premise, or hybrid — pick the model that matches your control, data, and connectivity needs."
+  },
+  {
+    icon: ShieldCheck,
+    title: "UAE Support On-Ground",
+    description: "Configuration, training, and monthly optimization delivered by a Dubai-based team that knows local workflows."
+  }
+];
+
+const aiFeatures = [
+  {
+    title: "Routine Entry & Classification",
+    description: "AI drafts and categorizes invoices, expenses, and journal entries — the owner approves in one click."
+  },
+  {
+    title: "Automated Reminders & Follow-ups",
+    description: "AI monitors overdue receivables, low stock, and approvals pending, then nudges the right person at the right time."
+  },
+  {
+    title: "Reporting & Insight Generation",
+    description: "Ask questions in plain English and get instant ERP-backed dashboards, variance summaries, and trend commentary."
+  }
+];
+
+const deploymentOptions = [
+  {
+    title: "Cloud (SaaS)",
+    description: "Lowest upfront cost with automatic updates and anywhere access. Ideal for lean teams and multi-location businesses.",
+    bullets: [
+      "Zero infrastructure to manage",
+      "Rapid go-live in less than a week",
+      "Predictable monthly subscription"
+    ]
+  },
+  {
+    title: "On-Premise",
+    description: "Full data control and one-time license option. Best when connectivity is variable or compliance requires local hosting.",
+    bullets: [
+      "Your data stays inside your network",
+      "One-time or perpetual licensing options",
+      "Works fully offline for local operations"
+    ]
+  },
+  {
+    title: "Hybrid",
+    description: "Sensitive workloads on-prem, collaborative modules in the cloud. A pragmatic middle path for growing SMEs.",
+    bullets: [
+      "Mix cloud collaboration with on-prem control",
+      "Scale specific modules independently",
+      "Secure sync with role-based access"
+    ]
+  }
+];
+
+const seoHighlights = [
+  "ERP configuration for finance, inventory, procurement, and multi-entity operations",
+  "HRMS deployments covering payroll, attendance, leave, and employee self-service",
+  "CRM setup with lead capture, pipeline management, and quotation-to-invoice flow",
+  "AI integrations that automate routine ERP updates with owner-in-the-loop approvals",
+  "Cloud, on-prem, and hybrid deployment models tuned to your budget and control needs",
+  "Live-in-a-week focused first phase followed by monthly optimization and training"
+];
+
 export const BusinessApps = () => {
-  const { hero } = businessAppsDetails;
+  const { hero, painPoints, offer } = businessAppsDetails;
 
   const breadcrumbs = [
     { name: "Home", url: typeof window !== "undefined" ? `${window.location.origin}/` : "" },
