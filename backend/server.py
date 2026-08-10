@@ -21,6 +21,12 @@ from blog_models import BlogPost, BlogPostCreate, BlogPostUpdate, User, Token, L
 from deal_models import Deal, DealCreate, DealUpdate
 from auth import verify_password, get_password_hash, create_access_token, decode_access_token
 from email_service import email_service
+from seo_prerender import (
+    resolve_route_meta,
+    render_seo_html,
+    list_static_routes,
+    BLOG_POST_RE,
+)
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -204,6 +210,58 @@ async def upload_image(file: UploadFile = File(...), current_user: str = Depends
 @api_router.get("/")
 async def root():
     return {"message": "Fidelis Logic API"}
+
+
+# ---------------------------------------------------------------------------
+# SEO pre-render endpoint
+# ---------------------------------------------------------------------------
+# Returns a fully rendered HTML document with route-specific <title>,
+# meta description, canonical URL, JSON-LD, H1 and summary content.
+# Route the following bot/social-scraper User-Agents through this endpoint
+# at the edge (nginx/Cloudflare) to feed crawlers pre-rendered HTML:
+#   Googlebot, Bingbot, DuckDuckBot, Slurp, Baiduspider, YandexBot,
+#   facebookexternalhit, Twitterbot, LinkedInBot, WhatsApp, TelegramBot,
+#   Slackbot, Discordbot.
+#
+# Public routes covered:
+#   - Static:  /, /solutions, /solutions/business-apps, /brands/roomz, /blog
+#   - Dynamic: /blog/<slug>  (any published blog post)
+# ---------------------------------------------------------------------------
+
+@api_router.get("/prerender", response_class=Response)
+async def prerender_route(path: str):
+    """
+    Return SEO-enhanced HTML for the given path (query param).
+
+    Example: GET /api/prerender?path=/solutions/business-apps
+    """
+    if not path.startswith("/"):
+        path = "/" + path
+
+    meta = await resolve_route_meta(path, db)
+    if meta is None:
+        raise HTTPException(status_code=404, detail=f"No pre-render metadata for path: {path}")
+
+    html_doc = render_seo_html(path, meta)
+    return Response(
+        content=html_doc,
+        media_type="text/html; charset=utf-8",
+        headers={"Cache-Control": "public, max-age=300"},
+    )
+
+
+@api_router.get("/prerender/routes")
+async def prerender_routes_index():
+    """List all static SEO-covered routes plus published blog post slugs."""
+    posts = await db.blog_posts.find(
+        {"published": True}, {"slug": 1, "_id": 0}
+    ).to_list(length=1000)
+    dynamic = [f"/blog/{p['slug']}" for p in posts if p.get("slug")]
+    return {
+        "static_routes": list_static_routes(),
+        "dynamic_routes": dynamic,
+        "blog_post_pattern": BLOG_POST_RE.pattern,
+    }
 
 
 @api_router.post("/contact", response_model=dict)

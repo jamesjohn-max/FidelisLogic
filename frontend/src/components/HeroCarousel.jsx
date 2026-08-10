@@ -20,8 +20,8 @@ import { useEffect, useRef, useState } from "react";
 export const HeroCarousel = ({
   images = [],
   interval = 6000,
-  transitionMs = 1200,
-  showDots = true,
+  transitionMs = 2400,
+  showDots = false,
   className = "",
   testId,
 }) => {

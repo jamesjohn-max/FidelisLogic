@@ -247,3 +247,37 @@ _No P0/P1 tasks queued. Possible future enhancements:_
 ## Test Reports
 - `/app/test_reports/iteration_1.json` - Admin panel tests
 - `/app/test_reports/iteration_2.json` - Base64 image upload tests (100% pass)
+- `/app/test_reports/iteration_4.json` - AdminFAQDashboard + BusinessApps P0 fixes
+- `/app/test_reports/iteration_5.json` - SEO prerender endpoint (11/11 pass)
+
+## Latest Additions — Feb 2026
+### SEO Pre-render Endpoint
+- **New module:** `/app/backend/seo_prerender.py`
+- **New endpoints:**
+  - `GET /api/prerender?path=<route>` — returns full HTML with route-specific `<title>`, meta description, canonical, OG tags, JSON-LD schemas, `<h1>` and summary paragraph baked in. `text/html; charset=utf-8`.
+  - `GET /api/prerender/routes` — lists all static + dynamic (published blog) covered routes.
+- **Covered routes:** `/`, `/solutions`, `/solutions/business-apps`, `/brands/roomz`, `/blog`, and every published `/blog/<slug>`.
+- **Docs:** `/app/deploy/SEO_PRERENDER.md` — nginx and Cloudflare Worker snippets for routing bot User-Agents through this endpoint at the edge.
+- **Regression test:** `/app/backend/tests/test_seo_prerender.py` (created by testing agent).
+- **Frontend:** unchanged.
+
+### Deployment Playbook (Ubuntu 24.04 + Lightsail + Atlas)
+- `/app/deploy/DEPLOYMENT_GUIDE.md` — end-to-end walkthrough with per-dependency install/verify steps.
+- `/app/deploy/LOCAL_DEV_SETUP.md` — MacBook local dev.
+- `/app/deploy/bootstrap.sh` — one-shot server bootstrap script.
+- `/app/deploy/nginx.conf`, `supervisor.conf`, `backend.env.example`, `frontend.env.example`
+- `/app/backend/requirements-prod.txt` — trimmed production deps (~15 packages vs 120+ in requirements.txt).
+- `/app/.github/workflows/deploy.yml` + `deploy-backend.yml` — CI/CD.
+
+### P0 Regressions Fixed
+- `AdminFAQDashboard.jsx` — restored missing `import { services } from "../data/services"` (page was throwing ReferenceError on mount).
+- `BusinessApps.jsx` — added 4 missing local const arrays (`valueCards`, `aiFeatures`, `deploymentOptions`, `seoHighlights`), destructured `painPoints` and `offer` from `businessAppsDetails`, imported `LucideIcons` namespace.
+- `RichTextEditor.jsx` — removed dead `import axios from 'axios'`.
+- `Contact.jsx` — fixed nested `<p>` inside `<p>` hydration warning; now a proper `<ul><li>` block.
+
+### Dependency pins (frontend)
+`resolutions` block in `package.json` pins:
+- `babel-loader@8.4.1`
+- `@babel/traverse@7.29.7`
+- `react-scripts@5.0.1`
+- `@craco/craco@7.1.0`

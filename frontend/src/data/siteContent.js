@@ -28,19 +28,12 @@ export const heroData = {
   images: [
     "/hero-images/HeroImage.png",
     "/hero-images/ROOMZ1.png",
-    "/hero-images/ROOMZ2.jpg",
-    "/hero-images/ROOMZ3.jpg",
-    "/hero-images/ROOMZ4.jpg",
-    "/hero-images/Neat1.jpg",
-    "/hero-images/Neat2.jpg",
-    "/hero-images/Neat3.jpg",
+
     "/hero-images/Neat4.png",
     "/hero-images/Logitech1.png",
-    "/hero-images/Logitech2.png",
-    "/hero-images/Logitech3.png",
-    "/hero-images/Jabra3.jpg",
-    "/hero-images/Jabra4.jpg",
-    "/hero-images/Jabra5.jpg",
+
+
+    "/hero-images/Jabra5.jpg"
   ]
 };
 

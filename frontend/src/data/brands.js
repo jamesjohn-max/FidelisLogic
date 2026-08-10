@@ -20,10 +20,10 @@ export const brands = [
     accentColor: "#5EA5E9",
     heroImage: "/platform-images/roomz.png",
     heroImages: [
-      "/hero-images/ROOMZ1.png",
-      "/hero-images/ROOMZ2.jpg",
-      "/hero-images/ROOMZ3.jpg",
-      "/hero-images/ROOMZ1.jpg"
+  
+      "/hero-images/BrandHeroImages/ROOMZ2.jpg",
+      "/hero-images/BrandHeroImages/ROOMZ3.jpg",
+      "/hero-images/BrandHeroImages/ROOMZ4.jpg"
       
     ],
     shortDescription:
@@ -188,10 +188,8 @@ export const brands = [
     accentColor: "#E30613",
     heroImage: "https://images.unsplash.com/photo-1769069920308-40130d50ae58",
     heroImages: [
-      "/hero-images/Jabra3.jpg",
-      "/hero-images/Jabra4.jpg",
-      "/hero-images/Jabra5.jpg"
-      
+      "/hero-images/BrandHeroImages/Jabra3.jpg",
+      "/hero-images/BrandHeroImages/Jabra4.jpg"
     ],
     shortDescription:
       "Market-leading enterprise headsets and AI-powered video bars built for contact centres, hybrid workers, and executive collaboration — at the scale enterprise IT actually has to operate.",
@@ -356,10 +354,10 @@ export const brands = [
     accentColor: "#FF5500",
     heroImage: "https://images.unsplash.com/photo-1703355685722-2996b01483be",
     heroImages: [
-    "/hero-images/Neat1.jpg",
-      "/hero-images/Neat2.jpg",
-      "/hero-images/Neat3.jpg",
-      "/hero-images/Neat4.jpg"
+    "/hero-images/BrandHeroImages/Neat1.jpg",
+      "/hero-images/BrandHeroImages/Neat2.jpg",
+      "/hero-images/BrandHeroImages/Neat3.jpg"
+      
     ],
     shortDescription:
       "Award-winning Norwegian-designed video devices that bring cinematic meeting experiences — and built-in workspace analytics — to Microsoft Teams Rooms and Zoom Rooms.",
@@ -523,9 +521,9 @@ export const brands = [
     accentColor: "#00B8FC",
     heroImage: "https://images.unsplash.com/photo-1770048532712-4fde5ef7eb90",
     heroImages: [
-      "/hero-images/Logitech1.png",
-      "/hero-images/Logitech2.png",
-      "/hero-images/Logitech3.png"
+      
+      "/hero-images/BrandHeroImages/Logitech2.png",
+      "/hero-images/BrandHeroImages/Logitech3.png"
     ],
     shortDescription:
       "Widely deployed collaboration peripherals — Rally video systems, Zone headsets, and MeetUp cameras — covering every form factor from personal desk to boardroom.",
