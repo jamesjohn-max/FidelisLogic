@@ -165,6 +165,129 @@ STATIC_ROUTES: dict[str, dict] = {
             _breadcrumb_schema([("Home", "/"), ("Solutions", "/solutions")]),
         ],
     },
+    "/solutions/meeting-rooms": {
+        "title": "Microsoft Teams Rooms & Zoom Rooms Deployment UAE | Fidelis Logic",
+        "description": (
+            "Expert consultation for Microsoft Teams Rooms, Zoom Rooms, and BYOD "
+            "meeting spaces in the UAE. Professional AV system design, installation, "
+            "commissioning, and post-deployment support."
+        ),
+        "canonical": "/solutions/meeting-rooms",
+        "h1": "Meeting Rooms & AV Systems That Actually Get Used",
+        "summary": (
+            "Room design, device selection, cabling, commissioning and adoption "
+            "for Microsoft Teams Rooms, Zoom Rooms and BYOD spaces. We stay vendor "
+            "neutral across Poly, Neat, Logitech, Yealink and Jabra so the "
+            "recommendation fits your calendar platform and estate — not a quota."
+        ),
+        "og_type": "website",
+        "og_image": "/HeroImage.png",
+        "keywords": [
+            "Microsoft Teams Rooms UAE",
+            "Zoom Rooms Dubai",
+            "meeting room technology",
+            "AV systems UAE",
+            "video conferencing deployment",
+            "BYOD meeting rooms",
+        ],
+        "structured_data": [
+            {
+                "@type": "Service",
+                "name": "Meeting Room & AV Systems Consulting",
+                "provider": {"@id": f"{SITE_BASE_URL}/#organization"},
+                "areaServed": "AE",
+                "serviceType": "Meeting Room Technology Deployment",
+                "url": f"{SITE_BASE_URL}/solutions/meeting-rooms",
+            },
+            _breadcrumb_schema([
+                ("Home", "/"),
+                ("Solutions", "/solutions"),
+                ("Meeting Rooms", "/solutions/meeting-rooms"),
+            ]),
+        ],
+    },
+    "/solutions/headsets": {
+        "title": "Enterprise Headsets & Collaboration Devices UAE | Fidelis Logic",
+        "description": (
+            "Standardise communication devices across your UAE organisation. "
+            "Vendor-neutral guidance on enterprise headsets and UC endpoints for "
+            "contact centres, hybrid workers, and executive users."
+        ),
+        "canonical": "/solutions/headsets",
+        "h1": "Enterprise Headsets & Collaboration Devices",
+        "summary": (
+            "Standardise the audio and UC device stack across your organisation "
+            "with a rollout plan that fits your calendar platform, roles and "
+            "budget. Fleet management, replacement cycles and firmware policy "
+            "included — across Jabra, Poly, Logitech and Yealink."
+        ),
+        "og_type": "website",
+        "og_image": "/EnterpriseHeadsets.png",
+        "keywords": [
+            "enterprise headsets UAE",
+            "collaboration devices Dubai",
+            "Jabra UAE",
+            "Poly headsets UAE",
+            "Logitech headsets",
+            "contact centre headsets",
+        ],
+        "structured_data": [
+            {
+                "@type": "Service",
+                "name": "Enterprise Headset & UC Device Consulting",
+                "provider": {"@id": f"{SITE_BASE_URL}/#organization"},
+                "areaServed": "AE",
+                "serviceType": "Collaboration Device Standardisation",
+                "url": f"{SITE_BASE_URL}/solutions/headsets",
+            },
+            _breadcrumb_schema([
+                ("Home", "/"),
+                ("Solutions", "/solutions"),
+                ("Enterprise Headsets", "/solutions/headsets"),
+            ]),
+        ],
+    },
+    "/solutions/workspace-experience": {
+        "title": "Room Booking, Hot Desking & Workspace Experience UAE | Fidelis Logic",
+        "description": (
+            "Optimise office utilisation with room booking, hot desking, occupancy "
+            "sensing and workspace analytics. ROOMZ, Flowscape and leading platforms "
+            "deployed and supported in the UAE by Fidelis Logic."
+        ),
+        "canonical": "/solutions/workspace-experience",
+        "h1": "Room Booking, Hot Desking & Workspace Experience",
+        "summary": (
+            "Right-size your office footprint with honest occupancy data. We "
+            "deploy wire-free room panels, desk booking, visitor management "
+            "and analytics that integrate with Microsoft 365, Google Workspace "
+            "and Exchange — so facilities and IT run off the same numbers."
+        ),
+        "og_type": "website",
+        "og_image": "/bookingsystem.png",
+        "keywords": [
+            "room booking system UAE",
+            "hot desking Dubai",
+            "workspace experience platform",
+            "ROOMZ UAE",
+            "occupancy analytics",
+            "visitor management UAE",
+        ],
+        "structured_data": [
+            {
+                "@type": "Service",
+                "name": "Workspace Experience Platform Deployment",
+                "provider": {"@id": f"{SITE_BASE_URL}/#organization"},
+                "areaServed": "AE",
+                "serviceType": "Room Booking & Workspace Analytics",
+                "url": f"{SITE_BASE_URL}/solutions/workspace-experience",
+            },
+            _breadcrumb_schema([
+                ("Home", "/"),
+                ("Solutions", "/solutions"),
+                ("Workspace Experience", "/solutions/workspace-experience"),
+            ]),
+        ],
+    },
     "/solutions/business-apps": {
         "title": "Low-Cost ERP, HRMS & CRM with AI Integration UAE | Fidelis Logic",
         "description": (
@@ -265,38 +388,250 @@ STATIC_ROUTES: dict[str, dict] = {
             ]),
         ],
     },
-    "/blog": {
-        "title": "Blog | Modern Workplace Technology Insights — Fidelis Logic",
+}
+
+
+# ---------------------------------------------------------------------------
+# /brands hub + remaining brand pages
+# ---------------------------------------------------------------------------
+# Add every brand from the ecosystem to STATIC_ROUTES so each has its own
+# pre-rendered HTML shell.
+
+_BRAND_PAGES: dict[str, dict] = {
+    "morbit": {
+        "name": "Morbit",
+        "tagline": "Workspace monitoring and device management for IT operations",
+        "partnership": "Channel Partner",
+        "category": "Workspace Experience",
         "description": (
-            "Expert insights on workplace technology, meeting rooms, collaboration "
-            "devices and business applications. Practical guidance for UAE organisations."
+            "A single pane of glass for meeting room devices, collaboration endpoints "
+            "and workspace infrastructure — fewer tickets, less downtime, smarter "
+            "space decisions."
         ),
-        "canonical": "/blog",
-        "h1": "Fidelis Logic Blog — Workplace Technology Insights",
-        "summary": (
-            "Field notes and buyer guidance from Fidelis Logic — meeting room "
-            "technology, collaboration devices, ERP and HRMS decisions, room "
-            "booking platforms and the practicalities of running modern UAE "
-            "workplace programmes."
-        ),
-        "og_type": "website",
-        "og_image": "/HeroImage.png",
         "keywords": [
-            "workplace technology blog",
-            "IT consulting insights UAE",
-            "meeting room best practices",
-            "collaboration technology tips",
-        ],
-        "structured_data": [
-            {
-                "@type": "Blog",
-                "name": "Fidelis Logic Blog",
-                "url": f"{SITE_BASE_URL}/blog",
-                "publisher": {"@id": f"{SITE_BASE_URL}/#organization"},
-            },
-            _breadcrumb_schema([("Home", "/"), ("Blog", "/blog")]),
+            "Morbit UAE",
+            "meeting room monitoring",
+            "device management platform",
+            "workspace analytics UAE",
+            "IT operations dashboard",
         ],
     },
+    "jabra": {
+        "name": "Jabra",
+        "tagline": "Enterprise audio and intelligent video for hybrid work",
+        "partnership": "Channel Partner",
+        "category": "Headsets & Devices",
+        "description": (
+            "Market-leading enterprise headsets and AI-powered video bars built for "
+            "contact centres, hybrid workers and executive collaboration — at the "
+            "scale enterprise IT actually has to operate."
+        ),
+        "keywords": [
+            "Jabra UAE",
+            "enterprise headsets",
+            "Jabra Engage",
+            "Jabra Evolve2",
+            "PanaCast UAE",
+            "contact centre headsets",
+        ],
+    },
+    "poly": {
+        "name": "Poly",
+        "tagline": "Professional audio, video, and headsets — engineered by HP",
+        "partnership": "Channel Partner",
+        "category": "Meeting Rooms & Headsets",
+        "description": (
+            "Professional-grade video conferencing, voice devices and headsets — "
+            "Plantronics and Polycom heritage, now backed by HP's global enterprise reach."
+        ),
+        "keywords": [
+            "Poly UAE",
+            "Poly Studio X",
+            "Poly Voyager",
+            "HP Poly Dubai",
+            "video conferencing devices",
+        ],
+    },
+    "neat": {
+        "name": "Neat",
+        "tagline": "Purpose-built video devices for Microsoft Teams and Zoom",
+        "partnership": "Channel Partner",
+        "category": "Meeting Rooms",
+        "description": (
+            "Award-winning Norwegian-designed video devices that bring cinematic "
+            "meeting experiences — and built-in workspace analytics — to Microsoft "
+            "Teams Rooms and Zoom Rooms."
+        ),
+        "keywords": [
+            "Neat UAE",
+            "Neat Bar Pro",
+            "Neat Board",
+            "Neat Pad",
+            "Microsoft Teams Rooms devices",
+        ],
+    },
+    "yealink": {
+        "name": "Yealink",
+        "tagline": "Scalable UC endpoints for multi-site deployments",
+        "partnership": "Channel Partner",
+        "category": "Meeting Rooms",
+        "description": (
+            "Broad portfolio of Microsoft Teams and Zoom certified room systems, "
+            "desk phones and headsets — built for scale rollouts where commercial "
+            "value matters as much as certification."
+        ),
+        "keywords": [
+            "Yealink UAE",
+            "MeetingBar A-series",
+            "MVC room systems",
+            "Yealink desk phones",
+            "UC endpoints Dubai",
+        ],
+    },
+    "logitech": {
+        "name": "Logitech",
+        "tagline": "Video, headsets, and peripherals across the hybrid workplace",
+        "partnership": "Channel Partner",
+        "category": "Meeting Rooms & Peripherals",
+        "description": (
+            "Widely deployed collaboration peripherals — Rally video systems, Zone "
+            "headsets and MeetUp cameras — covering every form factor from personal "
+            "desk to boardroom."
+        ),
+        "keywords": [
+            "Logitech UAE",
+            "Rally Bar",
+            "Rally Plus",
+            "Logitech Zone",
+            "MeetUp camera",
+            "hybrid workplace peripherals",
+        ],
+    },
+}
+
+
+def _brand_route_entry(slug: str, spec: dict) -> dict:
+    name = spec["name"]
+    canonical = f"/brands/{slug}"
+    return {
+        "title": f"{name} in the UAE — {spec['tagline']} | Fidelis Logic",
+        "description": spec["description"],
+        "canonical": canonical,
+        "h1": f"{name} — {spec['tagline']}",
+        "summary": spec["description"],
+        "og_type": "website",
+        "og_image": f"/brand-logos/{slug}.png",
+        "og_image_alt": f"{name} logo",
+        "keywords": spec["keywords"],
+        "structured_data": [
+            {
+                "@type": "Brand",
+                "name": name,
+                "url": f"{SITE_BASE_URL}{canonical}",
+                "logo": f"{SITE_BASE_URL}/brand-logos/{slug}.png",
+                "description": spec["description"],
+            },
+            _breadcrumb_schema([
+                ("Home", "/"),
+                ("Brands", "/brands"),
+                (name, canonical),
+            ]),
+        ],
+    }
+
+
+for _slug, _spec in _BRAND_PAGES.items():
+    STATIC_ROUTES[f"/brands/{_slug}"] = _brand_route_entry(_slug, _spec)
+
+
+# ---------------------------------------------------------------------------
+# /brands hub
+# ---------------------------------------------------------------------------
+
+_BRAND_DISPLAY_NAMES: dict[str, str] = {
+    "roomz": "ROOMZ",
+    "morbit": "Morbit",
+    "jabra": "Jabra",
+    "poly": "Poly",
+    "neat": "Neat",
+    "yealink": "Yealink",
+    "logitech": "Logitech",
+}
+_BRAND_ORDER: list[str] = ["roomz", "morbit", "jabra", "poly", "neat", "yealink", "logitech"]
+
+STATIC_ROUTES["/brands"] = {
+    "title": "Curated Brand Ecosystem for UAE Workplace Technology | Fidelis Logic",
+    "description": (
+        "A deliberately short list of Fidelis Logic's strategic partners — ROOMZ, "
+        "Morbit, Jabra, Poly, Neat, Yealink and Logitech — covering workspace "
+        "experience, meeting rooms, collaboration devices and enterprise headsets."
+    ),
+    "canonical": "/brands",
+    "h1": "Our Curated Brand Ecosystem",
+    "summary": (
+        "We stay vendor neutral, but not vendor unaware. Fidelis Logic works with a "
+        "small set of manufacturers we can stand behind — chosen for engineering "
+        "quality, in-region support and honest commercial terms. Every brand below "
+        "is one we deploy, service and back with UAE-local expertise."
+    ),
+    "og_type": "website",
+    "og_image": "/EnterpriseHeadsets.png",
+    "keywords": [
+        "workplace technology brands UAE",
+        "IT vendor partnerships Dubai",
+        "ROOMZ Jabra Poly Neat UAE",
+        "collaboration hardware UAE",
+    ],
+    "structured_data": [
+        {
+            "@type": "CollectionPage",
+            "name": "Curated Brand Ecosystem",
+            "url": f"{SITE_BASE_URL}/brands",
+            "isPartOf": {"@id": f"{SITE_BASE_URL}/#website"},
+            "hasPart": [
+                {
+                    "@type": "Brand",
+                    "name": _BRAND_DISPLAY_NAMES[s],
+                    "url": f"{SITE_BASE_URL}/brands/{s}",
+                }
+                for s in _BRAND_ORDER
+            ],
+        },
+        _breadcrumb_schema([("Home", "/"), ("Brands", "/brands")]),
+    ],
+}
+
+STATIC_ROUTES["/blog"] = {
+    "title": "Blog | Modern Workplace Technology Insights — Fidelis Logic",
+    "description": (
+        "Expert insights on workplace technology, meeting rooms, collaboration "
+        "devices and business applications. Practical guidance for UAE organisations."
+    ),
+    "canonical": "/blog",
+    "h1": "Fidelis Logic Blog — Workplace Technology Insights",
+    "summary": (
+        "Field notes and buyer guidance from Fidelis Logic — meeting room "
+        "technology, collaboration devices, ERP and HRMS decisions, room "
+        "booking platforms and the practicalities of running modern UAE "
+        "workplace programmes."
+    ),
+    "og_type": "website",
+    "og_image": "/HeroImage.png",
+    "keywords": [
+        "workplace technology blog",
+        "IT consulting insights UAE",
+        "meeting room best practices",
+        "collaboration technology tips",
+    ],
+    "structured_data": [
+        {
+            "@type": "Blog",
+            "name": "Fidelis Logic Blog",
+            "url": f"{SITE_BASE_URL}/blog",
+            "publisher": {"@id": f"{SITE_BASE_URL}/#organization"},
+        },
+        _breadcrumb_schema([("Home", "/"), ("Blog", "/blog")]),
+    ],
 }
 
 # Slug of blog-post routes matches `^/blog/[a-z0-9-]+/?$`

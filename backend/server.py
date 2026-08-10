@@ -25,6 +25,7 @@ from seo_prerender import (
     resolve_route_meta,
     render_seo_html,
     list_static_routes,
+    STATIC_ROUTES,
     BLOG_POST_RE,
 )
 
@@ -464,22 +465,16 @@ async def upload_deal_image(file: UploadFile = File(...), current_user: str = De
 
 
 # ==================== SITEMAP ====================
+#
+# Priority + changefreq metadata for known routes. The list of URLs is
+# actually derived by merging seo_prerender.STATIC_ROUTES (single source of
+# truth for pre-rendered pages) with any manually-tracked routes below. This
+# way, adding a route to STATIC_ROUTES automatically flows into sitemap.xml
+# too — no duplicate maintenance.
 
-SITEMAP_STATIC_PAGES = [
-    ("/", "1.0", "weekly"),
-    ("/solutions", "0.9", "weekly"),
-    ("/solutions/meeting-rooms", "0.8", "monthly"),
-    ("/solutions/headsets", "0.8", "monthly"),
-    ("/solutions/workspace-experience", "0.8", "monthly"),
-    ("/solutions/business-apps", "0.8", "monthly"),
-    ("/brands", "0.9", "monthly"),
-    ("/brands/roomz", "0.8", "monthly"),
-    ("/brands/morbit", "0.8", "monthly"),
-    ("/brands/jabra", "0.7", "monthly"),
-    ("/brands/poly", "0.7", "monthly"),
-    ("/brands/neat", "0.7", "monthly"),
-    ("/brands/yealink", "0.7", "monthly"),
-    ("/brands/logitech", "0.7", "monthly"),
+# Manual pages that are NOT in STATIC_ROUTES yet still belong in the sitemap
+# (React SPA routes without a pre-render entry, hub pages, etc.).
+SITEMAP_EXTRA_PAGES = [
     ("/services", "0.9", "monthly"),
     ("/services/consulting", "0.8", "monthly"),
     ("/services/deployment-configuration", "0.8", "monthly"),
@@ -490,10 +485,43 @@ SITEMAP_STATIC_PAGES = [
     ("/services/relocation-office-moves", "0.8", "monthly"),
     ("/services/training-adoption", "0.8", "monthly"),
     ("/about", "0.7", "monthly"),
-    ("/blog", "0.8", "weekly"),
     ("/deals", "0.8", "weekly"),
     ("/contact", "0.9", "monthly"),
 ]
+
+
+def _default_sitemap_meta(path: str) -> tuple[str, str]:
+    """Sensible priority + changefreq for a path drawn from STATIC_ROUTES."""
+    if path == "/":
+        return ("1.0", "weekly")
+    if path == "/solutions" or path == "/brands" or path == "/blog":
+        return ("0.9", "weekly")
+    if path.startswith("/solutions/"):
+        return ("0.8", "monthly")
+    if path.startswith("/brands/"):
+        return ("0.7", "monthly")
+    return ("0.7", "monthly")
+
+
+def _build_sitemap_static_pages() -> list[tuple[str, str, str]]:
+    """
+    Merge STATIC_ROUTES with SITEMAP_EXTRA_PAGES. Any route defined in
+    STATIC_ROUTES gets included automatically; extras layer on top without
+    duplicating anything already there.
+    """
+    seen: dict[str, tuple[str, str, str]] = {}
+
+    for path in STATIC_ROUTES.keys():
+        priority, changefreq = _default_sitemap_meta(path)
+        seen[path] = (path, priority, changefreq)
+
+    for path, priority, changefreq in SITEMAP_EXTRA_PAGES:
+        if path not in seen:
+            seen[path] = (path, priority, changefreq)
+
+    # Stable ordering: root first, then alphabetically for predictability.
+    ordered = sorted(seen.values(), key=lambda t: (t[0] != "/", t[0]))
+    return ordered
 
 
 def _resolve_base_url(request: Request) -> str:
@@ -611,8 +639,8 @@ async def sitemap(request: Request):
 
     url_entries: List[str] = []
 
-    # Static pages
-    for path, priority, changefreq in SITEMAP_STATIC_PAGES:
+    # Static pages — merged from seo_prerender.STATIC_ROUTES + SITEMAP_EXTRA_PAGES
+    for path, priority, changefreq in _build_sitemap_static_pages():
         url_entries.append(
             f"  <url>\n"
             f"    <loc>{base}{path}</loc>\n"
