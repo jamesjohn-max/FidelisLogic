@@ -82,7 +82,9 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "craco build && node scripts/prerender-seo.mjs",
+    "build:no-prerender": "craco build",
+    "prerender": "node scripts/prerender-seo.mjs",
     "test": "craco test"
   },
   "browserslist": {

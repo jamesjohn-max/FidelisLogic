@@ -80,15 +80,52 @@ export default {
 }
 ```
 
-### Option 3 — Static build-time pre-render (future enhancement)
+### Option 3 — Static build-time pre-render (RECOMMENDED)
 
-Add a post-build Node script (`frontend/scripts/prerender-seo.mjs`) that:
-1. Reads the built `build/index.html`.
-2. Fetches `/api/prerender/routes` to enumerate every route.
-3. For each route, fetches `/api/prerender?path=<route>` and writes the HTML
-   to `build/<route>/index.html`. Nginx's SPA fallback serves them as normal.
+Removes the need for edge bot detection entirely. Every visitor — human or
+crawler — gets a fully SEO-populated HTML file straight from Nginx.
 
-This is best for infrastructures without edge-layer bot detection.
+Wired into the frontend build via `yarn build`:
+
+```json
+"scripts": {
+  "build": "craco build && node scripts/prerender-seo.mjs",
+  "build:no-prerender": "craco build",
+  "prerender": "node scripts/prerender-seo.mjs"
+}
+```
+
+What `scripts/prerender-seo.mjs` does:
+1. Reads the compiled `build/index.html` (contains the React bundle links).
+2. Reads `frontend/.env` to find `REACT_APP_BACKEND_URL`.
+3. Calls `GET /api/prerender/routes` to enumerate every route (static + published blog posts).
+4. For each route, calls `GET /api/prerender?path=<route>`, extracts the SEO fragments (title, meta description, canonical, OG/Twitter, JSON-LD, and the visible H1 + summary block).
+5. Merges those fragments into a copy of the build shell and writes it to `build/<route>/index.html`.
+
+Run it manually (after a build) if you only want to refresh the SEO pages:
+```bash
+cd frontend && yarn prerender
+```
+
+Environment overrides:
+- `REACT_APP_BACKEND_URL` (preferred) — the URL of the running FastAPI backend
+- `API_BASE_URL` / `SEO_PRERENDER_BASE_URL` — accepted aliases
+
+Result — a browsable `build/` tree:
+```
+build/index.html                                        ← "/"  (with SEO baked in)
+build/solutions/index.html
+build/solutions/business-apps/index.html
+build/brands/roomz/index.html
+build/blog/index.html
+build/blog/<slug>/index.html                            ← one per published post
+```
+
+Nginx's existing SPA fallback (`try_files $uri $uri/ /index.html`) resolves every
+route to its per-route SEO'd file automatically.
+
+Regenerating for new blog posts: run `yarn prerender` again after publishing —
+no rebuild required (the compiled JS bundle is unchanged).
 
 ## Testing without deploying
 

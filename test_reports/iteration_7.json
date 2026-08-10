@@ -1,0 +1,32 @@
+{
+  "summary": "Retest of the prerender-seo.mjs idempotency fix (iter6 flagged bug). Created /app/backend/tests/test_seo_prerender_iter7.py with 21 tests covering: P0 idempotency (md5 stability after two consecutive `yarn prerender` runs), duplicate detection (JSON-LD count == 2, __seo_prerender count == 1), pristine snapshot artifact (_shell.html exists, no injected markers, still has React bundle), safety guard (missing _shell.html + already-injected index.html => non-zero exit + error mentions `yarn build:no-prerender`), iter5/iter6 regression sanity (/api/prerender 200 with full SEO, static roomz has bundle+title, og:image absolute https), and full fresh-build workflow (rm -rf build && yarn build:no-prerender && yarn prerender => >=13 files + clean _shell snapshot). ALL 21/21 iter7 tests PASS. Iter5 (11/11) and iter6 (47/47) regression suites still PASS. Idempotency fix verified: md5 of build/index.html and build/solutions/business-apps/index.html are byte-identical across consecutive `yarn prerender` runs.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_seo_prerender_iter7.py",
+    "/app/backend/tests/test_seo_prerender_iter6.py",
+    "/app/backend/tests/test_seo_prerender.py",
+    "/app/test_reports/pytest/iter7_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Idempotency fix is clean and minimal: SHELL_SNAPSHOT_PATH (build/_shell.html) is written on first run and always read on subsequent runs. Corrupted-state guard (index.html injected + snapshot missing) dies with an actionable message pointing to `yarn build:no-prerender`.",
+    "Snapshot file _shell.html sits inside build/ which is served by nginx. It won't be reachable via any React route but a direct HTTP GET to /_shell.html would return the pristine shell. Not a security issue (no secrets, publicly-derivable content) but consider .gitignore/robots handling or moving snapshot outside build/ (e.g. build.cache/) if you want to keep it out of the served surface.",
+    "Consider adding CI regression to run `yarn prerender` twice and diff outputs — trivially cheap and would catch any future divergence."
+  ],
+  "updated_files": ["/app/backend/tests/test_seo_prerender_iter7.py"],
+  "success_rate": {"backend": "100% (21/21 iter7 + 58/58 iter5+iter6 regression)", "frontend": "not tested (backend-only per request)"},
+  "test_credentials": "n/a — /api/prerender is public",
+  "seed_data_creation": "None. TestZFreshBuildPath wipes and rebuilds /app/frontend/build/ as part of the fresh-build workflow test; final state leaves build/ fully prerendered with _shell.html snapshot present.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "iter7 suite at /app/backend/tests/test_seo_prerender_iter7.py verifies the idempotency fix. Key invariants going forward: (1) build/_shell.html must exist after any prerender run and must NOT contain '__seo_prerender' or 'application/ld+json'; (2) any prerendered per-route index.html has exactly 1 '__seo_prerender' occurrence and exactly 2 'application/ld+json' occurrences for /solutions/business-apps (Service + BreadcrumbList); (3) running `yarn prerender` when _shell.html is absent AND build/index.html already injected MUST exit non-zero. If regenerating the build, `yarn build` (chains build:no-prerender + prerender) or `yarn build:no-prerender && yarn prerender` are both safe and idempotent. Note: TestZFreshBuildPath is destructive (wipes build/) so it's ordered last via the 'Z' class-name prefix.",
+  "rca of the issue": "Previous iteration bug: prerender-seo.mjs read build/index.html as the shell each run and wrote back to the same file, so a second run re-injected on top of already-injected content (duplicate JSON-LD + duplicate <main id='__seo_prerender'>). Fix (verified): on first run the script snapshots the pristine build/index.html to build/_shell.html; all subsequent runs always read from _shell.html so re-runs are byte-identical. Additional safety: if _shell.html is missing but build/index.html already contains __seo_prerender, the script dies with an instructive error pointing to `yarn build:no-prerender`. Both the happy path (idempotency) and the corrupted-state path (safety guard) are covered by iter7 tests and pass."
+}

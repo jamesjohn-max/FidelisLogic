@@ -33,6 +33,22 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://fidelislogic.com").rstrip("/")
 SITE_NAME = "Fidelis Logic"
+DEFAULT_OG_IMAGE = "/Logo_Color_Large.png"  # Site-wide fallback served from /public
+DEFAULT_OG_IMAGE_WIDTH = 1200
+DEFAULT_OG_IMAGE_HEIGHT = 630
+
+
+def _absolute_url(path_or_url: str) -> str:
+    """Return an absolute URL. Accepts absolute URLs, protocol-relative, or paths."""
+    if not path_or_url:
+        return f"{SITE_BASE_URL}{DEFAULT_OG_IMAGE}"
+    if path_or_url.startswith(("http://", "https://")):
+        return path_or_url
+    if path_or_url.startswith("//"):
+        return f"https:{path_or_url}"
+    if not path_or_url.startswith("/"):
+        path_or_url = "/" + path_or_url
+    return f"{SITE_BASE_URL}{path_or_url}"
 
 # ---------------------------------------------------------------------------
 # Reusable JSON-LD builders
@@ -102,6 +118,7 @@ STATIC_ROUTES: dict[str, dict] = {
             "technology execution for lean teams and enterprise programmes alike."
         ),
         "og_type": "website",
+        "og_image": "/HeroImage.png",
         "keywords": [
             "IT consulting UAE",
             "modern workplace technology",
@@ -130,6 +147,7 @@ STATIC_ROUTES: dict[str, dict] = {
             "Every engagement stays vendor-neutral and outcome-led."
         ),
         "og_type": "website",
+        "og_image": "/EnterpriseHeadsets.png",
         "keywords": [
             "workplace technology solutions",
             "IT consulting services UAE",
@@ -163,6 +181,7 @@ STATIC_ROUTES: dict[str, dict] = {
             "monthly optimisation, training and support tuned to lean teams."
         ),
         "og_type": "website",
+        "og_image": "/business-apps-ai-hero.png",
         "keywords": [
             "low cost ERP UAE",
             "affordable HRMS Dubai",
@@ -219,6 +238,7 @@ STATIC_ROUTES: dict[str, dict] = {
             "in-region lifecycle."
         ),
         "og_type": "website",
+        "og_image": "/hero-images/BrandHeroImages/ROOMZ2.jpg",
         "keywords": [
             "ROOMZ UAE",
             "wire-free room booking",
@@ -260,6 +280,7 @@ STATIC_ROUTES: dict[str, dict] = {
             "workplace programmes."
         ),
         "og_type": "website",
+        "og_image": "/HeroImage.png",
         "keywords": [
             "workplace technology blog",
             "IT consulting insights UAE",
@@ -309,6 +330,13 @@ async def _blog_post_meta(db: AsyncIOMotorDatabase, slug: str) -> Optional[dict]
     canonical = f"/blog/{slug}"
     date_pub = post.get("published_at") or post.get("created_at")
     date_mod = post.get("updated_at") or date_pub
+    og_image = (
+        post.get("cover_image")
+        or post.get("hero_image")
+        or post.get("featured_image")
+        or "/HeroImage.png"
+    )
+    og_image_abs = _absolute_url(og_image)
 
     def _iso(value):
         if not value:
@@ -325,13 +353,15 @@ async def _blog_post_meta(db: AsyncIOMotorDatabase, slug: str) -> Optional[dict]
         "h1": post.get("title") or title,
         "summary": _strip_html(post.get("content", ""), max_len=500) or description,
         "og_type": "article",
-        "og_image": post.get("cover_image") or post.get("hero_image"),
+        "og_image": og_image,
+        "og_image_alt": post.get("title") or title,
         "keywords": post.get("tags") or [],
         "structured_data": [
             {
                 "@type": "BlogPosting",
                 "headline": post.get("title"),
                 "description": description[:300],
+                "image": [og_image_abs],
                 "url": f"{SITE_BASE_URL}{canonical}",
                 "datePublished": _iso(date_pub),
                 "dateModified": _iso(date_mod),
@@ -394,10 +424,16 @@ _HTML_TEMPLATE = """<!doctype html>
 <meta property="og:url" content="{canonical_url}" />
 <meta property="og:type" content="{og_type}" />
 <meta property="og:site_name" content="{site_name}" />
-{og_image_tag}
+<meta property="og:image" content="{og_image_url}" />
+<meta property="og:image:secure_url" content="{og_image_url}" />
+<meta property="og:image:width" content="{og_image_width}" />
+<meta property="og:image:height" content="{og_image_height}" />
+<meta property="og:image:alt" content="{og_image_alt}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{title}" />
 <meta name="twitter:description" content="{description}" />
+<meta name="twitter:image" content="{og_image_url}" />
+<meta name="twitter:image:alt" content="{og_image_alt}" />
 <meta name="robots" content="index, follow" />
 {structured_data_scripts}
 </head>
@@ -433,11 +469,8 @@ def render_seo_html(path: str, meta: dict) -> str:
         if keywords else ""
     )
 
-    og_image = meta.get("og_image")
-    og_image_tag = (
-        f'<meta property="og:image" content="{_esc(og_image)}" />'
-        if og_image else ""
-    )
+    og_image_url = _absolute_url(meta.get("og_image"))
+    og_image_alt = meta.get("og_image_alt") or meta.get("title") or SITE_NAME
 
     scripts = []
     for schema in meta.get("structured_data", []) or []:
@@ -457,7 +490,10 @@ def render_seo_html(path: str, meta: dict) -> str:
         keywords_tag=keywords_tag,
         canonical_url=_esc(canonical_url),
         og_type=_esc(meta.get("og_type") or "website"),
-        og_image_tag=og_image_tag,
+        og_image_url=_esc(og_image_url),
+        og_image_width=DEFAULT_OG_IMAGE_WIDTH,
+        og_image_height=DEFAULT_OG_IMAGE_HEIGHT,
+        og_image_alt=_esc(og_image_alt),
         site_name=_esc(SITE_NAME),
         site_url=SITE_BASE_URL,
         h1=_esc(meta.get("h1") or ""),
