@@ -1,0 +1,42 @@
+{
+  "summary": "Iter 9 SEO cleanup verification — all 4 tasks + P0 prerender best-effort behaviour tested via starlette TestClient (bypasses preview k8s ingress + Cloudflare Host-spoof block). 22/22 tests pass.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_seo_iter9.py",
+    "/app/test_reports/pytest/iter9_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py is 746 lines — approaching the split-threshold; consider modularising SEO + prerender routes into their own router file.",
+    "Motor AsyncIOMotorClient is bound to first event loop it touches, so starlette TestClient instances after the first raise 'Event loop is closed'. Tests must share a single module-scoped TestClient (documented in test_seo_iter9.py).",
+    "canonical_host_redirect middleware defaults scheme to request.url.scheme when x-forwarded-proto is absent — behind Cloudflare that will always be set, but if a direct HTTP request ever reaches uvicorn it would redirect to http://apex. Acceptable trade-off, worth documenting.",
+    "prerender-seo.mjs correctly bails to exit 0 in default mode and exits non-zero under SEO_PRERENDER_STRICT=1 — verified both paths."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_seo_iter9.py (new)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "n/a"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Iter 9 focus areas: (1) www.fidelislogic.com -> fidelislogic.com 301 middleware in server.py (~line 710), (2) root /sitemap.xml alias route (~line 730), (3) single meta description in frontend/public/index.html line 36, (4) prerender-seo.mjs bail()/STRICT semantics. All verified via /app/backend/tests/test_seo_iter9.py using a MODULE-SCOPED TestClient — DO NOT create per-test TestClient instances (Motor event-loop binding will break subsequent tests with 'Event loop is closed'). Preview URL /sitemap.xml at root gets routed to frontend dev server by k8s ingress so test via ASGI TestClient, not requests. build/sitemap.xml already present with 35 URLs from a previous yarn prerender run.",
+  "detailed_findings": {
+    "task_1_www_redirect": "PASS — /api/prerender/routes with Host: www.fidelislogic.com returns 301 with Location https://fidelislogic.com/... (with x-forwarded-proto https) or http://... (without). Query string preserved. Apex host and default host return 200.",
+    "task_2_root_sitemap": "PASS — /sitemap.xml on the ASGI app returns 200 application/xml with the same URL count as /api/sitemap.xml (35 urls). Public preview URL for /api/sitemap.xml also returns 35 urls.",
+    "task_2_alt_build_sitemap": "PASS — /app/frontend/build/sitemap.xml exists, 6350 bytes, 35 <url> entries (matches api output).",
+    "task_3_meta_description": "PASS — exactly 1 meta name='description' remains in frontend/public/index.html (line 36); it's the specific 'plan, deploy, and support...' variant. Old generic 'Leading UAE IT consulting firm...' string is gone.",
+    "task_4_prerender_seo": "PASS — /, /solutions, /solutions/business-apps, /brands/roomz, /blog, and a /blog/<slug> from dynamic_routes all have title, meta description, canonical, at least one JSON-LD script, og:image (absolute https URL), and <h1>.",
+    "p0_prerender_best_effort": "PASS — REACT_APP_BACKEND_URL=https://unreachable.example.invalid node scripts/prerender-seo.mjs exits 0 and prints 'Could not enumerate routes' warning.",
+    "p0_prerender_strict": "PASS — same command with SEO_PRERENDER_STRICT=1 exits non-zero.",
+    "regression_iter8": "PASS — /api/prerender/routes returns 15 static + >=8 dynamic; /api/sitemap.xml has 35 urls; /brands/jabra and /solutions/meeting-rooms canonical carries their own path."
+  }
+}

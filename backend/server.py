@@ -6,7 +6,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks, Depends, UploadFile, File, Form, Request
-from fastapi.responses import Response
+from fastapi.responses import Response, RedirectResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -697,6 +697,40 @@ async def sitemap(request: Request):
 
 # Include the router in the main app
 app.include_router(api_router)
+
+
+# ---------------------------------------------------------------------------
+# Canonical host redirect — www.fidelislogic.com → fidelislogic.com (301)
+# ---------------------------------------------------------------------------
+# Applies only to requests that reach the FastAPI process. If your edge/CDN
+# already handles this (Cloudflare/Nginx map), this middleware is a harmless
+# no-op. If not, this ensures the SEO signal is preserved for any traffic
+# that lands on the backend directly.
+
+@app.middleware("http")
+async def canonical_host_redirect(request: Request, call_next):
+    host = (request.headers.get("host") or "").lower().split(":")[0]
+    if host.startswith("www."):
+        apex = host[4:]
+        # Build the target URL preserving path and query.
+        scheme = request.headers.get("x-forwarded-proto") or request.url.scheme or "https"
+        target = f"{scheme}://{apex}{request.url.path}"
+        if request.url.query:
+            target += f"?{request.url.query}"
+        return RedirectResponse(url=target, status_code=301)
+    return await call_next(request)
+
+
+# ---------------------------------------------------------------------------
+# Root-level /sitemap.xml — crawler-friendly alias for /api/sitemap.xml
+# ---------------------------------------------------------------------------
+# Google/Bing look for /sitemap.xml at the site root. We serve the exact same
+# XML that /api/sitemap.xml produces to avoid a redirect hop.
+
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap_root(request: Request):
+    return await sitemap(request)
+
 
 app.add_middleware(
     CORSMiddleware,

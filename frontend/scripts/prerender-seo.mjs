@@ -58,6 +58,13 @@ const API_BASE =
   process.env.API_BASE_URL ||
   process.env.SEO_PRERENDER_BASE_URL;
 
+// Strict mode = fail the build on prerender errors. Off by default so
+// production deploys never break just because the currently-running
+// backend hasn't caught up with new SEO endpoints yet. First deploy after
+// wiring this up will simply skip prerender; the next deploy (with the
+// updated backend live) will produce the SEO files as expected.
+const STRICT = /^(1|true|yes)$/i.test(process.env.SEO_PRERENDER_STRICT || "");
+
 // Timings and safety
 const FETCH_TIMEOUT_MS = 15_000;
 const MAX_CONCURRENCY = 4;
@@ -82,6 +89,20 @@ function log(msg) {
 function die(msg) {
   process.stderr.write(`${c.red}✗ ${msg}${c.reset}\n`);
   process.exit(1);
+}
+
+/**
+ * Fail the build only when STRICT mode is enabled. Otherwise print a warning
+ * and exit 0 so a stale backend never blocks a deploy.
+ */
+function bail(msg) {
+  if (STRICT) die(msg);
+  process.stderr.write(
+    `${c.yellow}!${c.reset}  ${msg}\n` +
+      `${c.dim}   Continuing without prerender output — the plain React SPA will be served.` +
+      `\n   To make this failure fatal, set SEO_PRERENDER_STRICT=1.${c.reset}\n`,
+  );
+  process.exit(0);
 }
 
 async function fetchWithTimeout(url, opts = {}) {
@@ -215,7 +236,7 @@ async function main() {
   log(`${c.cyan}▶${c.reset}  SEO prerender starting`);
 
   if (!API_BASE) {
-    die(
+    bail(
       "Missing backend URL. Set REACT_APP_BACKEND_URL (or API_BASE_URL) before running this script.",
     );
   }
@@ -255,7 +276,7 @@ async function main() {
   try {
     routesPayload = await fetchJson(routesUrl);
   } catch (err) {
-    die(`Could not enumerate routes at ${routesUrl} — ${err.message}`);
+    bail(`Could not enumerate routes at ${routesUrl} — ${err.message}`);
   }
   const staticRoutes = routesPayload.static_routes || [];
   const dynamicRoutes = routesPayload.dynamic_routes || [];
@@ -303,6 +324,21 @@ async function main() {
   );
   await Promise.all(workers);
 
+  // ---- Also snapshot sitemap.xml to build/ so the static host serves it ----
+  // /sitemap.xml at the root, no FastAPI dependency at request time.
+  try {
+    const sitemapUrl = `${API_BASE.replace(/\/$/, "")}/api/sitemap.xml`;
+    const res = await fetchWithTimeout(sitemapUrl);
+    const xml = await res.text();
+    await fs.writeFile(path.join(BUILD_DIR, "sitemap.xml"), xml, "utf8");
+    log(`   ${c.green}✓${c.reset} sitemap.xml ${c.dim}(${xml.length} bytes)${c.reset}`);
+  } catch (err) {
+    log(
+      `   ${c.yellow}!${c.reset} sitemap.xml snapshot skipped ` +
+        `${c.dim}${err.message}${c.reset}`,
+    );
+  }
+
   log("");
   log(
     `${c.cyan}▶${c.reset}  SEO prerender complete — ${c.green}${ok} written${c.reset}` +
@@ -314,8 +350,13 @@ async function main() {
     for (const f of failures) {
       log(`   ${c.red}✗${c.reset} ${f.route} — ${f.error}`);
     }
-    process.exit(1);
+    // Per-route failures are non-fatal unless STRICT — deploy should proceed
+    // with whatever routes succeeded.
+    if (STRICT) process.exit(1);
   }
 }
 
-main().catch((err) => die(err.stack || err.message));
+main().catch((err) => {
+  if (STRICT) die(err.stack || err.message);
+  bail(err.message || String(err));
+});
