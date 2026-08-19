@@ -15,7 +15,8 @@ export const SEO = ({
   const siteName = "Fidelis Logic";
   const fullTitle = title ? `${title} | ${siteName}` : siteName;
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+  window.location.href  →  window.location.origin + window.location.pathname
+  const currentUrl = typeof window !== "undefined" ? window.location.href : ""; 
   const canonical = canonicalUrl || currentUrl;
 
   return (

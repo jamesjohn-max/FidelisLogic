@@ -2,14 +2,14 @@ User-agent: *
 Allow: /
 
 # Disallow admin or private areas (add as needed)
-# Disallow: /admin/
+Disallow: /admin/
 # Disallow: /private/
 
 # Sitemap location (dynamically generated - includes all blog posts and deals)
 Sitemap: https://fidelislogic.com/api/sitemap.xml
 
 # Crawl-delay (optional, adjust if needed)
-Crawl-delay: 1
+# Crawl-delay: 1
 
 # AI Search Engines
 User-agent: GPTBot
