@@ -9,6 +9,7 @@ import { Solutions } from "./pages/Solutions";
 import { Services } from "./pages/Services";
 import { ServiceDetail } from "./pages/ServiceDetail";
 import { MeetingRooms } from "./pages/MeetingRooms";
+import { RoomConfigurator } from "./pages/RoomConfigurator";
 import { Headsets } from "./pages/Headsets";
 import { WorkspaceExperience } from "./pages/WorkspaceExperience";
 import { BusinessApps } from "./pages/BusinessApps";
@@ -69,6 +70,7 @@ function App() {
             <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
             <Route path="/solutions" element={<PublicLayout><Solutions /></PublicLayout>} />
             <Route path="/solutions/meeting-rooms" element={<PublicLayout><MeetingRooms /></PublicLayout>} />
+            <Route path="/tools/room-configurator" element={<PublicLayout><RoomConfigurator /></PublicLayout>} />
             <Route path="/solutions/headsets" element={<PublicLayout><Headsets /></PublicLayout>} />
             <Route path="/solutions/workspace-experience" element={<PublicLayout><WorkspaceExperience /></PublicLayout>} />
             <Route path="/solutions/business-apps" element={<PublicLayout><BusinessApps /></PublicLayout>} />

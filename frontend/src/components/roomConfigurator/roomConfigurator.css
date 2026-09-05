@@ -1,0 +1,47 @@
+.rc-device {
+  cursor: grab;
+}
+.rc-device:active {
+  cursor: grabbing;
+}
+.rc-table-group {
+  cursor: grab;
+}
+.rc-table-group:active {
+  cursor: grabbing;
+}
+.rc-handle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rc-device {
+    transition: filter 120ms ease;
+  }
+  .rc-device:hover {
+    filter: brightness(1.08);
+  }
+  .rc-handle {
+    transition: transform 100ms ease-out;
+  }
+  .rc-handle:hover {
+    transform: scale(1.12);
+  }
+  .rc-handle:active {
+    transform: scale(0.94);
+  }
+  .rc-fade-in {
+    animation: rc-fade-in-op 180ms ease-out;
+  }
+  .rc-banner-in {
+    animation: rc-slide-down 180ms ease-out;
+  }
+}
+@keyframes rc-fade-in-op {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rc-slide-down {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

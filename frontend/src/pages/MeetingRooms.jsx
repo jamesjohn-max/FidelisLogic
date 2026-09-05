@@ -55,12 +55,20 @@ export const MeetingRooms = () => {
               <p className="text-xl text-gray-600 leading-relaxed">
                 {hero.subtitle}
               </p>
-              <Link to="/contact">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-                  Book Free Meeting Room Consultation
-                  <ArrowRight className="ml-2" size={20} />
-                </Button>
-              </Link>
+              <div className="flex flex-wrap gap-4">
+                <Link to="/contact">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                    Book Free Meeting Room Consultation
+                    <ArrowRight className="ml-2" size={20} />
+                  </Button>
+                </Link>
+                <Link to="/tools/room-configurator">
+                  <Button size="lg" variant="outline" className="border-blue-200 text-blue-700 hover:bg-blue-50">
+                    Try the Room Configurator
+                    <ArrowRight className="ml-2" size={20} />
+                  </Button>
+                </Link>
+              </div>
             </div>
             <div className="relative">
               <img
