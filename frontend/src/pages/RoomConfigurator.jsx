@@ -7,6 +7,7 @@ import { RoomStatsCard } from "../components/roomConfigurator/RoomStatsCard";
 import { ControlsPanel } from "../components/roomConfigurator/ControlsPanel";
 import { RoomCanvas } from "../components/roomConfigurator/RoomCanvas";
 import { SummaryPanel } from "../components/roomConfigurator/SummaryPanel";
+import { RoomImagesPanel } from "../components/roomConfigurator/RoomImagesPanel";
 import { DisplaySizeDialog } from "../components/roomConfigurator/DisplaySizeDialog";
 import { CameraFovDialog } from "../components/roomConfigurator/CameraFovDialog";
 import { ExportDialog } from "../components/roomConfigurator/ExportDialog";
@@ -63,7 +64,13 @@ export const RoomConfigurator = () => {
   const [podSizeOverrides, setPodSizeOverrides] = useState({});
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [roomImages, setRoomImages] = useState([]);
   const diagramRef = useRef(null);
+  // Blob preview URLs need revoking on removal/unmount; a ref keeps the cleanup
+  // effect below from needing roomImages in its dependency array.
+  const roomImagesRef = useRef(roomImages);
+  useEffect(() => { roomImagesRef.current = roomImages; }, [roomImages]);
+  useEffect(() => () => { roomImagesRef.current.forEach((img) => URL.revokeObjectURL(img.previewUrl)); }, []);
 
   const layoutResult = useMemo(
     () => generateLayout(layout, room, table, chairCount, podSizeOverrides),
@@ -275,6 +282,19 @@ export const RoomConfigurator = () => {
     });
   };
 
+  const handleAddRoomImages = (files) => {
+    const next = files.map((file) => ({ id: uid("photo"), file, previewUrl: URL.createObjectURL(file) }));
+    setRoomImages((prev) => [...prev, ...next]);
+  };
+
+  const handleRemoveRoomImage = (id) => {
+    setRoomImages((prev) => {
+      const target = prev.find((img) => img.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((img) => img.id !== id);
+    });
+  };
+
   const handleReset = () => {
     setRoom(DEFAULT_ROOM);
     setTable(DEFAULT_TABLE);
@@ -294,6 +314,8 @@ export const RoomConfigurator = () => {
     setRemovedChairIndices(new Set());
     setChairOffsets({});
     setPodSizeOverrides({});
+    roomImages.forEach((img) => URL.revokeObjectURL(img.previewUrl));
+    setRoomImages([]);
   };
 
   const effectiveChairCount = Math.max(0, chairCount - removedChairIndices.size);
@@ -325,6 +347,7 @@ export const RoomConfigurator = () => {
         customerName,
         createdBy,
         diagramElement: diagramRef.current,
+        images: roomImages.map((img) => img.file),
       });
       toast.success("PDF downloaded");
       setExportDialogOpen(false);
@@ -446,6 +469,14 @@ export const RoomConfigurator = () => {
 
           <div className="mt-6">
             <SummaryPanel state={state} />
+          </div>
+
+          <div className="mt-6">
+            <RoomImagesPanel
+              images={roomImages}
+              onAddImages={handleAddRoomImages}
+              onRemoveImage={handleRemoveRoomImage}
+            />
           </div>
         </div>
 

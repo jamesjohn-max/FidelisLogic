@@ -124,7 +124,7 @@ function drawHeader(doc, meta, titleLines) {
   return dividerY + 6;
 }
 
-function drawFooter(doc, meta) {
+function drawFooter(doc, meta, pageNum, totalPages) {
   const y = PAGE_H - FOOTER_H;
   setDraw(doc, SLATE_300);
   doc.setLineWidth(0.4);
@@ -135,7 +135,7 @@ function drawFooter(doc, meta) {
   setText(doc, SLATE_500);
   doc.text(CREDIT_TEXT, MARGIN, y + 7);
   doc.text(meta.dateStr, MARGIN, y + 12);
-  doc.text("Page 1 of 1", PAGE_W - MARGIN, y + 7, { align: "right" });
+  doc.text(`Page ${pageNum} of ${totalPages}`, PAGE_W - MARGIN, y + 7, { align: "right" });
 }
 
 // --- section header ------------------------------------------------------------------
@@ -519,6 +519,114 @@ function drawDiagramLegendRow(doc, x, y) {
   return y + 5;
 }
 
+// --- room photo pages (2 per page, appended after the main report page) -------------------
+
+// Phone camera photos can run 4000px+ per side / several MB each; embedding them at
+// native resolution would bloat the PDF and slow generation for no visual benefit at
+// half-page print size. Downscaled + re-encoded once here via canvas before jsPDF
+// ever sees them. This is also the only place these photos exist as pixels — nothing
+// is uploaded, so "don't save the pictures on the website" holds by construction.
+const MAX_PHOTO_DIMENSION = 1600;
+const PHOTO_JPEG_QUALITY = 0.82;
+
+function loadImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, MAX_PHOTO_DIMENSION / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * scale));
+      const h = Math.max(1, Math.round(img.naturalHeight * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(objectUrl);
+      resolve({ dataUrl: canvas.toDataURL("image/jpeg", PHOTO_JPEG_QUALITY), width: w, height: h });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Couldn't read one of the room photos"));
+    };
+    img.src = objectUrl;
+  });
+}
+
+function drawPhotoPageHeader(doc, meta) {
+  drawTopAccent(doc);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  setText(doc, SLATE_500);
+  doc.text(meta.dateStr, PAGE_W - MARGIN, 11, { align: "right" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(15);
+  setText(doc, SLATE_900);
+  doc.text("Room Photos", MARGIN, 15);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  setText(doc, SLATE_500);
+  doc.text(meta.customerName ? `${meta.customerName} — site survey reference photos` : "Site survey reference photos", MARGIN, 21.5);
+
+  const dividerY = 25;
+  setDraw(doc, BRAND_BLUE);
+  doc.setLineWidth(0.8);
+  doc.line(MARGIN, dividerY, MARGIN + 16, dividerY);
+  setDraw(doc, SLATE_200);
+  doc.setLineWidth(0.4);
+  doc.line(MARGIN + 16, dividerY, PAGE_W - MARGIN, dividerY);
+
+  return dividerY + 6;
+}
+
+// Same tinted-card language as the rest of the report, letterboxing the photo inside
+// it (contain-fit) so a portrait or landscape phone photo is never stretched.
+function drawPhotoBox(doc, y, height, photo, captionText) {
+  const boxX = MARGIN, boxW = CONTENT_W;
+  setFill(doc, CARD_TINT);
+  setDraw(doc, SLATE_200);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(boxX, y, boxW, height, CARD_RADIUS, CARD_RADIUS, "FD");
+
+  const pad = 3;
+  const captionH = 5;
+  const innerX = boxX + pad, innerY = y + pad;
+  const innerW = boxW - pad * 2, innerH = height - pad * 2 - captionH;
+  const imgAspect = photo.width / photo.height;
+  const boxAspect = innerW / innerH;
+  let drawW, drawH;
+  if (imgAspect > boxAspect) { drawW = innerW; drawH = innerW / imgAspect; }
+  else { drawH = innerH; drawW = innerH * imgAspect; }
+  const drawX = innerX + (innerW - drawW) / 2;
+  const drawY = innerY + (innerH - drawH) / 2;
+  doc.addImage(photo.dataUrl, "JPEG", drawX, drawY, drawW, drawH, undefined, "FAST");
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  setText(doc, SLATE_500);
+  doc.text(captionText, boxX + pad, y + height - 2);
+}
+
+// Appends one new PDF page per pair of photos. Footers aren't drawn here — the entry
+// point draws every page's footer in one pass afterward, once the final page count
+// (main report page + photo pages) is known.
+function drawRoomPhotoPages(doc, meta, photos) {
+  for (let i = 0; i < photos.length; i += 2) {
+    doc.addPage();
+    const y = drawPhotoPageHeader(doc, meta);
+    const bottom = PAGE_H - FOOTER_H - 4;
+    const gap = 5;
+    const pair = photos.slice(i, i + 2);
+    const boxH = pair.length === 2 ? (bottom - y - gap) / 2 : bottom - y;
+    pair.forEach((photo, j) => {
+      const boxY = y + j * (boxH + gap);
+      drawPhotoBox(doc, boxY, boxH, photo, `Photo ${i + j + 1} of ${photos.length}`);
+    });
+  }
+}
+
 // --- 4-column configuration summary (mirrors the on-screen summary panel) -----------------
 
 // Predicts a column's rendered height without drawing anything — used to size the
@@ -758,12 +866,15 @@ function drawNotes(doc, y, state) {
 
 // --- entry point -----------------------------------------------------------------------------
 
-export async function exportRoomConfigPdf({ state, layoutResult, removedChairIndices, chairOffsets, roomName, customerName, createdBy, diagramElement }) {
+export async function exportRoomConfigPdf({ state, layoutResult, removedChairIndices, chairOffsets, roomName, customerName, createdBy, diagramElement, images = [] }) {
   if (!state || !layoutResult) throw new Error("Nothing to export — the room configuration wasn't found.");
 
-  // Captured before anything else is drawn — it's the only async step in this whole
-  // export, and doing it first means everything below can stay synchronous.
+  // Captured/decoded before anything else is drawn — these are the only async steps
+  // in this whole export, and doing them first means everything below can stay
+  // synchronous. Photos are decoded to data URLs entirely in memory (canvas), never
+  // sent anywhere — nothing about this export touches a server.
   const diagramCanvas = await captureDiagramElement(diagramElement);
+  const photos = images.length ? await Promise.all(images.map(loadImageFile)) : [];
 
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const dateStr = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
@@ -802,7 +913,13 @@ export async function exportRoomConfigPdf({ state, layoutResult, removedChairInd
   y = drawSectionTitle(doc, y, "Recommended Notes");
   drawNotes(doc, y, state);
 
-  drawFooter(doc, meta);
+  if (photos.length) drawRoomPhotoPages(doc, meta, photos);
+
+  const totalPages = 1 + Math.ceil(photos.length / 2);
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    drawFooter(doc, meta, p, totalPages);
+  }
 
   const safeName = customerName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/(^-+|-+$)/g, "") || "customer";
   doc.save(`meeting-room-configuration-${safeName}.pdf`);
