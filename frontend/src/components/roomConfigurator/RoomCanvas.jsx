@@ -236,7 +236,7 @@ function renderTableShape(tableShape, selected) {
 // Pods render individually (not through the generic renderTableShape) so each one
 // can carry its own selection state — double-click a pod to select just that table,
 // then its size is edited via the Table length/width controls.
-function renderPods(tables, selection, onSelect) {
+function renderPods(tables, selection, onSelect, registerTapAndCheckDouble) {
   return tables.map((t, i) => {
     const isSelected = selection?.category === "tablePod" && selection.index === i;
     const stroke = isSelected ? "#2563EB" : "#5B6B82";
@@ -254,6 +254,14 @@ function renderPods(tables, selection, onSelect) {
           vectorEffect="non-scaling-stroke"
           style={{ cursor: "pointer" }}
           onDoubleClick={(e) => { e.stopPropagation(); onSelect({ category: "tablePod", index: i }); }}
+          onPointerDown={(e) => {
+            // Same manual double-tap fallback as chairs — dblclick doesn't
+            // synthesize from touch on this SVG (see registerTapAndCheckDouble).
+            if (registerTapAndCheckDouble(e, `pod:${i}`)) {
+              e.stopPropagation();
+              onSelect({ category: "tablePod", index: i });
+            }
+          }}
         />
         {isSelected && (
           <circle
@@ -454,6 +462,7 @@ export function RoomCanvas({
   const svgRef = useRef(null);
   const dragRef = useRef(null);
   const rotateDragRef = useRef(null);
+  const lastTapRef = useRef({ key: null, time: 0, x: 0, y: 0 });
   const [liveTableOffset, setLiveTableOffset] = useState(null);
   const [liveDevicePos, setLiveDevicePos] = useState(null);
   const [liveAngle, setLiveAngle] = useState(null);
@@ -551,6 +560,34 @@ export function RoomCanvas({
       moved: false,
     };
   }, [clientToPoint, onSelect]);
+
+  // dblclick never synthesizes from a touch double-tap on this SVG, because
+  // touch-action:none (needed so a drag in progress doesn't also pan/pinch-zoom the
+  // page) also disables the browser's double-tap gesture recognition that dblclick
+  // compatibility events are built on — the mouse-only dblclick handlers below this
+  // (chairs, table pods) silently never fire on a phone or tablet. This reimplements
+  // just the double-tap part manually for touch pointers: a second tap on the same
+  // target within the window/radius counts as a "double-click"; the caller stops
+  // propagation and selects. A lone tap is recorded and left to propagate normally
+  // (e.g. so it can still drag/select the whole table group), exactly like the first
+  // half of a real double-click does.
+  const DOUBLE_TAP_MS = 350;
+  const DOUBLE_TAP_PX = 24;
+  const registerTapAndCheckDouble = useCallback((e, key) => {
+    if (e.pointerType !== "touch") return false;
+    const now = Date.now();
+    const last = lastTapRef.current;
+    const isDouble =
+      last.key === key &&
+      now - last.time < DOUBLE_TAP_MS &&
+      Math.hypot(e.clientX - last.x, e.clientY - last.y) < DOUBLE_TAP_PX;
+    if (isDouble) {
+      lastTapRef.current = { key: null, time: 0, x: 0, y: 0 };
+      return true;
+    }
+    lastTapRef.current = { key, time: now, x: e.clientX, y: e.clientY };
+    return false;
+  }, []);
 
   // Dragging a chair moves only that chair (as an offset from its generated seat
   // position), never the table — distinct from startDrag, which always drags the
@@ -814,7 +851,7 @@ export function RoomCanvas({
             onPointerDown={(e) => startDrag(e, "table", "table", effectiveOffset.x, effectiveOffset.y)}
           >
             {layoutResult.tableShape.type === "pods"
-              ? renderPods(layoutResult.tableShape.tables, selection, onSelect)
+              ? renderPods(layoutResult.tableShape.tables, selection, onSelect, registerTapAndCheckDouble)
               : renderTableShape(layoutResult.tableShape, selection?.category === "table")}
             {layoutResult.chairs.map((c, i) => {
               if (removedChairIndices.has(i)) return null;
@@ -832,6 +869,11 @@ export function RoomCanvas({
                   transform={`translate(${chairX} ${chairY})`}
                   onDoubleClick={(e) => { e.stopPropagation(); onSelect({ category: "chair", index: i }); }}
                   onPointerDown={(e) => {
+                    if (registerTapAndCheckDouble(e, `chair:${i}`)) {
+                      e.stopPropagation();
+                      onSelect({ category: "chair", index: i });
+                      return;
+                    }
                     // Only the already-selected chair drags on its own; otherwise the
                     // pointerdown is left to bubble up and drag the whole table group.
                     if (isThisChairSelected) startChairDrag(e, i, off.dx, off.dy);
