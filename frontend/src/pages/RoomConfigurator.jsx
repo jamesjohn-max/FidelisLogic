@@ -51,6 +51,7 @@ export const RoomConfigurator = () => {
   const [ceilingType, setCeilingType] = useState(CEILING_TYPES[0]);
   const [tableTopMaterial, setTableTopMaterial] = useState(TABLE_TOP_MATERIALS[0]);
   const [cameraFeatures, setCameraFeatures] = useState([]);
+  const [additionalNotes, setAdditionalNotes] = useState("");
   const [tableOffset, setTableOffset] = useState({ x: 0, y: 0 });
   const [devices, setDevices] = useState(EMPTY_DEVICES);
   const [selection, setSelection] = useState(null);
@@ -307,6 +308,7 @@ export const RoomConfigurator = () => {
     setCeilingType(CEILING_TYPES[0]);
     setTableTopMaterial(TABLE_TOP_MATERIALS[0]);
     setCameraFeatures([]);
+    setAdditionalNotes("");
     setTableOffset({ x: 0, y: 0 });
     setDevices(EMPTY_DEVICES);
     setSelection(null);
@@ -333,6 +335,7 @@ export const RoomConfigurator = () => {
     ceilingType,
     tableTopMaterial,
     cameraFeatures,
+    additionalNotes,
   };
 
   const handleExport = async ({ roomName, customerName, createdBy }) => {
@@ -463,6 +466,8 @@ export const RoomConfigurator = () => {
                 onTableTopMaterialChange={setTableTopMaterial}
                 cameraFeatures={cameraFeatures}
                 onToggleCameraFeature={handleToggleCameraFeature}
+                additionalNotes={additionalNotes}
+                onAdditionalNotesChange={setAdditionalNotes}
               />
             </div>
           </div>

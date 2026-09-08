@@ -144,6 +144,8 @@ export function ControlsPanel({
   onTableTopMaterialChange,
   cameraFeatures,
   onToggleCameraFeature,
+  additionalNotes,
+  onAdditionalNotesChange,
 }) {
   const deviceSectionOrder = DEVICE_ORDER.filter((c) => c !== "door");
   const totalDevices = deviceSectionOrder.reduce((sum, c) => sum + devices[c].length, 0);
@@ -333,6 +335,22 @@ export function ControlsPanel({
         </div>
         <p className="mt-3 text-xs leading-relaxed text-slate-400">
           Select the AV camera behaviors you want for this room — more than one can be enabled on cameras that support switching modes.
+        </p>
+      </Section>
+
+      <Section
+        title="Additional notes"
+        summary={additionalNotes?.trim() ? `${additionalNotes.trim().length} characters` : "None added"}
+      >
+        <textarea
+          rows={3}
+          value={additionalNotes}
+          onChange={(e) => onAdditionalNotesChange(e.target.value)}
+          placeholder="Anything else the site survey or install team should know..."
+          className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm outline-none transition-colors focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+        />
+        <p className="mt-3 text-xs leading-relaxed text-slate-400">
+          Included in the configuration brief and the exported PDF report.
         </p>
       </Section>
     </div>

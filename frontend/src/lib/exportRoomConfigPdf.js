@@ -138,6 +138,43 @@ function drawFooter(doc, meta, pageNum, totalPages) {
   doc.text(`Page ${pageNum} of ${totalPages}`, PAGE_W - MARGIN, y + 7, { align: "right" });
 }
 
+// A lighter header for an overflow continuation page — same top accent, a small
+// title instead of the full customer-name headline, no stat cards or diagram to
+// repeat since only trailing report sections ever land here.
+function drawContinuationHeader(doc, meta) {
+  drawTopAccent(doc);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  setText(doc, SLATE_500);
+  doc.text(meta.dateStr, PAGE_W - MARGIN, 11, { align: "right" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  setText(doc, SLATE_900);
+  doc.text("Meeting Room Configuration (continued)", MARGIN, 14);
+
+  const dividerY = 19;
+  setDraw(doc, SLATE_200);
+  doc.setLineWidth(0.4);
+  doc.line(MARGIN, dividerY, PAGE_W - MARGIN, dividerY);
+
+  return dividerY + 6;
+}
+
+// The report's main content isn't paginated top-to-bottom the way a word processor
+// would — every section computes its own y from the one before it — so a section
+// whose height depends on free-form user input (unlike the rest, which is bounded by
+// the configurator's own fixed vocabulary) needs an explicit fit check before it
+// draws. When it won't fit in what's left of the current page, start a fresh page
+// with a continuation header rather than letting it run under the footer.
+function ensureSpace(doc, y, neededHeight, meta) {
+  const safeBottom = PAGE_H - FOOTER_H - 4;
+  if (y + neededHeight <= safeBottom) return y;
+  doc.addPage();
+  return drawContinuationHeader(doc, meta);
+}
+
 // --- section header ------------------------------------------------------------------
 
 // A small accent tab beside every section label (the same brand-blue motif used on
@@ -835,6 +872,15 @@ function measureNotesHeight(doc, notes, wrapWidth) {
   return h;
 }
 
+// Shared by drawNotes and the entry point's fit check ahead of it — one source of
+// truth for the box's padding so the pre-draw measurement can't drift from the draw.
+function measureNotesBoxHeight(doc, state) {
+  const notes = recommendationNotes(state);
+  const padTop = 3, padBottom = 2.5, padLeft = 7, padRight = 5;
+  const wrapWidth = CONTENT_W - padLeft - padRight;
+  return padTop + measureNotesHeight(doc, notes, wrapWidth) + padBottom;
+}
+
 // A tinted callout card instead of bare bullets on white — gives the advisory notes
 // visual weight as a distinct "read this" block, the same way a pull-quote or
 // callout box reads in a printed report.
@@ -842,7 +888,7 @@ function drawNotes(doc, y, state) {
   const notes = recommendationNotes(state);
   const padTop = 3, padBottom = 2.5, padLeft = 7, padRight = 5;
   const wrapWidth = CONTENT_W - padLeft - padRight;
-  const boxH = padTop + measureNotesHeight(doc, notes, wrapWidth) + padBottom;
+  const boxH = measureNotesBoxHeight(doc, state);
 
   setFill(doc, BRAND_BLUE_TINT);
   setDraw(doc, SLATE_200);
@@ -860,6 +906,48 @@ function drawNotes(doc, y, state) {
     doc.text(lines, MARGIN + padLeft, cursorY);
     cursorY += lines.length * 3.6 + 1.3;
   });
+
+  return y + boxH;
+}
+
+// --- additional notes (free text from the user, distinct from the system-generated
+// recommendations above) -----------------------------------------------------------
+
+// Capped at a fixed number of lines (ellipsized beyond that) so its height is
+// bounded even for a pasted wall of text — the entry point still checks the actual
+// measured height against the page via ensureSpace before drawing, since this cap
+// alone (8 lines) is still tall enough to need that check in a crowded report.
+const MAX_USER_NOTES_LINES = 8;
+const USER_NOTES_PAD = { top: 4, bottom: 3, left: 6, right: 6 };
+const USER_NOTES_LINE_H = 3.8;
+
+// Wrapping is measurement — done once here so the entry point's fit check and the
+// actual draw always agree on exactly how many lines resulted.
+function wrapUserNotes(doc, notesText) {
+  const wrapWidth = CONTENT_W - USER_NOTES_PAD.left - USER_NOTES_PAD.right;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  return wrapToLines(doc, notesText, wrapWidth, MAX_USER_NOTES_LINES);
+}
+
+function measureUserNotesBoxHeight(lines) {
+  return USER_NOTES_PAD.top + lines.length * USER_NOTES_LINE_H + USER_NOTES_PAD.bottom;
+}
+
+function drawUserNotesBox(doc, y, lines) {
+  const boxH = measureUserNotesBoxHeight(lines);
+
+  setFill(doc, CARD_TINT);
+  setDraw(doc, SLATE_200);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(MARGIN, y, CONTENT_W, boxH, CARD_RADIUS, CARD_RADIUS, "FD");
+  setFill(doc, BRAND_BLUE);
+  doc.roundedRect(MARGIN, y, 1.2, boxH, 0.6, 0.6, "F");
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  setText(doc, SLATE_700);
+  doc.text(lines, MARGIN + USER_NOTES_PAD.left, y + USER_NOTES_PAD.top + 2.8);
 
   return y + boxH;
 }
@@ -910,12 +998,26 @@ export async function exportRoomConfigPdf({ state, layoutResult, removedChairInd
     y = drawDeviceTable(doc, y, state.devices) + 2;
   }
 
-  y = drawSectionTitle(doc, y, "Recommended Notes");
-  drawNotes(doc, y, state);
+  if (state.additionalNotes?.trim()) {
+    const lines = wrapUserNotes(doc, state.additionalNotes.trim());
+    const needed = 4.5 + measureUserNotesBoxHeight(lines) + 4;
+    y = ensureSpace(doc, y, needed, meta);
+    y = drawSectionTitle(doc, y, "Additional Notes");
+    y = drawUserNotesBox(doc, y, lines) + 4;
+  }
+
+  {
+    const needed = 4.5 + measureNotesBoxHeight(doc, state);
+    y = ensureSpace(doc, y, needed, meta);
+    y = drawSectionTitle(doc, y, "Recommended Notes");
+    drawNotes(doc, y, state);
+  }
 
   if (photos.length) drawRoomPhotoPages(doc, meta, photos);
 
-  const totalPages = 1 + Math.ceil(photos.length / 2);
+  // Computed from the doc itself, not a formula off `photos.length` — the notes
+  // sections above may have already pushed onto an overflow page of their own.
+  const totalPages = doc.internal.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
     drawFooter(doc, meta, p, totalPages);

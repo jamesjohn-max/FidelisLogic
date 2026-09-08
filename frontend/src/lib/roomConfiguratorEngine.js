@@ -699,6 +699,11 @@ export function buildConfigBrief(state) {
   lines.push(
     `- Booking panel: ${devices.bookingPanel.length ? `Yes (${devices.bookingPanel.map((d, i) => `${refCode("bookingPanel", i)}: ${d.edge} wall at ${posLabel(d)}`).join(", ")})` : "Not included"}`
   );
+  if (state.additionalNotes?.trim()) {
+    lines.push("");
+    lines.push("ADDITIONAL NOTES");
+    lines.push(state.additionalNotes.trim());
+  }
   lines.push("");
   lines.push("RECOMMENDED NOTES");
   recommendationNotes(state).forEach((n) => lines.push(`- ${n}`));
