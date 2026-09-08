@@ -949,6 +949,11 @@ export function RoomCanvas({
         </svg>
       </div>
 
+      <p className="mt-2 text-xs leading-relaxed text-slate-400">
+        Click and drag anywhere on the table to move the whole layout. Double-click — or double-tap on a
+        phone or tablet — a chair to move just that one.
+      </p>
+
       {selection && (
         <div className="rc-banner-in mt-3 flex items-center justify-between gap-3 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm">
           <span className="font-medium text-blue-900">

@@ -209,7 +209,7 @@ export function DimensionsBar({
             chairLimits[1] > CHAIR_LIMITS[1]
               ? `people · fills room (max ${chairLimits[1]})`
               : chairLimits[1] < CHAIR_LIMITS[1]
-              ? `people · max ${chairLimits[1]} (ergonomic spacing)`
+              ? `people · max ${chairLimits[1]}`
               : "people"
           }
           onChange={(v) => onChairCountChange(Math.round(v))}
