@@ -294,7 +294,7 @@ export function ControlsPanel({
         title="Camera Features"
         summary={cameraFeatures.length ? `${cameraFeatures.length} selected` : "None selected"}
       >
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5">
           {CAMERA_FEATURES.map((feature) => {
             const Illustration = CAMERA_FEATURE_ILLUSTRATIONS[feature.id];
             const active = cameraFeatures.includes(feature.id);
@@ -304,29 +304,28 @@ export function ControlsPanel({
                 type="button"
                 onClick={() => onToggleCameraFeature(feature.id)}
                 aria-pressed={active}
-                className={`flex flex-col overflow-hidden rounded-lg border text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 active:scale-[0.99] ${
+                title={feature.description}
+                className={`flex items-center gap-2.5 rounded-lg border p-2 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 active:scale-[0.99] ${
                   active
                     ? "border-blue-500 bg-blue-50 shadow-sm"
                     : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                 }`}
               >
-                <div className="aspect-[5/3] w-full border-b border-slate-100 bg-white">
+                <div className="h-9 w-14 shrink-0 overflow-hidden rounded-md border border-slate-100 bg-white">
                   <Illustration />
                 </div>
-                <div className="flex items-start gap-2.5 p-3">
-                  <span
-                    className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
-                      active ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 bg-white"
-                    }`}
-                  >
-                    {active && <Check className="h-3 w-3" />}
-                  </span>
-                  <div className="min-w-0">
-                    <div className={`text-xs font-semibold leading-tight ${active ? "text-blue-800" : "text-slate-800"}`}>
-                      {feature.label}
-                    </div>
-                    <p className="mt-0.5 text-[11px] leading-snug text-slate-500">{feature.description}</p>
+                <span
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                    active ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 bg-white"
+                  }`}
+                >
+                  {active && <Check className="h-3 w-3" />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className={`text-xs font-semibold leading-tight ${active ? "text-blue-800" : "text-slate-800"}`}>
+                    {feature.label}
                   </div>
+                  <p className="truncate text-[10px] leading-snug text-slate-500">{feature.description}</p>
                 </div>
               </button>
             );
