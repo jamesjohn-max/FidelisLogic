@@ -374,15 +374,9 @@ export const RoomConfigurator = () => {
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Meeting Room Configurator</h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
-            Use this during requirement gathering, not after: a display too small for the room, a camera that
-            can't see the whole table, or seating that doesn't fit the space are exactly the kind of mismatches
-            that are cheap to fix here and expensive to fix once installed.
-          </p>
-          <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
-            When the sales team builds the configuration here, presales, the implementation team, and the
-            customer are all working from the same documented plan before the site survey — so everyone stays
-            aligned on what was actually asked for, and no one hears "this isn't what I asked for" once the room
-            is being built.
+            Used during requirement gathering, this turns the customer's ask into a documented room plan —
+            keeping sales, presales, implementation, and the customer aligned before the site survey, so no one
+            hears "This isn't what I asked for!" after install.
           </p>
         </div>
 
