@@ -364,7 +364,7 @@ export const RoomConfigurator = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       <SEO
-        title="Meeting Room & AV Configurator"
+        title="Meeting Room Configurator"
         description="Design your meeting room before the site survey — set dimensions, seating layout, and AV device placement with Fidelis Logic's interactive room configurator."
         keywords="meeting room configurator, AV room design tool, conference room planner"
       />
@@ -372,14 +372,17 @@ export const RoomConfigurator = () => {
 
       <div className="mx-auto max-w-[1600px] px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Meeting Room &amp; AV Configurator</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Meeting Room Configurator</h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
-            AV mistakes are expensive once they're installed — a display too small for the room, a camera that
-            can't see the whole table, or seating that doesn't fit the space. Working through those details here
-            means your site survey confirms a plan that already works, instead of catching problems on install day.
+            Use this during requirement gathering, not after: a display too small for the room, a camera that
+            can't see the whole table, or seating that doesn't fit the space are exactly the kind of mismatches
+            that are cheap to fix here and expensive to fix once installed.
           </p>
           <p className="mt-2 max-w-2xl text-sm text-slate-500 sm:text-base">
-            Sketch your room, choose a seating layout, and place AV components before your site survey.
+            When the sales team builds the configuration here, presales, the implementation team, and the
+            customer are all working from the same documented plan before the site survey — so everyone stays
+            aligned on what was actually asked for, and no one hears "this isn't what I asked for" once the room
+            is being built.
           </p>
         </div>
 

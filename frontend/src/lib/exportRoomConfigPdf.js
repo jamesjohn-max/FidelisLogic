@@ -539,8 +539,14 @@ function drawDiagramLegendRow(doc, x, y) {
       setFill(doc, BRAND_BLUE); setDraw(doc, WHITE); doc.setLineWidth(0.25);
       doc.circle(cursorX + 1.1, cy, 1.1, "FD");
     } else if (item.kind === "chair") {
+      // Matches the actual chair icon captured into the diagram above (a seat with
+      // two armrest nubs) — a plain circle here used to be a leftover from before
+      // the diagram was a live screenshot, and it also looked identical to the AV
+      // device swatch.
       setFill(doc, CHAIR_FILL); setDraw(doc, CHAIR_STROKE); doc.setLineWidth(0.2);
-      doc.circle(cursorX + 1.1, cy, 1.1, "FD");
+      doc.roundedRect(cursorX + 0.5, cy - 0.9, 1.4, 1.8, 0.3, 0.3, "FD");
+      doc.roundedRect(cursorX, cy - 0.5, 0.4, 1.0, 0.15, 0.15, "FD");
+      doc.roundedRect(cursorX + 2.0, cy - 0.5, 0.4, 1.0, 0.15, 0.15, "FD");
     } else if (item.kind === "table") {
       setFill(doc, TABLE_FILL); setDraw(doc, TABLE_STROKE); doc.setLineWidth(0.25);
       doc.roundedRect(cursorX, cy - 1.1, 2.4, 2.2, 0.4, 0.4, "FD");
